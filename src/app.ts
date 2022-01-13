@@ -7,11 +7,11 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   app.set("port", 8080); // TODO: Use configuration instead of fixed value
 
-  app.get("/payments/:id/actions/check", async (req, _res) => {
+  app.get("/payments/:id/actions/check", async (req, res) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const id = Number.parseInt(req.params.id, 10);
 
-    return {
+    res.status(200).send({
       data: {
         amount: {
           amount: 12000,
@@ -52,7 +52,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
         urlRedirectEc:
           "http://pagopamock.pagopa.hq/esito.php?idSession=8bf0c08b67034dfcb700ff90d6aead78"
       }
-    } as PaymentResponse;
+    } as PaymentResponse);
   });
 
   return app;
