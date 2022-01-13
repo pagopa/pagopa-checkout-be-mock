@@ -6,6 +6,7 @@
   "author": "https://pagopa.gov.it",
   "license": "MIT",
   "scripts": {
+    "start": "node dist/index.js",
     "prebuild": "rimraf dist",
     "build": "npm-run-all -s clean generate lint build:*",
     "build:tsc": "tsc",
@@ -15,12 +16,14 @@
     "clean": "npm-run-all -s clean:*",
     "clean:dist": "rimraf dist",
     "clean:yaml-files": "rimraf generated/yaml-file/*.yaml",
-    "clean:ts-from-yaml": "rimraf generated/FespCdService && rimraf generated/PagamentiTelematiciPspNodoservice && rimraf generated/nodeNm3io && rimraf generated/nodeNm3psp ",
+    "clean:ts-from-yaml": "rimraf src/generated/api",
     "generate": "npm-run-all -s generate:ts-from-yaml:*",
-    "generate:ts-from-yaml:api": "shx mkdir -p generated/api && rimraf generated/api/* && gen-api-models --strict 0 --api-spec ./api.yaml --out-dir generated/api"
+    "generate:ts-from-yaml:api": "shx mkdir -p src/generated/api && rimraf src/generated/api/* && gen-api-models --strict 0 --api-spec ./api.yaml --out-dir src/generated/api"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
+    "@types/express": "^4.17.6",
+    "@types/winston": "^2.4.4",
     "jest": "^25.2.7",
     "rimraf": "^2.6.2",
     "ts-jest": "^25.3.1",
@@ -39,6 +42,8 @@
     "io-ts": "^2.2.16",
     "fp-ts": "^2.11.1",
     "@pagopa/openapi-codegen-ts": "^10.0.6",
-    "@pagopa/ts-commons": "^10.2.0"
+    "@pagopa/ts-commons": "^10.2.0",
+    "express": "^4.17.1",
+    "winston": "^3.2.1"
   }
 }

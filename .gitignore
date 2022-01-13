@@ -8,7 +8,7 @@ yarn-error.log
 package-lock.json
 .vscode/settings.json
 dump.rdb
-generated
+src/generated
 .env
 .DS_Store
 k6example/libs
