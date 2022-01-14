@@ -5,6 +5,15 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   const app = express();
   app.use(express.json());
 
+  app.use((_req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    next();
+  });
+
   app.get("/getPaymentId", async (_req, res) => {
     res.status(200).send({
       idPayment: "e1283f0e673b4789a2af87fd9b4043f4"
