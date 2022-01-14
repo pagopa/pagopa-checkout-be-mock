@@ -104,5 +104,28 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     } as Session);
   });
 
+  app.post("/pp-restapi/v4/users/actions/approve-terms", async (_req, res) => {
+    res.status(200);
+    res.send({
+      data: {
+        acceptTerms: true,
+        activationDate: new Date("2022-01-14T16:30:47.534Z"),
+        cellphone: USER_DATA.cellphone,
+        email: USER_DATA.email,
+        fiscalCode: USER_DATA.fiscalCode,
+        idPayment: ID_PAYMENT,
+        name: USER_DATA.name,
+        notificationEmail: USER_DATA.email,
+        registered: true,
+        registeredDate: new Date("2022-01-14T16:30:47.534Z"),
+        spidSessionId: 0,
+        status: "ANONYMOUS",
+        surname: USER_DATA.surname,
+        userId: 0,
+        username: undefined
+      }
+    } as UserResponse);
+  });
+
   return app;
 };
