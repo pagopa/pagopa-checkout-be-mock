@@ -5,7 +5,11 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   const app = express();
   app.use(express.json());
 
-  app.set("port", 8081); // TODO: Use configuration instead of fixed value
+  app.get("/getPaymentId", async (_req, res) => {
+    res.status(200).send({
+      idPayment: 0
+    });
+  });
 
   app.get("/payments/:id/actions/check", async (req, res) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

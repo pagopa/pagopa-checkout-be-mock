@@ -4,11 +4,14 @@ import { logger } from "./logger";
 
 App.newExpressApp()
   .then(app => {
-    const server = http.createServer(app);
+    const listeningPorts = [8080, 8081];
 
     logger.info("Starting PM mock...");
 
-    server.listen(8081);
+    for (const port of listeningPorts) {
+      const server = http.createServer(app);
+      server.listen(port);
+    }
   })
   .catch(error => {
     logger.error(`Error occurred starting server: ${error}`);
