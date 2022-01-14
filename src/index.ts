@@ -8,7 +8,7 @@ App.newExpressApp()
 
     logger.info("Starting PM mock...");
 
-    server.listen(8080);
+    server.listen(8081);
   })
   .catch(error => {
     logger.error(`Error occurred starting server: ${error}`);
