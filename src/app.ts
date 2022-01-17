@@ -3,7 +3,11 @@ import { PaymentResponse } from "./generated/api/PaymentResponse";
 import { Session } from "./generated/api/Session";
 import { User } from "./generated/api/User";
 import { UserResponse } from "./generated/api/UserResponse";
+import { WalletRequest } from "./generated/api/WalletRequest";
+import { WalletResponse } from "./generated/api/WalletResponse";
+import { createResponseWallet } from "./wallet";
 
+// eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
   const app = express();
   app.use(express.json());
@@ -22,8 +26,9 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
       "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
+      "Origin, X-Requested-With, Authorization, Content-Type, Accept"
     );
+    res.header("Access-Control-Allow-Methods", ["GET", "POST"]);
     next();
   });
 
@@ -125,6 +130,18 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
         username: undefined
       }
     } as UserResponse);
+  });
+
+  app.post("/pp-restapi/v4/wallet", async (req, res) => {
+    const requestData = req.body as WalletRequest;
+    const sentWallet = requestData.data;
+
+    const responseWallet = createResponseWallet(sentWallet);
+
+    res.status(200);
+    res.send({
+      data: responseWallet
+    } as WalletResponse);
   });
 
   return app;
