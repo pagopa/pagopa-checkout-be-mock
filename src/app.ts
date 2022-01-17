@@ -12,6 +12,8 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   const app = express();
   app.use(express.json());
 
+  const ID_PAYMENT = "e1283f0e673b4789a2af87fd9b4043f4";
+
   const USER_DATA = {
     cellphone: "+39 333 3333333",
     email: "john.doe@gmail.com",
@@ -20,7 +22,14 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     surname: "Doe"
   };
 
-  const ID_PAYMENT = "e1283f0e673b4789a2af87fd9b4043f4";
+  const SESSION_USER = {
+    email: USER_DATA.email,
+    fiscalCode: USER_DATA.fiscalCode,
+    notificationEmail: USER_DATA.email,
+    registered: false,
+    status: "ANONYMOUS",
+    userId: 39624
+  };
 
   app.use((_req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -92,13 +101,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
         "7c5G9d5o6W1v8p6S3a4z3N1c8q3A9p9c2M6p0v8D4t9c3G1s2c0N7w4o2K5o6q9P6i0p9H1d4z7G0a8n0L7a6n2J3c0n1S8h6j7G5w8u4G0s0b3U3x4n0V0d2m0E7m8e",
       user: {
         acceptTerms: true,
-        email: USER_DATA.email,
-        fiscalCode: USER_DATA.fiscalCode,
-        idPayment: ID_PAYMENT,
-        notificationEmail: USER_DATA.email,
-        registered: false,
-        status: "ANONYMOUS",
-        userId: 39624
+        ...SESSION_USER
       } as User
     } as Session);
   });
@@ -106,23 +109,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.post("/pp-restapi/v4/users/actions/approve-terms", async (_req, res) => {
     res.status(200);
     res.send({
-      data: {
-        acceptTerms: true,
-        activationDate: new Date("2022-01-14T16:30:47.534Z"),
-        cellphone: USER_DATA.cellphone,
-        email: USER_DATA.email,
-        fiscalCode: USER_DATA.fiscalCode,
-        idPayment: ID_PAYMENT,
-        name: USER_DATA.name,
-        notificationEmail: USER_DATA.email,
-        registered: true,
-        registeredDate: new Date("2022-01-14T16:30:47.534Z"),
-        spidSessionId: 0,
-        status: "ANONYMOUS",
-        surname: USER_DATA.surname,
-        userId: 0,
-        username: undefined
-      }
+      data: SESSION_USER
     } as UserResponse);
   });
 
