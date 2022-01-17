@@ -85,26 +85,20 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   app.post("/pp-restapi/v4/users/actions/start-session", async (_req, res) => {
     res.status(200);
-    // TODO: check this
+
     res.send({
       idPayment: ID_PAYMENT,
-      sessionToken: ID_PAYMENT,
+      sessionToken:
+        "7c5G9d5o6W1v8p6S3a4z3N1c8q3A9p9c2M6p0v8D4t9c3G1s2c0N7w4o2K5o6q9P6i0p9H1d4z7G0a8n0L7a6n2J3c0n1S8h6j7G5w8u4G0s0b3U3x4n0V0d2m0E7m8e",
       user: {
         acceptTerms: true,
-        activationDate: new Date("2022-01-14T16:15:29.362Z"),
-        cellphone: USER_DATA.cellphone,
         email: USER_DATA.email,
         fiscalCode: USER_DATA.fiscalCode,
         idPayment: ID_PAYMENT,
-        name: USER_DATA.name,
         notificationEmail: USER_DATA.email,
         registered: false,
-        registeredDate: new Date("2022-01-14T16:15:29.362Z"),
-        spidSessionId: 0,
         status: "ANONYMOUS",
-        surname: USER_DATA.surname,
-        userId: 0,
-        username: undefined
+        userId: 39624
       } as User
     } as Session);
   });
