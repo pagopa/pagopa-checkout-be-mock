@@ -4,7 +4,7 @@ import { logger } from "./logger";
 
 App.newExpressApp()
   .then(app => {
-    const listeningPorts = [8080, 8081];
+    const listeningPorts = [8080, 8081, 7071];
 
     logger.info("Starting PM mock...");
 

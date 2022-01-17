@@ -144,5 +144,17 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     } as WalletResponse);
   });
 
+  app.get(
+    "/api/checkout/payments/v1/browsers/current/info",
+    async (_req, res) => {
+      res.send({
+        accept: "*/*",
+        ip: "97.13.428.11",
+        useragent:
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:95.0) Gecko/20100101 Firefox/95.0"
+      });
+    }
+  );
+
   return app;
 };
