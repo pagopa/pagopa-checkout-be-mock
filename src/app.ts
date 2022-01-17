@@ -1,6 +1,7 @@
 import * as express from "express";
 import { PaymentResponse } from "./generated/api/PaymentResponse";
 import { Session } from "./generated/api/Session";
+import { TransactionResponse } from "./generated/api/TransactionResponse";
 import { User } from "./generated/api/User";
 import { UserResponse } from "./generated/api/UserResponse";
 import { WalletRequest } from "./generated/api/WalletRequest";
@@ -136,6 +137,75 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       });
     }
   );
+
+  app.post("/pp-restapi/v4/payments/:id/actions/pay3ds2", async (_req, res) => {
+    res.send({
+      data: {
+        amount: {
+          amount: 12000,
+          currency: "EUR",
+          decimalDigits: 2
+        },
+        created: new Date("2022-01-17T15:00:20Z"),
+        description: "TARI/TEFA 2021",
+        detailsList: [
+          {
+            CCP: "d15da8f4df1b4ab6855c966044310b1a",
+            IUV: "02016723749670001",
+            codicePagatore: USER_DATA.fiscalCode,
+            enteBeneficiario: "EC_TE",
+            idDominio: "77777777777",
+            importo: 100,
+            nomePagatore: `${USER_DATA.name} ${USER_DATA.surname}`,
+            tipoPagatore: "F"
+          },
+          {
+            CCP: "d15da8f4df1b4ab6855c966044310b1a",
+            IUV: "02016723749670001",
+            codicePagatore: USER_DATA.fiscalCode,
+            enteBeneficiario: "Comune di Milano",
+            idDominio: "01199250158",
+            importo: 20,
+            nomePagatore: `${USER_DATA.name} ${USER_DATA.surname}`,
+            tipoPagatore: "F"
+          }
+        ],
+        directAcquirer: false,
+        error: false,
+        fee: {
+          amount: 100,
+          currency: "EUR",
+          decimalDigits: 2
+        },
+        grandTotal: {
+          amount: 12100,
+          currency: "EUR",
+          decimalDigits: 2
+        },
+        id: 7090106732,
+        idPayment: 203737,
+        idStatus: 0,
+        idWallet: 94243,
+        merchant: "EC_TE",
+        nodoIdPayment: "d15da8f4df1b4ab6855c966044310b1a",
+        orderNumber: 7090106732,
+        paymentCancelled: false,
+        paymentModel: 0,
+        pspId: 1122602,
+        pspInfo: {
+          codiceAbi: "03069",
+          idPsp: "BCITITMM",
+          ragioneSociale: "Intesa Sanpaolo S.p.A"
+        },
+        statusMessage: "Da autorizzare",
+        success: false,
+        token: "NzA5MDEwNjczMg==",
+        updated: new Date("2022-01-17T15:00:20Z"),
+        urlCheckout3ds:
+          "https://acardste.vaservices.eu/wallet/checkout?id=NzA5MDEwNjczMg=="
+      }
+    } as TransactionResponse);
+  });
 
   return app;
 };
