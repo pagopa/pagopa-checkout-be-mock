@@ -1,4 +1,5 @@
 import * as express from "express";
+import { encode3ds2MethodData } from "./3ds2";
 import { PaymentResponse } from "./generated/api/PaymentResponse";
 import { Session } from "./generated/api/Session";
 import { TransactionResponse } from "./generated/api/TransactionResponse";
@@ -206,6 +207,27 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       }
     } as TransactionResponse);
   });
+
+  app.get(
+    "/pp-restapi/v4/transactions/:id/actions/check",
+    async (_req, res) => {
+      const idTransaction = 7090106799;
+      res.send({
+        data: {
+          authorizationCode: "25",
+          expired: false,
+          finalStatus: false,
+          idPayment: ID_PAYMENT,
+          idStatus: 15,
+          idTransaction,
+          methodUrl: "https://3dstest.sia.eu/ACFS_3DS_ACS_GUI/brw/gdi/main",
+          paymentOrigin: "IO_PAY",
+          statusMessage: "In attesa del metodo 3ds2",
+          threeDSMethodData: encode3ds2MethodData(idTransaction)
+        }
+      });
+    }
+  );
 
   return app;
 };
