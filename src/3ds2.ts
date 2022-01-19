@@ -5,7 +5,7 @@ export const encode3ds2MethodData: (idTransaction: number) => string = (
     "base64"
   );
   const methodData = {
-    threeDSMethodNotificationURL: `https://api.uat.platform.pagopa.it/api/checkout/payment-transactions/v1/transactions/${encodedTransactionId}/method`,
+    threeDSMethodNotificationURL: `http://localhost:7071/api/v1/transactions/${encodedTransactionId}/method`,
     threeDSServerTransID: "97808490-b371-4f5f-bb9c-5f5de61107d0"
   };
 
