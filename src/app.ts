@@ -1,6 +1,6 @@
 import * as express from "express";
 import { pipe } from "fp-ts/function";
-import { fold, map, right } from "fp-ts/Either";
+import { chain, fold, map, right } from "fp-ts/Either";
 import { encode3ds2MethodData } from "./3ds2";
 import { PaymentResponse } from "./generated/api/PaymentResponse";
 import { Session } from "./generated/api/Session";
@@ -8,7 +8,6 @@ import { TransactionResponse } from "./generated/api/TransactionResponse";
 import { StatusEnum } from "./generated/api/User";
 import { UserResponse } from "./generated/api/UserResponse";
 import { WalletRequest } from "./generated/api/WalletRequest";
-import { WalletResponse } from "./generated/api/WalletResponse";
 import { createResponseWallet } from "./wallet";
 import { sendResponseWithData, tupleWith } from "./utils";
 import { TransactionStatusResponse } from "./generated/api/TransactionStatusResponse";
@@ -131,21 +130,21 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     );
   });
 
-  app.post("/pp-restapi/v4/wallet", async (req, res) => {
+  app.post("/pp-restapi/v4/wallet", async (req, res) =>
     pipe(
       WalletRequest.decode(req.body),
-      map((requestData: WalletRequest) => {
+      chain((requestData: WalletRequest) => {
         const sentWallet = requestData.data;
 
-        return {
-          data: createResponseWallet(sentWallet)
-        };
+        return createResponseWallet(sentWallet);
       }),
-      map(WalletResponse.encode),
+      map((responseWallet: unknown) => ({
+        data: responseWallet
+      })),
       tupleWith(res),
       fold(_e => res.status(500), sendResponseWithData)
-    );
-  });
+    )
+  );
 
   app.get(
     "/api/checkout/payments/v1/browsers/current/info",
