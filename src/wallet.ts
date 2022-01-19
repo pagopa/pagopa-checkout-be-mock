@@ -5,7 +5,7 @@ const censorPan: (pan: string) => string = (rawPan: string) => {
   const pan = rawPan.replace(/ /g, "");
   const [panPrefix, panSuffix] = splitAt(pan.length - 4, pan);
 
-  return panPrefix.replace(/.*/, "*") + panSuffix;
+  return panPrefix.replace(/./g, "*") + panSuffix;
 };
 
 export const createResponseWallet: (wallet: Wallet) => Wallet = (
