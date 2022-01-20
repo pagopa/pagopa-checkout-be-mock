@@ -234,7 +234,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
             idPayment: ID_PAYMENT,
             idStatus: 15,
             idTransaction,
-            methodUrl: "https://3dstest.sia.eu/ACFS_3DS_ACS_GUI/brw/gdi/main",
+            methodUrl: `http://localhost:7071/api/v1/transactions/${idTransaction}/method`,
             paymentOrigin: "IO_PAY",
             statusMessage: "In attesa del metodo 3ds2",
             threeDSMethodData: encode3ds2MethodData(idTransaction)
