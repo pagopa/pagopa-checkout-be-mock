@@ -1,3 +1,15 @@
+/**
+ * 3DS challenge status.
+ * Normal state flow: AwaitingMethod -> AfterMethod -> AwaitingChallenge -> AfterChallenge -> Confirmed
+ */
+export enum Transaction3DSStatus {
+  AwaitingMethod = 15,
+  AfterMethod = 17,
+  AwaitingChallenge = 16,
+  AfterChallenge = 18,
+  Confirmed = 3
+}
+
 export const encode3ds2MethodData: (idTransaction: number) => string = (
   idTransaction: number
 ) => {
