@@ -1,7 +1,8 @@
 import * as express from "express";
 import { pipe } from "fp-ts/function";
 import { chain, fold, map, right } from "fp-ts/Either";
-import { encode3ds2MethodData } from "./3ds2";
+import { createProxyMiddleware } from "http-proxy-middleware";
+import { encode3ds2MethodData, Transaction3DSStatus } from "./3ds2";
 import { PaymentResponse } from "./generated/api/PaymentResponse";
 import { Session } from "./generated/api/Session";
 import { TransactionResponse } from "./generated/api/TransactionResponse";
@@ -245,6 +246,15 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
         fold(_ => res.status(500), sendResponseWithData)
       );
     }
+  );
+
+  app.use(
+    createProxyMiddleware("/api/checkout", {
+      pathRewrite: {
+        "^/api/checkout": "/api/"
+      },
+      target: "http://localhost:7071"
+    })
   );
 
   return app;

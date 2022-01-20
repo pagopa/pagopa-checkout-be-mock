@@ -43,8 +43,10 @@
     "@pagopa/ts-commons": "^10.2.0",
     "express": "^4.17.1",
     "fp-ts": "^2.11.1",
+    "http-proxy-middleware": "^2.0.1",
     "io-ts": "^2.2.16",
     "io-ts-reporters": "^2.0.0",
+    "parcel-bundler": "^1.12.5",
     "winston": "^3.2.1"
   }
 }
