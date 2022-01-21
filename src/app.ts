@@ -13,6 +13,7 @@ import { createResponseWallet } from "./wallet";
 import { sendResponseWithData, tupleWith } from "./utils";
 import { TransactionStatusResponse } from "./generated/api/TransactionStatusResponse";
 import { TransactionStatus } from "./generated/api/TransactionStatus";
+import { pspList } from "./psps";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -335,6 +336,20 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       res.status(200).send();
     }
   );
+
+  app.get("/pp-restapi/v4/psps", async (req, res) => {
+    const { listRequestedParam = "true" } = req.query;
+    const listRequested = listRequestedParam === "true";
+
+    if (!listRequested) {
+      res.status(500);
+      return;
+    }
+
+    res.send({
+      data: pspList
+    });
+  });
 
   app.use(
     createProxyMiddleware("/api/checkout", {
