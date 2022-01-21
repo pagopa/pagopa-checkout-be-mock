@@ -1,6 +1,6 @@
 import * as express from "express";
 import { pipe } from "fp-ts/function";
-import { chain, fold, map, right } from "fp-ts/Either";
+import { fold, map, right } from "fp-ts/Either";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import { encode3ds2MethodData, Transaction3DSStatus } from "./3ds2";
 import { PaymentResponse } from "./generated/api/PaymentResponse";
@@ -144,7 +144,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.post("/pp-restapi/v4/wallet", async (req, res) =>
     pipe(
       WalletRequest.decode(req.body),
-      chain((requestData: WalletRequest) => {
+      map((requestData: WalletRequest) => {
         const sentWallet = requestData.data;
 
         return createResponseWallet(sentWallet);
@@ -362,7 +362,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.put("/pp-restapi/v4/wallet/:id", async (req, res) => {
     pipe(
       WalletRequest.decode(req.body),
-      chain((requestData: WalletRequest) => {
+      map((requestData: WalletRequest) => {
         const sentWallet = requestData.data;
 
         return createUpdateResponseWallet(sentWallet, creditCard);
