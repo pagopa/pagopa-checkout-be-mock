@@ -1,8 +1,8 @@
 {
-  "name": "io-pagopa-pm-mock",
+  "name": "pagopa-checkout-backend-mock",
   "version": "0.0.1",
   "description": "TODO",
-  "repository": "https://github.com/pagopa/io-pagopa-pm-mock",
+  "repository": "https://github.com/pagopa/pagopa-checkout-backend-mock",
   "author": "https://pagopa.gov.it",
   "license": "MIT",
   "scripts": {
