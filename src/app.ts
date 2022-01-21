@@ -9,11 +9,12 @@ import { TransactionResponse } from "./generated/api/TransactionResponse";
 import { StatusEnum } from "./generated/api/User";
 import { UserResponse } from "./generated/api/UserResponse";
 import { WalletRequest } from "./generated/api/WalletRequest";
-import { createResponseWallet } from "./wallet";
+import { createResponseWallet, createUpdateResponseWallet } from "./wallet";
 import { sendResponseWithData, tupleWith } from "./utils";
 import { TransactionStatusResponse } from "./generated/api/TransactionStatusResponse";
 import { TransactionStatus } from "./generated/api/TransactionStatus";
 import { pspList } from "./psps";
+import { CreditCard } from "./generated/api/CreditCard";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -43,13 +44,16 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   let transactionStatus: Transaction3DSStatus =
     Transaction3DSStatus.AwaitingMethod;
 
+  // eslint-disable-next-line functional/no-let
+  let creditCard: CreditCard;
+
   app.use((_req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
       "Access-Control-Allow-Headers",
       "Origin, X-Requested-With, Authorization, Content-Type, Accept"
     );
-    res.header("Access-Control-Allow-Methods", ["GET", "POST"]);
+    res.header("Access-Control-Allow-Methods", ["GET", "POST", "PUT"]);
     next();
   });
 
@@ -143,10 +147,11 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       chain((requestData: WalletRequest) => {
         const sentWallet = requestData.data;
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        creditCard = sentWallet.creditCard!;
-
         return createResponseWallet(sentWallet);
+      }),
+      map((responseWallet: Record<string, unknown>) => {
+        creditCard = responseWallet.creditCard as CreditCard;
+        return responseWallet;
       }),
       map((responseWallet: unknown) => ({
         data: responseWallet
@@ -352,6 +357,22 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     res.send({
       data: pspList
     });
+  });
+
+  app.put("/pp-restapi/v4/wallet/:id", async (req, res) => {
+    pipe(
+      WalletRequest.decode(req.body),
+      chain((requestData: WalletRequest) => {
+        const sentWallet = requestData.data;
+
+        return createUpdateResponseWallet(sentWallet, creditCard);
+      }),
+      map((responseWallet: Record<string, unknown>) => ({
+        data: responseWallet
+      })),
+      tupleWith(res),
+      fold(_e => res.status(500).send(), sendResponseWithData)
+    );
   });
 
   app.use(
