@@ -122,7 +122,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       }),
       map(Session.encode),
       tupleWith(res),
-      fold(_e => res.status(500), sendResponseWithData)
+      fold(_e => res.status(500).send(), sendResponseWithData)
     );
   });
 
@@ -133,7 +133,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       }),
       map(UserResponse.encode),
       tupleWith(res),
-      fold(_e => res.status(500), sendResponseWithData)
+      fold(_e => res.status(500).send(), sendResponseWithData)
     );
   });
 
@@ -143,13 +143,16 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       chain((requestData: WalletRequest) => {
         const sentWallet = requestData.data;
 
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        creditCard = sentWallet.creditCard!;
+
         return createResponseWallet(sentWallet);
       }),
       map((responseWallet: unknown) => ({
         data: responseWallet
       })),
       tupleWith(res),
-      fold(_e => res.status(500), sendResponseWithData)
+      fold(_e => res.status(500).send(), sendResponseWithData)
     )
   );
 
@@ -223,7 +226,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       }),
       map(TransactionResponse.encode),
       tupleWith(res),
-      fold(_ => res.status(500), sendResponseWithData)
+      fold(_ => res.status(500).send(), sendResponseWithData)
     );
   });
 
@@ -325,7 +328,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
         }),
         map(TransactionStatusResponse.encode),
         tupleWith(res),
-        fold(_ => res.status(500), sendResponseWithData)
+        fold(_ => res.status(500).send(), sendResponseWithData)
       );
     }
   );
@@ -342,7 +345,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     const listRequested = listRequestedParam === "true";
 
     if (!listRequested) {
-      res.status(500);
+      res.status(500).send();
       return;
     }
 
