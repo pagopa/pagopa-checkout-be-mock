@@ -354,7 +354,8 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.use(
     createProxyMiddleware("/api/checkout", {
       pathRewrite: {
-        "^/api/checkout": "/api/"
+        "^/api/checkout": "/api",
+        "^/api/payments": "/api"
       },
       target: "http://localhost:7071"
     })
