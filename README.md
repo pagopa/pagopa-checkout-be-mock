@@ -7,7 +7,7 @@
    * [Running with docker and docker-compose](#running-with-docker-and-docker-compose)
    * [Running without docker](#running-without-docker)
 
-Mock of backend services use by pagopa Checkout.
+Mock of backend services used by pagopa Checkout.
 
 ## Prerequisites
 
