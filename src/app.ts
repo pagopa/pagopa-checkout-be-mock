@@ -83,7 +83,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
         "^/api/checkout": "/api",
         "^/api/payments": "/api"
       },
-      target: "http://localhost:7071"
+      target: `http://${process.env.PAGOPA_FUNCTIONS_CHECKOUT_HOST}:${process.env.PAGOPA_FUNCTIONS_CHECKOUT_PORT}`
     })
   );
 
