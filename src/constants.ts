@@ -1,5 +1,29 @@
-import { LinguaEnum } from "./generated/api/Psp";
+import { StatusEnum } from "./generated/api/User";
 import { PspListResponseData } from "./generated/api/PspListResponseData";
+import { LinguaEnum } from "./generated/api/Psp";
+
+export const ID_PAYMENT = "e1283f0e673b4789a2af87fd9b4043f4";
+
+export const USER_DATA = {
+  cellphone: "+39 333 3333333",
+  email: "john.doe@gmail.com",
+  fiscalCode: "JHNDOE00A01F205N",
+  name: "John",
+  surname: "Doe"
+};
+
+export type IUserData = typeof USER_DATA;
+
+export const SESSION_USER = {
+  email: USER_DATA.email,
+  fiscalCode: USER_DATA.fiscalCode,
+  notificationEmail: USER_DATA.email,
+  registered: false,
+  status: "ANONYMOUS" as StatusEnum,
+  userId: 39624
+};
+
+export type ISessionUser = typeof SESSION_USER;
 
 export const pspList: PspListResponseData = {
   myBankSellerBankList: [],
