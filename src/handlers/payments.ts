@@ -137,3 +137,7 @@ export const pay3ds2Handler: (userData: IUserData) => RequestHandler = (
     fold(_ => res.status(500).send(), sendResponseWithData)
   );
 };
+
+export const cancelPayment: RequestHandler = async (_req, res) => {
+  res.status(200).send();
+};

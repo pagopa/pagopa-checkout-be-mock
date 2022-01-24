@@ -1,6 +1,10 @@
 import * as express from "express";
 import { createProxyMiddleware } from "http-proxy-middleware";
-import { pay3ds2Handler, paymentCheckHandler } from "./handlers/payments";
+import {
+  cancelPayment,
+  pay3ds2Handler,
+  paymentCheckHandler
+} from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
 import { updateWalletHandler, walletHandler } from "./handlers/wallet";
 import {
@@ -20,7 +24,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       "Access-Control-Allow-Headers",
       "Origin, X-Requested-With, Authorization, Content-Type, Accept"
     );
-    res.header("Access-Control-Allow-Methods", ["GET", "POST", "PUT"]);
+    res.header("Access-Control-Allow-Methods", [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE"
+    ]);
     next();
   });
 
@@ -56,6 +65,8 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     "/pp-restapi/v4/transactions/:id/actions/check",
     checkTransactionHandler(ID_PAYMENT)
   );
+
+  app.delete("/pp-restapi/v4/payments/:id/actions/delete", cancelPayment);
 
   app.post(
     "/pp-restapi/v4/transactions/:transactionData/actions/resume3ds2",
