@@ -1,9 +1,9 @@
 import * as express from "express";
-import { createProxyMiddleware } from "http-proxy-middleware";
 import {
   cancelPayment,
   pay3ds2Handler,
-  paymentCheckHandler
+  paymentCheckHandler,
+  paymentRequestHandler
 } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
 import { updateWalletHandler, walletHandler } from "./handlers/wallet";
@@ -77,14 +77,23 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   app.put("/pp-restapi/v4/wallet/:id", updateWalletHandler);
 
-  app.use(
-    createProxyMiddleware("/api/checkout", {
-      pathRewrite: {
-        "^/api/checkout": "/api",
-        "^/api/payments": "/api"
-      },
-      target: `http://${process.env.PAGOPA_FUNCTIONS_CHECKOUT_HOST}:${process.env.PAGOPA_FUNCTIONS_CHECKOUT_PORT}`
-    })
+  app.get(
+    "/checkout/payments/v1/payment-requests/:rptId",
+    paymentRequestHandler(ID_PAYMENT)
+  );
+
+  app.post(
+    "/checkout/payments/v1/payment-activations",
+    paymentRequestHandler(ID_PAYMENT)
+  );
+
+  app.get(
+    "/checkout/payments/v1/payment-activations/:codiceContestoPagamento",
+    async (_req, res) => {
+      res.send({
+        idPagamento: ID_PAYMENT
+      });
+    }
   );
 
   return app;

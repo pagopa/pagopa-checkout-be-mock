@@ -51,6 +51,7 @@ export const paymentCheckHandler: (
         isCancelled: false,
         origin: "WALLET_APP",
         receiver: "EC_TE",
+        // eslint-disable-next-line sonarjs/no-duplicate-string
         subject: "TARI/TEFA 2021",
         urlRedirectEc:
           "http://pagopamock.pagopa.hq/esito.php?idSession=e1283f0e673b4789a2af87fd9b4043f4"
@@ -140,4 +141,22 @@ export const pay3ds2Handler: (userData: IUserData) => RequestHandler = (
 
 export const cancelPayment: RequestHandler = async (_req, res) => {
   res.status(200).send();
+};
+
+export const paymentRequestHandler: (
+  codiceContestoPagamento: string
+) => RequestHandler = codiceContestoPagamento => async (
+  _req,
+  res
+): Promise<void> => {
+  res.status(200).send({
+    causaleVersamento: "TARI/TEFA 2021",
+    codiceContestoPagamento,
+    enteBeneficiario: {
+      denominazioneBeneficiario: "EC_TE",
+      identificativoUnivocoBeneficiario: "77777777777"
+    },
+    ibanAccredito: "IT21Q0760101600000000546200",
+    importoSingoloVersamento: 12000
+  });
 };
