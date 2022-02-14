@@ -10,7 +10,7 @@ App.newExpressApp()
 
     for (const port of listeningPorts) {
       const server = http.createServer(app);
-      server.listen(port, "0.0.0.0");
+      server.listen(port);
     }
   })
   .catch(error => {
