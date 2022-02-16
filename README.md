@@ -38,7 +38,13 @@ You can run the mock either with or without docker-compose.
 
 ### Running with docker and docker-compose
 
-Just run
+Build the package and the docker image with
+
+```shell
+$ yarn build && docker-compose build
+```
+
+then
 
 ```shell
 $ docker-compose up
@@ -47,7 +53,13 @@ $ docker-compose up
 in the repo root.
 
 ### Running without docker
-If for some reason you don't want to run the project with docker, you can use this one-liner:
+Build the package with
+
+```shell
+$ yarn build
+```
+
+then, if for some reason you don't want to run the project with docker, you can use this one-liner:
 
 ```shell
 $  (export $(grep -v '^#' .env | xargs) && yarn start)
