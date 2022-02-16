@@ -1,4 +1,6 @@
 import * as express from "express";
+import * as O from "fp-ts/lib/Option";
+import { pipe } from "fp-ts/function";
 import {
   cancelPayment,
   pay3ds2Handler,
@@ -16,6 +18,8 @@ import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
 
 export const newExpressApp: () => Promise<Express.Application> = async () => {
   const app = express();
+  const router = express.Router();
+
   app.use(express.json());
 
   app.use((_req, res, next) => {
@@ -39,55 +43,72 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     });
   });
 
-  app.get(
+  app.use(router);
+
+  router.use((req, res, next) => {
+    pipe(
+      req.header("Authorization"),
+      O.fromNullable,
+      O.fold(
+        () => {
+          res.status(401).send();
+        },
+        _authorization => {
+          next();
+        }
+      )
+    );
+  });
+
+  router.get(
     "/pp-restapi/v4/payments/:id/actions/check",
     paymentCheckHandler(ID_PAYMENT, USER_DATA)
   );
 
-  app.post(
+  router.post(
     "/pp-restapi/v4/users/actions/start-session",
     startSessionHandler(ID_PAYMENT, SESSION_USER)
   );
 
-  app.post(
+  router.post(
     "/pp-restapi/v4/users/actions/approve-terms",
     approveTermsHandler(SESSION_USER)
   );
 
-  app.post("/pp-restapi/v4/wallet", walletHandler);
+  router.post("/pp-restapi/v4/wallet", walletHandler);
 
-  app.post(
+  router.post(
     "/pp-restapi/v4/payments/:id/actions/pay3ds2",
     pay3ds2Handler(USER_DATA)
   );
 
-  app.get(
+  router.get(
     "/pp-restapi/v4/transactions/:id/actions/check",
     checkTransactionHandler(ID_PAYMENT)
   );
 
-  app.delete("/pp-restapi/v4/payments/:id/actions/delete", cancelPayment);
+  router.delete("/pp-restapi/v4/payments/:id/actions/delete", cancelPayment);
 
-  app.post(
+  router.post(
     "/pp-restapi/v4/transactions/:transactionData/actions/resume3ds2",
     resume3ds2Handler
   );
 
-  app.get("/pp-restapi/v4/psps", getPspListHandler);
+  router.get("/pp-restapi/v4/psps", getPspListHandler);
 
-  app.put("/pp-restapi/v4/wallet/:id", updateWalletHandler);
+  router.put("/pp-restapi/v4/wallet/:id", updateWalletHandler);
 
-  app.get(
+  router.get(
     "/checkout/payments/v1/payment-requests/:rptId",
     paymentRequestHandler(ID_PAYMENT)
   );
 
-  app.post(
+  router.post(
     "/checkout/payments/v1/payment-activations",
     paymentRequestHandler(ID_PAYMENT)
   );
 
-  app.get(
+  router.get(
     "/checkout/payments/v1/payment-activations/:codiceContestoPagamento",
     async (_req, res) => {
       res.send({
