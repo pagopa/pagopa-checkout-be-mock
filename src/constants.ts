@@ -15,6 +15,7 @@ export const USER_DATA = {
 export type IUserData = typeof USER_DATA;
 
 export const SESSION_USER = {
+  acceptTerms: true,
   email: USER_DATA.email,
   fiscalCode: USER_DATA.fiscalCode,
   notificationEmail: USER_DATA.email,
