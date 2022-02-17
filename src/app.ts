@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as O from "fp-ts/lib/Option";
 import { pipe } from "fp-ts/function";
+import { toExpressHandler } from "@pagopa/ts-commons/lib/express";
 import {
   cancelPayment,
   pay3ds2Handler,
@@ -67,7 +68,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.post(
     "/pp-restapi/v4/users/actions/start-session",
-    startSessionHandler(ID_PAYMENT, SESSION_USER)
+    toExpressHandler(startSessionHandler(ID_PAYMENT, SESSION_USER))
   );
 
   router.post(

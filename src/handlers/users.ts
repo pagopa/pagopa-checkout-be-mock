@@ -1,32 +1,65 @@
 import { pipe } from "fp-ts/function";
 import * as E from "fp-ts/Either";
 import { RequestHandler } from "express";
+import {
+  ResponseErrorForbiddenAnonymousUser,
+  ResponseErrorFromValidationErrors,
+  ResponseErrorInternal,
+  ResponseSuccessJson
+} from "@pagopa/ts-commons/lib/responses";
+import * as t from "io-ts";
 import { UserResponse } from "../generated/api/UserResponse";
 import { sendResponseWithData, tupleWith } from "../utils/utils";
-import { Session } from "../generated/api/Session";
 import { ISessionUser } from "../constants";
+import { StartSessionUsingPOSTT } from "../generated/api/requestTypes";
+import { StartSessionRequest } from "../generated/api/StartSessionRequest";
+import {
+  EndpointController,
+  EndpointHandler,
+  HandlerResponseType
+} from "../utils/types";
+import { Session } from "../generated/api/Session";
 
-export const startSessionHandler: (
+export const startSessionController: (
   idPayment: string,
   sessionUser: ISessionUser
-) => RequestHandler = (
-  idPayment: string,
-  sessionUser: Record<string, unknown>
-): RequestHandler => async (_req, res): Promise<void> => {
-  pipe(
-    E.right({
+) => EndpointController<StartSessionUsingPOSTT> = (idPayment, sessionUser) => ({
+  startSessionRequest
+}): HandlerResponseType<StartSessionUsingPOSTT> => {
+  if (startSessionRequest.data.email === "403@example.com") {
+    return ResponseErrorForbiddenAnonymousUser;
+  } else if (startSessionRequest.data.email === "500@example.com") {
+    return ResponseErrorInternal("Mock – Internal server error");
+  } else {
+    const response: Session = {
       idPayment,
       sessionToken:
         "7c5G9d5o6W1v8p6S3a4z3N1c8q3A9p9c2M6p0v8D4t9c3G1s2c0N7w4o2K5o6q9P6i0p9H1d4z7G0a8n0L7a6n2J3c0n1S8h6j7G5w8u4G0s0b3U3x4n0V0d2m0E7m8e",
       user: {
         ...sessionUser
       }
-    }),
-    E.map(Session.encode),
-    tupleWith(res),
-    E.fold(_e => res.status(500).send(), sendResponseWithData)
-  );
+    };
+    return ResponseSuccessJson(response);
+  }
 };
+
+export const startSessionHandler = (
+  idPayment: string,
+  sessionUser: ISessionUser
+): EndpointHandler<StartSessionUsingPOSTT> => async (
+  req
+): Promise<HandlerResponseType<StartSessionUsingPOSTT>> =>
+  pipe(
+    req.body,
+    StartSessionRequest.decode,
+    E.mapLeft<t.Errors, HandlerResponseType<StartSessionUsingPOSTT>>(
+      ResponseErrorFromValidationErrors(StartSessionRequest)
+    ),
+    E.map(startSessionRequest =>
+      startSessionController(idPayment, sessionUser)({ startSessionRequest })
+    ),
+    E.getOrElse(t.identity)
+  );
 
 export const approveTermsHandler: (
   sessionUser: ISessionUser

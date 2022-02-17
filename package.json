@@ -18,7 +18,7 @@
     "clean:yaml-files": "rimraf generated/yaml-file/*.yaml",
     "clean:ts-from-yaml": "rimraf src/generated/api",
     "generate": "npm-run-all -s generate:ts-from-yaml:*",
-    "generate:ts-from-yaml:api": "shx mkdir -p src/generated/api && rimraf src/generated/api/* && gen-api-models --strict 0 --api-spec ./api.yaml --out-dir src/generated/api"
+    "generate:ts-from-yaml:api": "shx mkdir -p src/generated/api && rimraf src/generated/api/* && gen-api-models --strict 0 --api-spec ./api.yaml --out-dir src/generated/api --request-types"
   },
   "devDependencies": {
     "@pagopa/eslint-config": "^1.3.1",
