@@ -7,7 +7,7 @@ import {
   pay3ds2Handler,
   activatePaymentHandler,
   paymentCheckHandler,
-  verifyPaymentHandler
+  getPaymentInfoHandler
 } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
 import { updateWalletHandler, walletHandler } from "./handlers/wallet";
@@ -102,7 +102,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.get(
     "/checkout/payments/v1/payment-requests/:rptId",
-    verifyPaymentHandler(ID_PAYMENT)
+    toExpressHandler(getPaymentInfoHandler(ID_PAYMENT))
   );
 
   router.post(

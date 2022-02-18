@@ -1,10 +1,23 @@
 import { pipe } from "fp-ts/function";
-import { fold, map, right } from "fp-ts/Either";
 import { RequestHandler } from "express";
+import * as E from "fp-ts/lib/Either";
+import * as t from "io-ts";
+import { ResponseSuccessJson } from "@pagopa/ts-commons/lib/responses";
 import { PaymentResponse } from "../generated/payment_manager/PaymentResponse";
 import { sendResponseWithData, tupleWith } from "../utils/utils";
 import { TransactionResponse } from "../generated/payment_manager/TransactionResponse";
 import { IUserData } from "../constants";
+import {
+  EndpointController,
+  EndpointHandler,
+  HandlerResponseType,
+  ResponsePaymentError
+} from "../utils/types";
+import { GetPaymentInfoT } from "../generated/pagopa_proxy/requestTypes";
+import { RptId } from "../generated/pagopa_proxy/RptId";
+import { PaymentRequestsGetResponse } from "../generated/pagopa_proxy/PaymentRequestsGetResponse";
+import { PaymentFaultV2Enum } from "../generated/pagopa_proxy/PaymentFaultV2";
+import { PaymentFaultEnum } from "../generated/pagopa_proxy/PaymentFault";
 
 export const paymentCheckHandler: (
   idPayment: string,
@@ -14,7 +27,7 @@ export const paymentCheckHandler: (
   res
 ): Promise<void> => {
   pipe(
-    right({
+    E.right({
       data: {
         amount: {
           amount: 12000,
@@ -57,9 +70,9 @@ export const paymentCheckHandler: (
           "http://pagopamock.pagopa.hq/esito.php?idSession=e1283f0e673b4789a2af87fd9b4043f4"
       }
     }),
-    map(PaymentResponse.encode),
+    E.map(PaymentResponse.encode),
     tupleWith(res),
-    fold(_ => res.send(500), sendResponseWithData)
+    E.fold(_ => res.send(500), sendResponseWithData)
   );
 };
 
@@ -67,7 +80,7 @@ export const pay3ds2Handler: (userData: IUserData) => RequestHandler = (
   userData: IUserData
 ) => async (_req, res): Promise<void> => {
   pipe(
-    right({
+    E.right({
       data: {
         amount: {
           amount: 12000,
@@ -133,9 +146,9 @@ export const pay3ds2Handler: (userData: IUserData) => RequestHandler = (
           "https://acardste.vaservices.eu/wallet/checkout?id=NzA5MDEwNjczMg=="
       }
     }),
-    map(TransactionResponse.encode),
+    E.map(TransactionResponse.encode),
     tupleWith(res),
-    fold(_ => res.status(500).send(), sendResponseWithData)
+    E.fold(_ => res.status(500).send(), sendResponseWithData)
   );
 };
 
@@ -143,13 +156,12 @@ export const cancelPayment: RequestHandler = async (_req, res) => {
   res.status(200).send();
 };
 
-export const verifyPaymentHandler: (
+export const getPaymentInfoController: (
   codiceContestoPagamento: string
-) => RequestHandler = codiceContestoPagamento => async (
-  _req,
-  res
-): Promise<void> => {
-  res.status(200).send({
+) => EndpointController<GetPaymentInfoT> = codiceContestoPagamento => (
+  _params
+): HandlerResponseType<GetPaymentInfoT> => {
+  const response = {
     causaleVersamento: "TARI/TEFA 2021",
     codiceContestoPagamento,
     enteBeneficiario: {
@@ -158,14 +170,51 @@ export const verifyPaymentHandler: (
     },
     ibanAccredito: "IT21Q0760101600000000546200",
     importoSingoloVersamento: 12000
-  });
+  };
+  return pipe(
+    response,
+    PaymentRequestsGetResponse.decode,
+    E.mapLeft<t.Errors, HandlerResponseType<GetPaymentInfoT>>(_ =>
+      ResponsePaymentError(
+        PaymentFaultEnum.GENERIC_ERROR,
+        PaymentFaultV2Enum.GENERIC_ERROR
+      )
+    ),
+    E.map(ResponseSuccessJson),
+    E.getOrElse(t.identity)
+  );
 };
 
+export const getPaymentInfoHandler = (
+  codiceContestoPagamento: string
+): EndpointHandler<GetPaymentInfoT> => async (
+  req
+): Promise<HandlerResponseType<GetPaymentInfoT>> =>
+  pipe(
+    req.params.rptId,
+    RptId.decode,
+    // eslint-disable-next-line sonarjs/no-identical-functions
+    E.mapLeft<t.Errors, HandlerResponseType<GetPaymentInfoT>>(_ =>
+      ResponsePaymentError(
+        PaymentFaultEnum.GENERIC_ERROR,
+        PaymentFaultV2Enum.GENERIC_ERROR
+      )
+    ),
+    E.map(rptId =>
+      getPaymentInfoController(codiceContestoPagamento)({
+        rpt_id_from_string: rptId,
+        "x-Client-Id": ""
+      })
+    ),
+    E.getOrElse(t.identity)
+  );
 export const activatePaymentHandler: (
   codiceContestoPagamento: string
-) => RequestHandler = codiceContestoPagamento => async (
+) => // eslint-disable-next-line sonarjs/no-identical-functions
+RequestHandler = codiceContestoPagamento => async (
   _req,
   res
+  // eslint-disable-next-line sonarjs/no-identical-functions
 ): Promise<void> => {
   res.status(200).send({
     causaleVersamento: "TARI/TEFA 2021",

@@ -2,7 +2,6 @@ import { pipe } from "fp-ts/function";
 import * as E from "fp-ts/Either";
 import { RequestHandler } from "express";
 import {
-  ResponseErrorForbiddenAnonymousUser,
   ResponseErrorFromValidationErrors,
   ResponseErrorInternal,
   ResponseSuccessJson
@@ -26,9 +25,7 @@ export const startSessionController: (
 ) => EndpointController<StartSessionUsingPOSTT> = (idPayment, sessionUser) => ({
   startSessionRequest
 }): HandlerResponseType<StartSessionUsingPOSTT> => {
-  if (startSessionRequest.data.email === "403@example.com") {
-    return ResponseErrorForbiddenAnonymousUser;
-  } else if (startSessionRequest.data.email === "500@example.com") {
+  if (startSessionRequest.data.email === "500@example.com") {
     return ResponseErrorInternal("Mock – Internal server error");
   } else {
     const response: Session = {
