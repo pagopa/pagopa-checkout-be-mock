@@ -8,17 +8,17 @@ import {
   ResponseSuccessJson
 } from "@pagopa/ts-commons/lib/responses";
 import * as t from "io-ts";
-import { UserResponse } from "../generated/api/UserResponse";
+import { UserResponse } from "../generated/payment_manager/UserResponse";
 import { sendResponseWithData, tupleWith } from "../utils/utils";
 import { ISessionUser } from "../constants";
-import { StartSessionUsingPOSTT } from "../generated/api/requestTypes";
-import { StartSessionRequest } from "../generated/api/StartSessionRequest";
+import { StartSessionUsingPOSTT } from "../generated/payment_manager/requestTypes";
+import { StartSessionRequest } from "../generated/payment_manager/StartSessionRequest";
 import {
   EndpointController,
   EndpointHandler,
   HandlerResponseType
 } from "../utils/types";
-import { Session } from "../generated/api/Session";
+import { Session } from "../generated/payment_manager/Session";
 
 export const startSessionController: (
   idPayment: string,

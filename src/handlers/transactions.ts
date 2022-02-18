@@ -2,8 +2,8 @@ import { pipe } from "fp-ts/function";
 import { fold, map, right } from "fp-ts/Either";
 import { RequestHandler } from "express";
 import { encode3ds2MethodData, Transaction3DSStatus } from "../utils/3ds2";
-import { TransactionStatus } from "../generated/api/TransactionStatus";
-import { TransactionStatusResponse } from "../generated/api/TransactionStatusResponse";
+import { TransactionStatus } from "../generated/payment_manager/TransactionStatus";
+import { TransactionStatusResponse } from "../generated/payment_manager/TransactionStatusResponse";
 import { sendResponseWithData, tupleWith } from "../utils/utils";
 
 // eslint-disable-next-line functional/no-let

@@ -1,5 +1,5 @@
-import { Wallet } from "../generated/api/Wallet";
-import { CreditCard } from "../generated/api/CreditCard";
+import { Wallet } from "../generated/payment_manager/Wallet";
+import { CreditCard } from "../generated/payment_manager/CreditCard";
 import { splitAt } from "./utils";
 
 const censorPan: (pan: string) => string = (rawPan: string) => {

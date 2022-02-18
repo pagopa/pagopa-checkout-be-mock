@@ -1,6 +1,6 @@
-import { StatusEnum } from "./generated/api/User";
-import { PspListResponseData } from "./generated/api/PspListResponseData";
-import { LinguaEnum } from "./generated/api/Psp";
+import { StatusEnum } from "./generated/payment_manager/User";
+import { PspListResponseData } from "./generated/payment_manager/PspListResponseData";
+import { LinguaEnum } from "./generated/payment_manager/Psp";
 
 export const ID_PAYMENT = "e1283f0e673b4789a2af87fd9b4043f4";
 

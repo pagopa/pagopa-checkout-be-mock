@@ -1,9 +1,9 @@
 import { pipe } from "fp-ts/function";
 import { fold, map, right } from "fp-ts/Either";
 import { RequestHandler } from "express";
-import { PaymentResponse } from "../generated/api/PaymentResponse";
+import { PaymentResponse } from "../generated/payment_manager/PaymentResponse";
 import { sendResponseWithData, tupleWith } from "../utils/utils";
-import { TransactionResponse } from "../generated/api/TransactionResponse";
+import { TransactionResponse } from "../generated/payment_manager/TransactionResponse";
 import { IUserData } from "../constants";
 
 export const paymentCheckHandler: (

@@ -1,12 +1,12 @@
 import { pipe } from "fp-ts/function";
 import { fold, map } from "fp-ts/Either";
 import { RequestHandler } from "express";
-import { WalletRequest } from "../generated/api/WalletRequest";
+import { WalletRequest } from "../generated/payment_manager/WalletRequest";
 import {
   createResponseWallet,
   createUpdateResponseWallet
 } from "../utils/wallet";
-import { CreditCard } from "../generated/api/CreditCard";
+import { CreditCard } from "../generated/payment_manager/CreditCard";
 import { sendResponseWithData, tupleWith } from "../utils/utils";
 
 // eslint-disable-next-line functional/no-let
