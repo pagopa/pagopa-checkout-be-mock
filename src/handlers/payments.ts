@@ -143,7 +143,25 @@ export const cancelPayment: RequestHandler = async (_req, res) => {
   res.status(200).send();
 };
 
-export const paymentRequestHandler: (
+export const verifyPaymentHandler: (
+  codiceContestoPagamento: string
+) => RequestHandler = codiceContestoPagamento => async (
+  _req,
+  res
+): Promise<void> => {
+  res.status(200).send({
+    causaleVersamento: "TARI/TEFA 2021",
+    codiceContestoPagamento,
+    enteBeneficiario: {
+      denominazioneBeneficiario: "EC_TE",
+      identificativoUnivocoBeneficiario: "77777777777"
+    },
+    ibanAccredito: "IT21Q0760101600000000546200",
+    importoSingoloVersamento: 12000
+  });
+};
+
+export const activatePaymentHandler: (
   codiceContestoPagamento: string
 ) => RequestHandler = codiceContestoPagamento => async (
   _req,

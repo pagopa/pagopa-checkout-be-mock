@@ -5,8 +5,9 @@ import { toExpressHandler } from "@pagopa/ts-commons/lib/express";
 import {
   cancelPayment,
   pay3ds2Handler,
+  activatePaymentHandler,
   paymentCheckHandler,
-  paymentRequestHandler
+  verifyPaymentHandler
 } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
 import { updateWalletHandler, walletHandler } from "./handlers/wallet";
@@ -101,12 +102,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.get(
     "/checkout/payments/v1/payment-requests/:rptId",
-    paymentRequestHandler(ID_PAYMENT)
+    verifyPaymentHandler(ID_PAYMENT)
   );
 
   router.post(
     "/checkout/payments/v1/payment-activations",
-    paymentRequestHandler(ID_PAYMENT)
+    activatePaymentHandler(ID_PAYMENT)
   );
 
   router.get(
