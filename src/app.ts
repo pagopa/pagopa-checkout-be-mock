@@ -1,6 +1,4 @@
 import * as express from "express";
-import * as O from "fp-ts/lib/Option";
-import { pipe } from "fp-ts/function";
 import { toExpressHandler } from "@pagopa/ts-commons/lib/express";
 import * as cookieParser from "cookie-parser";
 import {
@@ -48,21 +46,6 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   });
 
   app.use(router);
-
-  router.use((req, res, next) => {
-    pipe(
-      req.header("Authorization"),
-      O.fromNullable,
-      O.fold(
-        () => {
-          res.status(401).send();
-        },
-        _authorization => {
-          next();
-        }
-      )
-    );
-  });
 
   router.get(
     "/pp-restapi/v4/payments/:id/actions/check",
