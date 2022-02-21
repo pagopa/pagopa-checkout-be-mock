@@ -2,7 +2,8 @@ import * as O from "fp-ts/lib/Option";
 
 export enum FlowCase {
   OK,
-  FAIL_ACTIVATE_500
+  FAIL_ACTIVATE_500,
+  FAIL_ACTIVATE_424
 }
 
 export const getFlowFromRptId: (

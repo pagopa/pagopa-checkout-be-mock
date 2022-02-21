@@ -1,4 +1,5 @@
 import { pipe } from "fp-ts/function";
+import * as express from "express";
 import { RequestHandler } from "express";
 import * as E from "fp-ts/lib/Either";
 import * as O from "fp-ts/lib/Option";
@@ -7,7 +8,6 @@ import {
   ResponseErrorInternal,
   ResponseSuccessJson
 } from "@pagopa/ts-commons/lib/responses";
-import * as express from "express";
 import { PathReporter } from "io-ts/PathReporter";
 import { PaymentResponse } from "../generated/payment_manager/PaymentResponse";
 import { sendResponseWithData, tupleWith } from "../utils/utils";
@@ -240,7 +240,8 @@ const activatePaymentController: (
 
   const flowId = getFlowFromRptId(params.body.rptId);
   const isModifiedFlow = O.fromPredicate(
-    (flow: FlowCase) => flow === FlowCase.FAIL_ACTIVATE_500
+    (flow: FlowCase) =>
+      flow === FlowCase.FAIL_ACTIVATE_500 || flow === FlowCase.FAIL_ACTIVATE_424
   );
 
   return pipe(
@@ -266,7 +267,18 @@ const activatePaymentController: (
           E.map(ResponseSuccessJson),
           E.getOrElse(t.identity)
         ),
-      flow => ResponseErrorInternal(`Mock – Failure case ${FlowCase[flow]}`)
+      flow => {
+        if (flow === FlowCase.FAIL_ACTIVATE_500) {
+          return ResponseErrorInternal(`Mock – Failure case ${FlowCase[flow]}`);
+        } else if (flow === FlowCase.FAIL_ACTIVATE_424) {
+          return ResponsePaymentError(
+            PaymentFaultEnum.GENERIC_ERROR,
+            PaymentFaultV2Enum.GENERIC_ERROR
+          );
+        } else {
+          throw new Error("Bug – Unhandled flow case");
+        }
+      }
     )
   );
 };
