@@ -28,7 +28,12 @@ import { PaymentRequestsGetResponse } from "../generated/pagopa_proxy/PaymentReq
 import { PaymentFaultV2Enum } from "../generated/pagopa_proxy/PaymentFaultV2";
 import { PaymentFaultEnum } from "../generated/pagopa_proxy/PaymentFault";
 import { PaymentActivationsPostRequest } from "../generated/pagopa_proxy/PaymentActivationsPostRequest";
-import { FlowCase, getFlowFromRptId } from "../flow";
+import {
+  FlowCase,
+  getFlowCookie,
+  getFlowFromRptId,
+  setFlowCookie
+} from "../flow";
 import { PaymentActivationsPostResponse } from "../generated/pagopa_proxy/PaymentActivationsPostResponse";
 import { logger } from "../logger";
 
@@ -218,10 +223,8 @@ export const getPaymentInfoHandler = (
       pipe(
         rptId,
         getFlowFromRptId,
-        O.fold(
-          () => res.cookie("mockFlow", FlowCase.OK),
-          id => res.cookie("mockFlow", id)
-        )
+        O.getOrElse(() => FlowCase.OK),
+        flow => setFlowCookie(res, flow)
       );
 
       return getPaymentInfoController(codiceContestoPagamento)({
@@ -236,7 +239,7 @@ export const getPaymentInfoHandler = (
 };
 
 const activatePaymentController: (
-  flowId: O.Option<FlowCase>
+  flowId: FlowCase
 ) => EndpointController<ActivatePaymentT> = flowId => (
   params
 ): HandlerResponseType<ActivatePaymentT> => {
@@ -251,13 +254,13 @@ const activatePaymentController: (
     importoSingoloVersamento: params.body.importoSingoloVersamento
   };
 
+  const isModifiedFlow = O.fromPredicate(
+    flow =>
+      flow === FlowCase.FAIL_ACTIVATE_500 || flow === FlowCase.FAIL_ACTIVATE_424
+  );
+
   return pipe(
-    flowId,
-    O.filter(
-      flow =>
-        flow === FlowCase.FAIL_ACTIVATE_500 ||
-        flow === FlowCase.FAIL_ACTIVATE_424
-    ),
+    isModifiedFlow(flowId),
     O.fold(
       () =>
         pipe(
@@ -296,11 +299,7 @@ const activatePaymentController: (
 export const activatePaymentHandler = (): EndpointHandler<ActivatePaymentT> => async (
   req
 ): Promise<HandlerResponseType<ActivatePaymentT>> => {
-  const flowId = pipe(
-    O.fromNullable(req.cookies.mockFlow),
-    O.map(id => Number(id)),
-    O.filter(id => id in FlowCase)
-  );
+  const flowId = getFlowCookie(req);
 
   return pipe(
     req.body,
