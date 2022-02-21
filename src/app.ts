@@ -87,12 +87,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.get(
     "/checkout/payments/v1/payment-requests/:rptId",
-    toExpressHandler(getPaymentInfoHandler(ID_PAYMENT))
+    getPaymentInfoHandler(ID_PAYMENT)
   );
 
   router.post(
     "/checkout/payments/v1/payment-activations",
-    activatePaymentHandler()
+    toExpressHandler(activatePaymentHandler())
   );
 
   router.get(

@@ -200,10 +200,11 @@ export const getPaymentInfoController: (
 
 export const getPaymentInfoHandler = (
   codiceContestoPagamento: string
-): EndpointHandler<GetPaymentInfoT> => async (
-  req
-): Promise<HandlerResponseType<GetPaymentInfoT>> =>
-  pipe(
+): ((req: express.Request, res: express.Response) => Promise<void>) => async (
+  req,
+  res
+): Promise<void> => {
+  const responseContent = pipe(
     req.params.rptId,
     RptId.decode,
     // eslint-disable-next-line sonarjs/no-identical-functions
@@ -213,18 +214,30 @@ export const getPaymentInfoHandler = (
         PaymentFaultV2Enum.GENERIC_ERROR
       )
     ),
-    E.map(rptId =>
-      getPaymentInfoController(codiceContestoPagamento)({
+    E.map(rptId => {
+      pipe(
+        rptId,
+        getFlowFromRptId,
+        O.fold(
+          () => res.cookie("mockFlow", FlowCase.OK),
+          id => res.cookie("mockFlow", id)
+        )
+      );
+
+      return getPaymentInfoController(codiceContestoPagamento)({
         rpt_id_from_string: rptId,
         "x-Client-Id": ""
-      })
-    ),
+      });
+    }),
     E.getOrElse(t.identity)
   );
 
+  responseContent.apply(res);
+};
+
 const activatePaymentController: (
-  res: express.Response
-) => EndpointController<ActivatePaymentT> = res => (
+  flowId: O.Option<FlowCase>
+) => EndpointController<ActivatePaymentT> = flowId => (
   params
 ): HandlerResponseType<ActivatePaymentT> => {
   const response = {
@@ -238,19 +251,13 @@ const activatePaymentController: (
     importoSingoloVersamento: params.body.importoSingoloVersamento
   };
 
-  const flowId = getFlowFromRptId(params.body.rptId);
-  const isModifiedFlow = O.fromPredicate(
-    (flow: FlowCase) =>
-      flow === FlowCase.FAIL_ACTIVATE_500 || flow === FlowCase.FAIL_ACTIVATE_424
-  );
-
   return pipe(
     flowId,
-    O.map(flow => {
-      res.cookie("mockFlow", flow);
-      return flow;
-    }),
-    O.chain(isModifiedFlow),
+    O.filter(
+      flow =>
+        flow === FlowCase.FAIL_ACTIVATE_500 ||
+        flow === FlowCase.FAIL_ACTIVATE_424
+    ),
     O.fold(
       () =>
         pipe(
@@ -268,26 +275,34 @@ const activatePaymentController: (
           E.getOrElse(t.identity)
         ),
       flow => {
-        if (flow === FlowCase.FAIL_ACTIVATE_500) {
-          return ResponseErrorInternal(`Mock – Failure case ${FlowCase[flow]}`);
-        } else if (flow === FlowCase.FAIL_ACTIVATE_424) {
-          return ResponsePaymentError(
-            PaymentFaultEnum.GENERIC_ERROR,
-            PaymentFaultV2Enum.GENERIC_ERROR
-          );
-        } else {
-          throw new Error("Bug – Unhandled flow case");
+        switch (flow) {
+          case FlowCase.FAIL_ACTIVATE_500:
+            return ResponseErrorInternal(
+              `Mock – Failure case ${FlowCase[flow]}`
+            );
+          case FlowCase.FAIL_ACTIVATE_424:
+            return ResponsePaymentError(
+              PaymentFaultEnum.GENERIC_ERROR,
+              PaymentFaultV2Enum.GENERIC_ERROR
+            );
+          default:
+            throw new Error("Bug – Unhandled flow case");
         }
       }
     )
   );
 };
 
-export const activatePaymentHandler = (): ((
-  req: express.Request,
-  res: express.Response
-) => Promise<void>) => async (req, res): Promise<void> => {
-  const responseContent = pipe(
+export const activatePaymentHandler = (): EndpointHandler<ActivatePaymentT> => async (
+  req
+): Promise<HandlerResponseType<ActivatePaymentT>> => {
+  const flowId = pipe(
+    O.fromNullable(req.cookies.mockFlow),
+    O.map(id => Number(id)),
+    O.filter(id => id in FlowCase)
+  );
+
+  return pipe(
     req.body,
     PaymentActivationsPostRequest.decode,
     // eslint-disable-next-line sonarjs/no-identical-functions
@@ -299,13 +314,11 @@ export const activatePaymentHandler = (): ((
       );
     }),
     E.map(paymentRequest =>
-      activatePaymentController(res)({
+      activatePaymentController(flowId)({
         body: paymentRequest,
         "x-Client-Id": ""
       })
     ),
     E.getOrElse(t.identity)
   );
-
-  responseContent.apply(res);
 };
