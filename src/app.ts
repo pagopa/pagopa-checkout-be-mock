@@ -2,6 +2,7 @@ import * as express from "express";
 import * as O from "fp-ts/lib/Option";
 import { pipe } from "fp-ts/function";
 import { toExpressHandler } from "@pagopa/ts-commons/lib/express";
+import * as cookieParser from "cookie-parser";
 import {
   cancelPayment,
   pay3ds2Handler,
@@ -23,6 +24,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   const router = express.Router();
 
   app.use(express.json());
+  app.use(cookieParser());
 
   app.use((_req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -107,7 +109,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.post(
     "/checkout/payments/v1/payment-activations",
-    activatePaymentHandler(ID_PAYMENT)
+    activatePaymentHandler()
   );
 
   router.get(

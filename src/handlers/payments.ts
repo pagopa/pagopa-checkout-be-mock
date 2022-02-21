@@ -1,8 +1,14 @@
 import { pipe } from "fp-ts/function";
 import { RequestHandler } from "express";
 import * as E from "fp-ts/lib/Either";
+import * as O from "fp-ts/lib/Option";
 import * as t from "io-ts";
-import { ResponseSuccessJson } from "@pagopa/ts-commons/lib/responses";
+import {
+  ResponseErrorInternal,
+  ResponseSuccessJson
+} from "@pagopa/ts-commons/lib/responses";
+import * as express from "express";
+import { PathReporter } from "io-ts/PathReporter";
 import { PaymentResponse } from "../generated/payment_manager/PaymentResponse";
 import { sendResponseWithData, tupleWith } from "../utils/utils";
 import { TransactionResponse } from "../generated/payment_manager/TransactionResponse";
@@ -13,11 +19,18 @@ import {
   HandlerResponseType,
   ResponsePaymentError
 } from "../utils/types";
-import { GetPaymentInfoT } from "../generated/pagopa_proxy/requestTypes";
+import {
+  ActivatePaymentT,
+  GetPaymentInfoT
+} from "../generated/pagopa_proxy/requestTypes";
 import { RptId } from "../generated/pagopa_proxy/RptId";
 import { PaymentRequestsGetResponse } from "../generated/pagopa_proxy/PaymentRequestsGetResponse";
 import { PaymentFaultV2Enum } from "../generated/pagopa_proxy/PaymentFaultV2";
 import { PaymentFaultEnum } from "../generated/pagopa_proxy/PaymentFault";
+import { PaymentActivationsPostRequest } from "../generated/pagopa_proxy/PaymentActivationsPostRequest";
+import { FlowCase, getFlowFromRptId } from "../flow";
+import { PaymentActivationsPostResponse } from "../generated/pagopa_proxy/PaymentActivationsPostResponse";
+import { logger } from "../logger";
 
 export const paymentCheckHandler: (
   idPayment: string,
@@ -208,22 +221,79 @@ export const getPaymentInfoHandler = (
     ),
     E.getOrElse(t.identity)
   );
-export const activatePaymentHandler: (
-  codiceContestoPagamento: string
-) => // eslint-disable-next-line sonarjs/no-identical-functions
-RequestHandler = codiceContestoPagamento => async (
-  _req,
-  res
-  // eslint-disable-next-line sonarjs/no-identical-functions
-): Promise<void> => {
-  res.status(200).send({
+
+const activatePaymentController: (
+  res: express.Response
+) => EndpointController<ActivatePaymentT> = res => (
+  params
+): HandlerResponseType<ActivatePaymentT> => {
+  const response = {
     causaleVersamento: "TARI/TEFA 2021",
-    codiceContestoPagamento,
+    codiceContestoPagamento: params.body.codiceContestoPagamento,
     enteBeneficiario: {
       denominazioneBeneficiario: "EC_TE",
       identificativoUnivocoBeneficiario: "77777777777"
     },
     ibanAccredito: "IT21Q0760101600000000546200",
-    importoSingoloVersamento: 12000
-  });
+    importoSingoloVersamento: params.body.importoSingoloVersamento
+  };
+
+  const flowId = getFlowFromRptId(params.body.rptId);
+  const isModifiedFlow = O.fromPredicate(
+    (flow: FlowCase) => flow === FlowCase.FAIL_ACTIVATE_500
+  );
+
+  return pipe(
+    flowId,
+    O.map(flow => {
+      res.cookie("mockFlow", flow);
+      return flow;
+    }),
+    O.chain(isModifiedFlow),
+    O.fold(
+      () =>
+        pipe(
+          response,
+          PaymentActivationsPostResponse.decode,
+          // eslint-disable-next-line sonarjs/no-identical-functions
+          E.mapLeft<t.Errors, HandlerResponseType<ActivatePaymentT>>(e => {
+            logger.info(PathReporter.report(E.left(e)));
+            return ResponsePaymentError(
+              PaymentFaultEnum.GENERIC_ERROR,
+              PaymentFaultV2Enum.GENERIC_ERROR
+            );
+          }),
+          E.map(ResponseSuccessJson),
+          E.getOrElse(t.identity)
+        ),
+      flow => ResponseErrorInternal(`Mock – Failure case ${FlowCase[flow]}`)
+    )
+  );
+};
+
+export const activatePaymentHandler = (): ((
+  req: express.Request,
+  res: express.Response
+) => Promise<void>) => async (req, res): Promise<void> => {
+  const responseContent = pipe(
+    req.body,
+    PaymentActivationsPostRequest.decode,
+    // eslint-disable-next-line sonarjs/no-identical-functions
+    E.mapLeft<t.Errors, HandlerResponseType<ActivatePaymentT>>(e => {
+      logger.info(PathReporter.report(E.left(e)));
+      return ResponsePaymentError(
+        PaymentFaultEnum.GENERIC_ERROR,
+        PaymentFaultV2Enum.GENERIC_ERROR
+      );
+    }),
+    E.map(paymentRequest =>
+      activatePaymentController(res)({
+        body: paymentRequest,
+        "x-Client-Id": ""
+      })
+    ),
+    E.getOrElse(t.identity)
+  );
+
+  responseContent.apply(res);
 };
