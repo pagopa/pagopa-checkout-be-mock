@@ -60,7 +60,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.post(
     "/pp-restapi/v4/users/actions/approve-terms",
-    approveTermsHandler(SESSION_USER)
+    toExpressHandler(approveTermsHandler(SESSION_USER))
   );
 
   router.post("/pp-restapi/v4/wallet", toExpressHandler(addWalletHandler()));
