@@ -8,6 +8,8 @@ export enum FlowCase {
   FAIL_ACTIVATE_424
 }
 
+type FlowCaseKey = keyof typeof FlowCase;
+
 export const getFlowFromRptId: (
   rptId: string
 ) => O.Option<FlowCase> = rptId => {
@@ -28,14 +30,14 @@ export const getFlowFromRptId: (
 export const getFlowCookie: (req: express.Request) => FlowCase = req =>
   pipe(
     O.fromNullable(req.cookies.mockFlow),
-    O.map(id => Number(id)),
     O.filter(id => id in FlowCase),
-    O.getOrElse(() => FlowCase.OK)
+    O.map((id: FlowCaseKey) => FlowCase[id]),
+    O.getOrElse(() => FlowCase.OK as FlowCase)
   );
 
 export const setFlowCookie: (
   res: express.Response,
   flowId: FlowCase
 ) => void = (res, flowId) => {
-  res.cookie("mockFlow", flowId);
+  res.cookie("mockFlow", FlowCase[flowId]);
 };
