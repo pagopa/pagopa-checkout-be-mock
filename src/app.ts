@@ -10,7 +10,7 @@ import {
   checkPaymentStatusHandler
 } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
-import { updateWalletHandler, walletHandler } from "./handlers/wallet";
+import { addWalletHandler, updateWalletHandler } from "./handlers/wallet";
 import {
   checkTransactionHandler,
   resume3ds2Handler
@@ -63,7 +63,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     approveTermsHandler(SESSION_USER)
   );
 
-  router.post("/pp-restapi/v4/wallet", walletHandler);
+  router.post("/pp-restapi/v4/wallet", toExpressHandler(addWalletHandler()));
 
   router.post(
     "/pp-restapi/v4/payments/:id/actions/pay3ds2",

@@ -6,6 +6,7 @@ import {
 import {
   HttpStatusCodeEnum,
   IResponse,
+  IResponseErrorForbiddenAnonymousUser,
   IResponseErrorForbiddenNotAuthorized,
   IResponseErrorInternal,
   IResponseErrorNotFound,
@@ -19,20 +20,22 @@ import { PaymentFaultV2Enum } from "../generated/pagopa_proxy/PaymentFaultV2";
 import { PaymentProblemJson } from "../generated/pagopa_proxy/PaymentProblemJson";
 
 type InnerHandlerResponseType<T> = T extends IResponseType<200, infer R>
-  ? IResponseSuccessJson<R>
-  : T extends IResponseType<201, infer A>
-  ? IResponseSuccessJson<A> // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ? IResponseSuccessJson<R> // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  : T extends IResponseType<201, infer _A>
+  ? IResponseSuccessfulCreated // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IResponseType<400, infer _B>
   ? IResponseErrorValidation // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IResponseType<401, infer _C>
-  ? IResponseErrorForbiddenNotAuthorized // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IResponseType<404, infer _D>
+  ? IResponseErrorForbiddenNotAuthorized // eslint-disable-next-line @typescript-eslint/no-unused-vars,
+  : T extends IResponseType<403, infer _D>
+  ? IResponseErrorForbiddenAnonymousUser // eslint-disable-next-line @typescript-eslint/no-unused-vars,
+  : T extends IResponseType<404, infer _E>
   ? IResponseErrorNotFound // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IResponseType<422, infer _E>
+  : T extends IResponseType<422, infer _F>
   ? IResponseErrorValidation // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IResponseType<424, infer _F>
+  : T extends IResponseType<424, infer _G>
   ? IResponsePaymentInternalError // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IResponseType<500, infer _D>
+  : T extends IResponseType<500, infer _H>
   ? IResponseErrorInternal
   : never;
 
@@ -51,6 +54,19 @@ export type EndpointController<T> = (
 export type IResponsePaymentInternalError = IResponse<"IResponseErrorInternal">;
 
 type HttpCode = number & WithinRangeInteger<100, 599>;
+
+export declare type IResponseSuccessfulCreated = IResponse<
+  "IResponseSuccessfulCreated"
+>;
+
+/**
+ * Returns a 201 response without a body.
+ */
+export const ResponseSuccessfulCreated: IResponseSuccessfulCreated = {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  apply: res => res.status(HttpStatusCodeEnum.HTTP_STATUS_201).send(),
+  kind: "IResponseSuccessfulCreated"
+};
 
 /**
  * Returns a 424 with json response.
