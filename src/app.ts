@@ -6,7 +6,8 @@ import {
   pay3ds2Handler,
   activatePaymentHandler,
   paymentCheckHandler,
-  getPaymentInfoHandler
+  getPaymentInfoHandler,
+  checkPaymentStatusHandler
 } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
 import { updateWalletHandler, walletHandler } from "./handlers/wallet";
@@ -97,11 +98,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.get(
     "/checkout/payments/v1/payment-activations/:codiceContestoPagamento",
-    async (_req, res) => {
-      res.send({
-        idPagamento: ID_PAYMENT
-      });
-    }
+    toExpressHandler(checkPaymentStatusHandler(ID_PAYMENT))
   );
 
   return app;

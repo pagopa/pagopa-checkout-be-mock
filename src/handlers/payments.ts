@@ -7,9 +7,9 @@ import * as t from "io-ts";
 import {
   ResponseErrorFromValidationErrors,
   ResponseErrorInternal,
+  ResponseErrorNotFound,
   ResponseSuccessJson
 } from "@pagopa/ts-commons/lib/responses";
-import { PathReporter } from "io-ts/PathReporter";
 import { PaymentResponse } from "../generated/payment_manager/PaymentResponse";
 import { sendResponseWithData, tupleWith } from "../utils/utils";
 import { TransactionResponse } from "../generated/payment_manager/TransactionResponse";
@@ -22,6 +22,7 @@ import {
 } from "../utils/types";
 import {
   ActivatePaymentT,
+  GetActivationStatusT,
   GetPaymentInfoT
 } from "../generated/pagopa_proxy/requestTypes";
 import { RptId } from "../generated/pagopa_proxy/RptId";
@@ -36,7 +37,7 @@ import {
   setFlowCookie
 } from "../flow";
 import { PaymentActivationsPostResponse } from "../generated/pagopa_proxy/PaymentActivationsPostResponse";
-import { logger } from "../logger";
+import { PaymentActivationsGetResponse } from "../generated/pagopa_proxy/PaymentActivationsGetResponse";
 
 export const paymentCheckHandler: (
   idPayment: string,
@@ -223,6 +224,7 @@ export const getPaymentInfoController: (
               PaymentFaultV2Enum.GENERIC_ERROR
             );
           default:
+            // eslint-disable-next-line sonarjs/no-duplicate-string
             throw new Error("Bug – Unhandled flow case");
         }
       }
@@ -336,5 +338,78 @@ export const activatePaymentHandler = (): EndpointHandler<ActivatePaymentT> => a
       })
     ),
     E.getOrElse(t.identity)
+  );
+};
+
+const checkPaymentStatusController: (
+  idPayment: string,
+  flowId: FlowCase
+) => EndpointController<GetActivationStatusT> = (idPayment, flowId) => (
+  _params
+): HandlerResponseType<GetActivationStatusT> => {
+  const response: PaymentActivationsGetResponse = {
+    idPagamento: idPayment
+  };
+
+  const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
+    [
+      FlowCase.FAIL_PAYMENT_STATUS_404,
+      FlowCase.FAIL_PAYMENT_STATUS_424,
+      FlowCase.FAIL_PAYMENT_STATUS_500
+    ].includes(flow)
+  );
+
+  return pipe(
+    isModifiedFlow(flowId),
+    O.fold(
+      () =>
+        pipe(
+          response,
+          PaymentActivationsGetResponse.decode,
+          E.mapLeft<t.Errors, HandlerResponseType<GetActivationStatusT>>(e =>
+            ResponseErrorFromValidationErrors(PaymentActivationsGetResponse)(e)
+          ),
+          E.map(ResponseSuccessJson),
+          E.getOrElse(t.identity)
+        ),
+      flow => {
+        switch (flow) {
+          case FlowCase.FAIL_PAYMENT_STATUS_404:
+            return ResponseErrorNotFound(
+              `Mock – Failure case ${FlowCase[flow]}`,
+              "Not found"
+            );
+          case FlowCase.FAIL_PAYMENT_STATUS_424:
+            return ResponsePaymentError(
+              PaymentFaultEnum.GENERIC_ERROR,
+              PaymentFaultV2Enum.GENERIC_ERROR
+            );
+          case FlowCase.FAIL_PAYMENT_STATUS_500:
+            return ResponseErrorInternal(
+              `Mock – Failure case ${FlowCase[flow]}`
+            );
+          default:
+            throw new Error("Bug – Unhandled flow case");
+        }
+      }
+    )
+  );
+};
+
+export const checkPaymentStatusHandler = (
+  idPayment: string
+): EndpointHandler<GetActivationStatusT> => async (
+  req
+): Promise<HandlerResponseType<GetActivationStatusT>> => {
+  const flowId = getFlowCookie(req);
+
+  return pipe(req.params.codiceContestoPagamento, codiceContestoPagamento =>
+    checkPaymentStatusController(
+      idPayment,
+      flowId
+    )({
+      codice_contesto_pagamento: codiceContestoPagamento,
+      "x-Client-Id": ""
+    })
   );
 };
