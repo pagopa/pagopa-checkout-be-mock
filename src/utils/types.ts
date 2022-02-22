@@ -32,7 +32,7 @@ type InnerHandlerResponseType<T> = T extends IResponseType<200, infer R>
   : T extends IResponseType<404, infer _E>
   ? IResponseErrorNotFound // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IResponseType<422, infer _F>
-  ? IResponseErrorValidation // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ? IResponseUnprocessableEntity // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IResponseType<424, infer _G>
   ? IResponsePaymentInternalError // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IResponseType<500, infer _H>
@@ -66,6 +66,19 @@ export const ResponseSuccessfulCreated: IResponseSuccessfulCreated = {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: res => res.status(HttpStatusCodeEnum.HTTP_STATUS_201).send(),
   kind: "IResponseSuccessfulCreated"
+};
+
+export declare type IResponseUnprocessableEntity = IResponse<
+  "IResponseUnprocessableEntity"
+>;
+
+/**
+ * Returns a 422 response without a body.
+ */
+export const ResponseUnprocessableEntity: IResponseUnprocessableEntity = {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  apply: res => res.status(HttpStatusCodeEnum.HTTP_STATUS_422).send(),
+  kind: "IResponseUnprocessableEntity"
 };
 
 /**
