@@ -4,8 +4,10 @@ import { pipe } from "fp-ts/function";
 
 export enum FlowCase {
   OK,
-  FAIL_ACTIVATE_500,
-  FAIL_ACTIVATE_424
+  FAIL_VERIFY_424,
+  FAIL_VERIFY_500,
+  FAIL_ACTIVATE_424,
+  FAIL_ACTIVATE_500
 }
 
 type FlowCaseKey = keyof typeof FlowCase;

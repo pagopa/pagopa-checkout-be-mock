@@ -175,10 +175,12 @@ export const cancelPayment: RequestHandler = async (_req, res) => {
 };
 
 export const getPaymentInfoController: (
-  codiceContestoPagamento: string
-) => EndpointController<GetPaymentInfoT> = codiceContestoPagamento => (
-  _params
-): HandlerResponseType<GetPaymentInfoT> => {
+  codiceContestoPagamento: string,
+  flowId: FlowCase
+) => EndpointController<GetPaymentInfoT> = (
+  codiceContestoPagamento,
+  flowId
+) => (_params): HandlerResponseType<GetPaymentInfoT> => {
   const response = {
     causaleVersamento: "TARI/TEFA 2021",
     codiceContestoPagamento,
@@ -189,17 +191,44 @@ export const getPaymentInfoController: (
     ibanAccredito: "IT21Q0760101600000000546200",
     importoSingoloVersamento: 12000
   };
+
+  const isModifiedFlow = O.fromPredicate(
+    flow =>
+      flow === FlowCase.FAIL_VERIFY_500 || flow === FlowCase.FAIL_VERIFY_424
+  );
+
   return pipe(
-    response,
-    PaymentRequestsGetResponse.decode,
-    E.mapLeft<t.Errors, HandlerResponseType<GetPaymentInfoT>>(_ =>
-      ResponsePaymentError(
-        PaymentFaultEnum.GENERIC_ERROR,
-        PaymentFaultV2Enum.GENERIC_ERROR
-      )
-    ),
-    E.map(ResponseSuccessJson),
-    E.getOrElse(t.identity)
+    isModifiedFlow(flowId),
+    O.fold(
+      () =>
+        pipe(
+          response,
+          PaymentRequestsGetResponse.decode,
+          E.mapLeft<t.Errors, HandlerResponseType<GetPaymentInfoT>>(_ =>
+            ResponsePaymentError(
+              PaymentFaultEnum.GENERIC_ERROR,
+              PaymentFaultV2Enum.GENERIC_ERROR
+            )
+          ),
+          E.map(ResponseSuccessJson),
+          E.getOrElse(t.identity)
+        ),
+      flow => {
+        switch (flow) {
+          case FlowCase.FAIL_VERIFY_500:
+            return ResponseErrorInternal(
+              `Mock – Failure case ${FlowCase[flow]}`
+            );
+          case FlowCase.FAIL_VERIFY_424:
+            return ResponsePaymentError(
+              PaymentFaultEnum.GENERIC_ERROR,
+              PaymentFaultV2Enum.GENERIC_ERROR
+            );
+          default:
+            throw new Error("Bug – Unhandled flow case");
+        }
+      }
+    )
   );
 };
 
@@ -220,14 +249,18 @@ export const getPaymentInfoHandler = (
       )
     ),
     E.map(rptId => {
-      pipe(
+      const flowId = pipe(
         rptId,
         getFlowFromRptId,
-        O.getOrElse(() => FlowCase.OK),
-        flow => setFlowCookie(res, flow)
+        O.getOrElse(() => FlowCase.OK)
       );
 
-      return getPaymentInfoController(codiceContestoPagamento)({
+      setFlowCookie(res, flowId);
+
+      return getPaymentInfoController(
+        codiceContestoPagamento,
+        flowId
+      )({
         rpt_id_from_string: rptId,
         "x-Client-Id": ""
       });
