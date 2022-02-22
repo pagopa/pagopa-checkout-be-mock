@@ -5,6 +5,7 @@ import * as E from "fp-ts/lib/Either";
 import * as O from "fp-ts/lib/Option";
 import * as t from "io-ts";
 import {
+  ResponseErrorFromValidationErrors,
   ResponseErrorInternal,
   ResponseSuccessJson
 } from "@pagopa/ts-commons/lib/responses";
@@ -204,11 +205,8 @@ export const getPaymentInfoController: (
         pipe(
           response,
           PaymentRequestsGetResponse.decode,
-          E.mapLeft<t.Errors, HandlerResponseType<GetPaymentInfoT>>(_ =>
-            ResponsePaymentError(
-              PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.GENERIC_ERROR
-            )
+          E.mapLeft<t.Errors, HandlerResponseType<GetPaymentInfoT>>(e =>
+            ResponseErrorFromValidationErrors(PaymentRequestsGetResponse)(e)
           ),
           E.map(ResponseSuccessJson),
           E.getOrElse(t.identity)
@@ -241,12 +239,8 @@ export const getPaymentInfoHandler = (
   const responseContent = pipe(
     req.params.rptId,
     RptId.decode,
-    // eslint-disable-next-line sonarjs/no-identical-functions
-    E.mapLeft<t.Errors, HandlerResponseType<GetPaymentInfoT>>(_ =>
-      ResponsePaymentError(
-        PaymentFaultEnum.GENERIC_ERROR,
-        PaymentFaultV2Enum.GENERIC_ERROR
-      )
+    E.mapLeft<t.Errors, HandlerResponseType<GetPaymentInfoT>>(e =>
+      ResponseErrorFromValidationErrors(RptId)(e)
     ),
     E.map(rptId => {
       const flowId = pipe(
@@ -299,14 +293,9 @@ const activatePaymentController: (
         pipe(
           response,
           PaymentActivationsPostResponse.decode,
-          // eslint-disable-next-line sonarjs/no-identical-functions
-          E.mapLeft<t.Errors, HandlerResponseType<ActivatePaymentT>>(e => {
-            logger.info(PathReporter.report(E.left(e)));
-            return ResponsePaymentError(
-              PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.GENERIC_ERROR
-            );
-          }),
+          E.mapLeft<t.Errors, HandlerResponseType<ActivatePaymentT>>(e =>
+            ResponseErrorFromValidationErrors(PaymentActivationsPostResponse)(e)
+          ),
           E.map(ResponseSuccessJson),
           E.getOrElse(t.identity)
         ),
@@ -337,14 +326,9 @@ export const activatePaymentHandler = (): EndpointHandler<ActivatePaymentT> => a
   return pipe(
     req.body,
     PaymentActivationsPostRequest.decode,
-    // eslint-disable-next-line sonarjs/no-identical-functions
-    E.mapLeft<t.Errors, HandlerResponseType<ActivatePaymentT>>(e => {
-      logger.info(PathReporter.report(E.left(e)));
-      return ResponsePaymentError(
-        PaymentFaultEnum.GENERIC_ERROR,
-        PaymentFaultV2Enum.GENERIC_ERROR
-      );
-    }),
+    E.mapLeft<t.Errors, HandlerResponseType<ActivatePaymentT>>(e =>
+      ResponseErrorFromValidationErrors(PaymentActivationsPostRequest)(e)
+    ),
     E.map(paymentRequest =>
       activatePaymentController(flowId)({
         body: paymentRequest,
