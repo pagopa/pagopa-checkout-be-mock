@@ -5,11 +5,14 @@ import * as E from "fp-ts/lib/Either";
 import * as O from "fp-ts/lib/Option";
 import * as t from "io-ts";
 import {
+  ResponseErrorForbiddenAnonymousUser,
+  ResponseErrorForbiddenNotAuthorized,
   ResponseErrorFromValidationErrors,
   ResponseErrorInternal,
   ResponseErrorNotFound,
   ResponseSuccessJson
 } from "@pagopa/ts-commons/lib/responses";
+import { PathReporter } from "io-ts/PathReporter";
 import { PaymentResponse } from "../generated/payment_manager/PaymentResponse";
 import { sendResponseWithData, tupleWith } from "../utils/utils";
 import { TransactionResponse } from "../generated/payment_manager/TransactionResponse";
@@ -18,7 +21,8 @@ import {
   EndpointController,
   EndpointHandler,
   HandlerResponseType,
-  ResponsePaymentError
+  ResponsePaymentError,
+  ResponseSuccessfulCreated
 } from "../utils/types";
 import {
   ActivatePaymentT,
@@ -38,6 +42,9 @@ import {
 } from "../flow";
 import { PaymentActivationsPostResponse } from "../generated/pagopa_proxy/PaymentActivationsPostResponse";
 import { PaymentActivationsGetResponse } from "../generated/pagopa_proxy/PaymentActivationsGetResponse";
+import { Pay3ds2UsingPOSTT } from "../generated/payment_manager/requestTypes";
+import { logger } from "../logger";
+import { PayRequest } from "../generated/payment_manager/PayRequest";
 
 export const paymentCheckHandler: (
   idPayment: string,
@@ -96,79 +103,159 @@ export const paymentCheckHandler: (
   );
 };
 
-export const pay3ds2Handler: (userData: IUserData) => RequestHandler = (
-  userData: IUserData
-) => async (_req, res): Promise<void> => {
-  pipe(
-    E.right({
-      data: {
-        amount: {
-          amount: 12000,
-          currency: "EUR",
-          decimalDigits: 2
+const pay3ds2Controller: (
+  userData: IUserData,
+  flowId: FlowCase
+) => EndpointController<Pay3ds2UsingPOSTT> = (userData, flowId) => (
+  _params
+): HandlerResponseType<Pay3ds2UsingPOSTT> => {
+  const response: TransactionResponse = {
+    data: {
+      amount: {
+        amount: 12000,
+        currency: "EUR",
+        decimalDigits: 2
+      },
+      created: new Date("2022-01-17T15:00:20Z"),
+      description: "TARI/TEFA 2021",
+      detailsList: [
+        {
+          CCP: "d15da8f4df1b4ab6855c966044310b1a",
+          IUV: "02016723749670001",
+          codicePagatore: userData.fiscalCode,
+          enteBeneficiario: "EC_TE",
+          idDominio: "77777777777",
+          importo: 100,
+          nomePagatore: `${userData.name} ${userData.surname}`,
+          tipoPagatore: "F"
         },
-        created: new Date("2022-01-17T15:00:20Z"),
-        description: "TARI/TEFA 2021",
-        detailsList: [
-          {
-            CCP: "d15da8f4df1b4ab6855c966044310b1a",
-            IUV: "02016723749670001",
-            codicePagatore: userData.fiscalCode,
-            enteBeneficiario: "EC_TE",
-            idDominio: "77777777777",
-            importo: 100,
-            nomePagatore: `${userData.name} ${userData.surname}`,
-            tipoPagatore: "F"
-          },
-          {
-            CCP: "d15da8f4df1b4ab6855c966044310b1a",
-            IUV: "02016723749670001",
-            codicePagatore: userData.fiscalCode,
-            enteBeneficiario: "Comune di Milano",
-            idDominio: "01199250158",
-            importo: 20,
-            nomePagatore: `${userData.name} ${userData.surname}`,
-            tipoPagatore: "F"
-          }
-        ],
-        directAcquirer: false,
-        error: false,
-        fee: {
-          amount: 100,
-          currency: "EUR",
-          decimalDigits: 2
-        },
-        grandTotal: {
-          amount: 12100,
-          currency: "EUR",
-          decimalDigits: 2
-        },
-        id: 7090106732,
-        idPayment: 203737,
-        idStatus: 0,
-        idWallet: 94243,
-        merchant: "EC_TE",
-        nodoIdPayment: "d15da8f4df1b4ab6855c966044310b1a",
-        orderNumber: 7090106732,
-        paymentCancelled: false,
-        paymentModel: 0,
-        pspId: 1122602,
-        pspInfo: {
-          codiceAbi: "03069",
-          idPsp: "BCITITMM",
-          ragioneSociale: "Intesa Sanpaolo S.p.A"
-        },
-        statusMessage: "Da autorizzare",
-        success: false,
-        token: "NzA5MDEwNjczMg==",
-        updated: new Date("2022-01-17T15:00:20Z"),
-        urlCheckout3ds:
-          "https://acardste.vaservices.eu/wallet/checkout?id=NzA5MDEwNjczMg=="
+        {
+          CCP: "d15da8f4df1b4ab6855c966044310b1a",
+          IUV: "02016723749670001",
+          codicePagatore: userData.fiscalCode,
+          enteBeneficiario: "Comune di Milano",
+          idDominio: "01199250158",
+          importo: 20,
+          nomePagatore: `${userData.name} ${userData.surname}`,
+          tipoPagatore: "F"
+        }
+      ],
+      directAcquirer: false,
+      error: false,
+      fee: {
+        amount: 100,
+        currency: "EUR",
+        decimalDigits: 2
+      },
+      grandTotal: {
+        amount: 12100,
+        currency: "EUR",
+        decimalDigits: 2
+      },
+      id: 7090106732,
+      idPayment: 203737,
+      idStatus: 0,
+      idWallet: 94243,
+      merchant: "EC_TE",
+      nodoIdPayment: "d15da8f4df1b4ab6855c966044310b1a",
+      orderNumber: 7090106732,
+      paymentCancelled: false,
+      paymentModel: 0,
+      statusMessage: "Da autorizzare",
+      success: false,
+      token: "NzA5MDEwNjczMg==",
+      updated: new Date("2022-01-17T15:00:20Z"),
+      urlCheckout3ds:
+        "https://acardste.vaservices.eu/wallet/checkout?id=NzA5MDEwNjczMg=="
+    }
+  };
+
+  const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
+    [
+      FlowCase.ANSWER_PAY_3DS2_STATUS_201,
+      FlowCase.FAIL_PAY_3DS2_STATUS_401,
+      FlowCase.FAIL_PAY_3DS2_STATUS_403,
+      FlowCase.FAIL_PAY_3DS2_STATUS_404
+    ].includes(flow)
+  );
+
+  return pipe(
+    isModifiedFlow(flowId),
+    O.fold(
+      () =>
+        pipe(
+          response,
+          TransactionResponse.decode,
+          // eslint-disable-next-line sonarjs/no-identical-functions
+          E.mapLeft<t.Errors, HandlerResponseType<Pay3ds2UsingPOSTT>>(e => {
+            logger.info(
+              PathReporter.report(E.left<t.Errors, TransactionResponse>(e))
+            );
+            logger.warn(
+              "PM `pay3ds2UsingPOST` endpoint doesn't have HTTP 400 responses, returning 404 on `TransactionResponse` failed decoding instead"
+            );
+            return ResponseErrorNotFound(
+              "Mock – Error while decoding `TransactionResponse`",
+              ""
+            );
+          }),
+          E.map(ResponseSuccessJson),
+          E.getOrElse(t.identity)
+        ),
+      flow => {
+        switch (flow) {
+          case FlowCase.ANSWER_PAY_3DS2_STATUS_201:
+            return ResponseSuccessfulCreated;
+          case FlowCase.FAIL_PAY_3DS2_STATUS_401:
+            return ResponseErrorForbiddenAnonymousUser;
+          case FlowCase.FAIL_PAY_3DS2_STATUS_403:
+            return ResponseErrorForbiddenNotAuthorized;
+          case FlowCase.FAIL_PAY_3DS2_STATUS_404:
+            return ResponseErrorNotFound(
+              `Mock – Failure case ${FlowCase[flow]}`,
+              ""
+            );
+          default:
+            // eslint-disable-next-line sonarjs/no-duplicate-string
+            throw new Error("Bug – Unhandled flow case");
+        }
       }
+    )
+  );
+};
+
+export const pay3ds2Handler = (
+  userData: IUserData
+): EndpointHandler<Pay3ds2UsingPOSTT> => async (
+  req
+): Promise<HandlerResponseType<Pay3ds2UsingPOSTT>> => {
+  const flowId = getFlowCookie(req);
+
+  return pipe(
+    req.body,
+    PayRequest.decode,
+    E.mapLeft<t.Errors, HandlerResponseType<Pay3ds2UsingPOSTT>>(e => {
+      logger.info(PathReporter.report(E.left<t.Errors, PayRequest>(e)));
+      logger.warn(
+        "PM `pay3ds2UsingPOST` endpoint doesn't have HTTP 400 responses, returning 404 on `PayRequest` failed decoding instead"
+      );
+      return ResponseErrorNotFound(
+        "Mock – Error while decoding `PayRequest`",
+        ""
+      );
     }),
-    E.map(TransactionResponse.encode),
-    tupleWith(res),
-    E.fold(_ => res.status(500).send(), sendResponseWithData)
+    E.map(payRequest =>
+      pay3ds2Controller(
+        userData,
+        flowId
+      )({
+        Bearer: "",
+        id: "",
+        language: "",
+        payRequest
+      })
+    ),
+    E.getOrElse(t.identity)
   );
 };
 

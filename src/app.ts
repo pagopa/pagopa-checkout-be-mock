@@ -67,7 +67,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.post(
     "/pp-restapi/v4/payments/:id/actions/pay3ds2",
-    pay3ds2Handler(USER_DATA)
+    toExpressHandler(pay3ds2Handler(USER_DATA))
   );
 
   router.get(

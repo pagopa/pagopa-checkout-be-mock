@@ -40,7 +40,13 @@ const addWalletController: (
   creditCard = responseWallet.creditCard as CreditCard;
 
   const response: WalletResponse = {
-    data: responseWallet
+    data: {
+      creditCard,
+      idWallet: responseWallet.idWallet,
+      psp: responseWallet.psp,
+      pspEditable: responseWallet.pspEditable,
+      type: responseWallet.type
+    }
   };
 
   const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
@@ -67,6 +73,15 @@ const addWalletController: (
             );
             return ResponseSuccessfulCreated;
           }),
+          E.map(responseData => ({
+            data: {
+              ...responseData.data,
+              psp: {
+                ...responseData.data.psp,
+                directAcquirer: false
+              }
+            }
+          })),
           E.map(ResponseSuccessJson),
           E.getOrElse(t.identity)
         ),
