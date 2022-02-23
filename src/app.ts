@@ -1,12 +1,16 @@
 import * as express from "express";
+import { toExpressHandler } from "@pagopa/ts-commons/lib/express";
+import * as cookieParser from "cookie-parser";
 import {
   cancelPayment,
   pay3ds2Handler,
+  activatePaymentHandler,
   paymentCheckHandler,
-  paymentRequestHandler
+  getPaymentInfoHandler,
+  checkPaymentStatusHandler
 } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
-import { updateWalletHandler, walletHandler } from "./handlers/wallet";
+import { addWalletHandler, updateWalletHandler } from "./handlers/wallet";
 import {
   checkTransactionHandler,
   resume3ds2Handler
@@ -16,7 +20,10 @@ import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
 
 export const newExpressApp: () => Promise<Express.Application> = async () => {
   const app = express();
+  const router = express.Router();
+
   app.use(express.json());
+  app.use(cookieParser());
 
   app.use((_req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -39,61 +46,59 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     });
   });
 
-  app.get(
+  app.use(router);
+
+  router.get(
     "/pp-restapi/v4/payments/:id/actions/check",
     paymentCheckHandler(ID_PAYMENT, USER_DATA)
   );
 
-  app.post(
+  router.post(
     "/pp-restapi/v4/users/actions/start-session",
-    startSessionHandler(ID_PAYMENT, SESSION_USER)
+    toExpressHandler(startSessionHandler(ID_PAYMENT, SESSION_USER))
   );
 
-  app.post(
+  router.post(
     "/pp-restapi/v4/users/actions/approve-terms",
-    approveTermsHandler(SESSION_USER)
+    toExpressHandler(approveTermsHandler(SESSION_USER))
   );
 
-  app.post("/pp-restapi/v4/wallet", walletHandler);
+  router.post("/pp-restapi/v4/wallet", toExpressHandler(addWalletHandler()));
 
-  app.post(
+  router.post(
     "/pp-restapi/v4/payments/:id/actions/pay3ds2",
-    pay3ds2Handler(USER_DATA)
+    toExpressHandler(pay3ds2Handler(USER_DATA))
   );
 
-  app.get(
+  router.get(
     "/pp-restapi/v4/transactions/:id/actions/check",
-    checkTransactionHandler(ID_PAYMENT)
+    toExpressHandler(checkTransactionHandler(ID_PAYMENT))
   );
 
-  app.delete("/pp-restapi/v4/payments/:id/actions/delete", cancelPayment);
+  router.delete("/pp-restapi/v4/payments/:id/actions/delete", cancelPayment);
 
-  app.post(
+  router.post(
     "/pp-restapi/v4/transactions/:transactionData/actions/resume3ds2",
     resume3ds2Handler
   );
 
-  app.get("/pp-restapi/v4/psps", getPspListHandler);
+  router.get("/pp-restapi/v4/psps", getPspListHandler);
 
-  app.put("/pp-restapi/v4/wallet/:id", updateWalletHandler);
+  router.put("/pp-restapi/v4/wallet/:id", updateWalletHandler);
 
-  app.get(
+  router.get(
     "/checkout/payments/v1/payment-requests/:rptId",
-    paymentRequestHandler(ID_PAYMENT)
+    getPaymentInfoHandler(ID_PAYMENT)
   );
 
-  app.post(
+  router.post(
     "/checkout/payments/v1/payment-activations",
-    paymentRequestHandler(ID_PAYMENT)
+    toExpressHandler(activatePaymentHandler())
   );
 
-  app.get(
+  router.get(
     "/checkout/payments/v1/payment-activations/:codiceContestoPagamento",
-    async (_req, res) => {
-      res.send({
-        idPagamento: ID_PAYMENT
-      });
-    }
+    toExpressHandler(checkPaymentStatusHandler(ID_PAYMENT))
   );
 
   return app;

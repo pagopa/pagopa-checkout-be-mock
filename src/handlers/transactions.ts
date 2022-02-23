@@ -1,18 +1,38 @@
 import { pipe } from "fp-ts/function";
-import { fold, map, right } from "fp-ts/Either";
+import * as E from "fp-ts/Either";
 import { RequestHandler } from "express";
+import * as t from "io-ts";
+import { PathReporter } from "io-ts/PathReporter";
+import {
+  ResponseErrorInternal,
+  ResponseErrorNotFound,
+  ResponseSuccessJson
+} from "@pagopa/ts-commons/lib/responses";
+import * as O from "fp-ts/Option";
 import { encode3ds2MethodData, Transaction3DSStatus } from "../utils/3ds2";
-import { TransactionStatus } from "../generated/api/TransactionStatus";
-import { TransactionStatusResponse } from "../generated/api/TransactionStatusResponse";
-import { sendResponseWithData, tupleWith } from "../utils/utils";
+import { TransactionStatus } from "../generated/payment_manager/TransactionStatus";
+import { TransactionStatusResponse } from "../generated/payment_manager/TransactionStatusResponse";
+
+import {
+  EndpointController,
+  EndpointHandler,
+  HandlerResponseType,
+  ResponseUnprocessableEntity
+} from "../utils/types";
+import { CheckStatusUsingGETT } from "../generated/payment_manager/requestTypes";
+import { logger } from "../logger";
+import { FlowCase, getFlowCookie } from "../flow";
 
 // eslint-disable-next-line functional/no-let
 let transactionStatus: Transaction3DSStatus =
   Transaction3DSStatus.AwaitingMethod;
 
-export const checkTransactionHandler: (idPayment: string) => RequestHandler = (
-  idPayment: string
-) => async (_req, res): Promise<void> => {
+const checkTransactionController: (
+  idPayment: string,
+  flowId: FlowCase
+) => EndpointController<CheckStatusUsingGETT> = (idPayment, flowId) => (
+  _params
+): HandlerResponseType<CheckStatusUsingGETT> => {
   const idTransaction = 7090106799;
 
   /* Here we skip all 3ds2 challenge verification steps and mock everything with a successful response */
@@ -102,13 +122,73 @@ export const checkTransactionHandler: (idPayment: string) => RequestHandler = (
     }
   };
 
-  pipe(
-    right({
-      data: RESPONSE_MAP[transactionStatus]
-    }),
-    map(TransactionStatusResponse.encode),
-    tupleWith(res),
-    fold(_ => res.status(500).send(), sendResponseWithData)
+  const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
+    [
+      FlowCase.FAIL_CHECK_STATUS_404,
+      FlowCase.FAIL_CHECK_STATUS_422,
+      FlowCase.FAIL_CHECK_STATUS_500
+    ].includes(flow)
+  );
+
+  return pipe(
+    isModifiedFlow(flowId),
+    O.fold(
+      () =>
+        pipe(
+          {
+            data: RESPONSE_MAP[transactionStatus]
+          },
+          TransactionStatusResponse.decode,
+          E.mapLeft<t.Errors, HandlerResponseType<CheckStatusUsingGETT>>(e => {
+            logger.info(
+              PathReporter.report(
+                E.left<t.Errors, TransactionStatusResponse>(e)
+              )
+            );
+            logger.warn(
+              "PM `checkStatusUsingGet` endpoint doesn't have HTTP 400 responses, returning 422 on `TransactionStatusResponse` failed decoding instead"
+            );
+            return ResponseUnprocessableEntity;
+          }),
+          E.map(ResponseSuccessJson),
+          E.getOrElse(t.identity)
+        ),
+      flow => {
+        switch (flow) {
+          case FlowCase.FAIL_CHECK_STATUS_404:
+            return ResponseErrorNotFound(
+              `Mock – Failure case ${FlowCase[flow]}`,
+              ""
+            );
+          case FlowCase.FAIL_CHECK_STATUS_422:
+            return ResponseUnprocessableEntity;
+          case FlowCase.FAIL_CHECK_STATUS_500:
+            return ResponseErrorInternal(
+              `Mock – Failure case ${FlowCase[flow]}`
+            );
+          default:
+            throw new Error("Bug – Unhandled flow case");
+        }
+      }
+    )
+  );
+};
+
+export const checkTransactionHandler: (
+  idPayment: string
+) => EndpointHandler<CheckStatusUsingGETT> = (idPayment: string) => async (
+  req
+): Promise<HandlerResponseType<CheckStatusUsingGETT>> => {
+  const flowId = getFlowCookie(req);
+
+  return pipe(req.params.id, id =>
+    checkTransactionController(
+      idPayment,
+      flowId
+    )({
+      Bearer: "",
+      id
+    })
   );
 };
 
