@@ -72,7 +72,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.get(
     "/pp-restapi/v4/transactions/:id/actions/check",
-    checkTransactionHandler(ID_PAYMENT)
+    toExpressHandler(checkTransactionHandler(ID_PAYMENT))
   );
 
   router.delete("/pp-restapi/v4/payments/:id/actions/delete", cancelPayment);
