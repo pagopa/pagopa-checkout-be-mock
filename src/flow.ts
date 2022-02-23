@@ -5,12 +5,15 @@ import { pipe } from "fp-ts/function";
 export enum FlowCase {
   OK,
   /* pagopa-proxy: getPaymentInfo */
+  FAIL_VERIFY_400,
   FAIL_VERIFY_424,
   FAIL_VERIFY_500,
   /* pagopa-proxy: activatePayment */
+  FAIL_ACTIVATE_400,
   FAIL_ACTIVATE_424,
   FAIL_ACTIVATE_500,
   /* pagopa-proxy: getActivationStatus */
+  FAIL_PAYMENT_STATUS_400,
   FAIL_PAYMENT_STATUS_404,
   FAIL_PAYMENT_STATUS_424,
   FAIL_PAYMENT_STATUS_500,

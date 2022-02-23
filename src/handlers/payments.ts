@@ -10,6 +10,7 @@ import {
   ResponseErrorFromValidationErrors,
   ResponseErrorInternal,
   ResponseErrorNotFound,
+  ResponseErrorValidation,
   ResponseSuccessJson
 } from "@pagopa/ts-commons/lib/responses";
 import { PathReporter } from "io-ts/PathReporter";
@@ -24,22 +25,13 @@ import {
   ResponsePaymentError,
   ResponseSuccessfulCreated
 } from "../utils/types";
-import {
-  ActivatePaymentT,
-  GetActivationStatusT,
-  GetPaymentInfoT
-} from "../generated/pagopa_proxy/requestTypes";
+import { ActivatePaymentT, GetActivationStatusT, GetPaymentInfoT } from "../generated/pagopa_proxy/requestTypes";
 import { RptId } from "../generated/pagopa_proxy/RptId";
 import { PaymentRequestsGetResponse } from "../generated/pagopa_proxy/PaymentRequestsGetResponse";
 import { PaymentFaultV2Enum } from "../generated/pagopa_proxy/PaymentFaultV2";
 import { PaymentFaultEnum } from "../generated/pagopa_proxy/PaymentFault";
 import { PaymentActivationsPostRequest } from "../generated/pagopa_proxy/PaymentActivationsPostRequest";
-import {
-  FlowCase,
-  getFlowCookie,
-  getFlowFromRptId,
-  setFlowCookie
-} from "../flow";
+import { FlowCase, getFlowCookie, getFlowFromRptId, setFlowCookie } from "../flow";
 import { PaymentActivationsPostResponse } from "../generated/pagopa_proxy/PaymentActivationsPostResponse";
 import { PaymentActivationsGetResponse } from "../generated/pagopa_proxy/PaymentActivationsGetResponse";
 import { Pay3ds2UsingPOSTT } from "../generated/payment_manager/requestTypes";
@@ -281,9 +273,12 @@ export const getPaymentInfoController: (
     importoSingoloVersamento: 12000
   };
 
-  const isModifiedFlow = O.fromPredicate(
-    flow =>
-      flow === FlowCase.FAIL_VERIFY_500 || flow === FlowCase.FAIL_VERIFY_424
+  const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
+    [
+      FlowCase.FAIL_VERIFY_400,
+      FlowCase.FAIL_VERIFY_424,
+      FlowCase.FAIL_VERIFY_500
+    ].includes(flow)
   );
 
   return pipe(
@@ -301,14 +296,19 @@ export const getPaymentInfoController: (
         ),
       flow => {
         switch (flow) {
-          case FlowCase.FAIL_VERIFY_500:
-            return ResponseErrorInternal(
-              `Mock – Failure case ${FlowCase[flow]}`
+          case FlowCase.FAIL_VERIFY_400:
+            return ResponseErrorValidation(
+              `Mock – Failure case ${FlowCase[flow]}`,
+              ""
             );
           case FlowCase.FAIL_VERIFY_424:
             return ResponsePaymentError(
               PaymentFaultEnum.GENERIC_ERROR,
               PaymentFaultV2Enum.GENERIC_ERROR
+            );
+          case FlowCase.FAIL_VERIFY_500:
+            return ResponseErrorInternal(
+              `Mock – Failure case ${FlowCase[flow]}`
             );
           default:
             // eslint-disable-next-line sonarjs/no-duplicate-string
@@ -370,9 +370,12 @@ const activatePaymentController: (
     importoSingoloVersamento: params.body.importoSingoloVersamento
   };
 
-  const isModifiedFlow = O.fromPredicate(
-    flow =>
-      flow === FlowCase.FAIL_ACTIVATE_500 || flow === FlowCase.FAIL_ACTIVATE_424
+  const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
+    [
+      FlowCase.FAIL_ACTIVATE_400,
+      FlowCase.FAIL_ACTIVATE_424,
+      FlowCase.FAIL_ACTIVATE_500
+    ].includes(flow)
   );
 
   return pipe(
@@ -390,14 +393,19 @@ const activatePaymentController: (
         ),
       flow => {
         switch (flow) {
-          case FlowCase.FAIL_ACTIVATE_500:
-            return ResponseErrorInternal(
-              `Mock – Failure case ${FlowCase[flow]}`
+          case FlowCase.FAIL_VERIFY_400:
+            return ResponseErrorValidation(
+              `Mock – Failure case ${FlowCase[flow]}`,
+              ""
             );
           case FlowCase.FAIL_ACTIVATE_424:
             return ResponsePaymentError(
               PaymentFaultEnum.GENERIC_ERROR,
               PaymentFaultV2Enum.GENERIC_ERROR
+            );
+          case FlowCase.FAIL_ACTIVATE_500:
+            return ResponseErrorInternal(
+              `Mock – Failure case ${FlowCase[flow]}`
             );
           default:
             throw new Error("Bug – Unhandled flow case");
@@ -440,6 +448,7 @@ const checkPaymentStatusController: (
 
   const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
     [
+      FlowCase.FAIL_PAYMENT_STATUS_400,
       FlowCase.FAIL_PAYMENT_STATUS_404,
       FlowCase.FAIL_PAYMENT_STATUS_424,
       FlowCase.FAIL_PAYMENT_STATUS_500
@@ -461,6 +470,11 @@ const checkPaymentStatusController: (
         ),
       flow => {
         switch (flow) {
+          case FlowCase.FAIL_VERIFY_400:
+            return ResponseErrorValidation(
+              `Mock – Failure case ${FlowCase[flow]}`,
+              ""
+            );
           case FlowCase.FAIL_PAYMENT_STATUS_404:
             return ResponseErrorNotFound(
               `Mock – Failure case ${FlowCase[flow]}`,
