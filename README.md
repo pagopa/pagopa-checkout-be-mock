@@ -18,11 +18,12 @@ Mock of backend services used by pagopa Checkout.
 
 This mock uses the following environment variables:
 
-| Name                             | Description                                                       | Required | Default value |
-|----------------------------------|-------------------------------------------------------------------|----------|---------------|
-| ENDPOINT_DELAY                   | Delay time in milliseconds applied to every endpoint              | No       | 0             |
-| CHECK_STATUS_ADDITIONAL_ATTEMPTS | Additional attempts made when calling PM transaction status check | No       | 0             |
+| Name                             | Description                                                           | Required | Default value |
+|----------------------------------|-----------------------------------------------------------------------|----------|---------------|
+| ENDPOINT_DELAY                   | Delay time in milliseconds applied to every endpoint                  | No       | 0             |
+| CHECK_STATUS_ADDITIONAL_ATTEMPTS | Additional attempts made when calling PM transaction status check (†) | No       | 0             |
 
+(†) Note that the total time to successfully complete a transaction status check is `(CHECK_STATUS_ADDITIONAL_ATTEMPTS + 2) * ENDPOINT_DELAY`
 
 You must set up environment variables by creating a `.env` file. You can use the provided example file as such to get default values for these variables:
 
