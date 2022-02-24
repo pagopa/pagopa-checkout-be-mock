@@ -105,5 +105,16 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     toExpressHandler(checkPaymentStatusHandler(ID_PAYMENT))
   );
 
+  router.get("/checkout/payments/v1/browsers/current/info", (req, res) => {
+    res.set("Content-Type", "application/json");
+
+    const browserInfo = {
+      accept: req.get("Accept"),
+      ip: req.ip,
+      useragent: req.get("User-Agent")
+    };
+    res.send(browserInfo);
+  });
+
   return app;
 };
