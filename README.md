@@ -18,11 +18,12 @@ Mock of backend services used by pagopa Checkout.
 
 This mock uses the following environment variables:
 
-| Name                           | Description                                                     | Required |
-|--------------------------------|-----------------------------------------------------------------|----------|
-| PAGOPA_FUNCTIONS_CHECKOUT_HOST | (†) Host of pagoPA functions supporting pagoPA Checkout backend | Yes      |
-| PAGOPA_FUNCTIONS_CHECKOUT_PORT | (†) Port of pagoPA functions supporting pagoPA Checkout backend | Yes      |
-| ENDPOINT_DELAY                 | Delay time applied to every endpoint                            | Yes      |
+| Name                             | Description                                                       | Required | Default value |
+|----------------------------------|-------------------------------------------------------------------|----------|---------------|
+| PAGOPA_FUNCTIONS_CHECKOUT_HOST   | (†) Host of pagoPA functions supporting pagoPA Checkout backend   | Yes      | N /A          |
+| PAGOPA_FUNCTIONS_CHECKOUT_PORT   | (†) Port of pagoPA functions supporting pagoPA Checkout backend   | Yes      | N/A           |
+| ENDPOINT_DELAY                   | Delay time in milliseconds applied to every endpoint              | No       | 0             |
+| CHECK_STATUS_ADDITIONAL_ATTEMPTS | Additional attempts made when calling PM transaction status check | No       | 0             |
 
 (†): please refer to [this repo](https://github.com/pagopa/pagopa-functions-checkout)
 

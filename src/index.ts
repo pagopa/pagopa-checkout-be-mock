@@ -3,6 +3,9 @@ import * as App from "./app";
 import { logger } from "./logger";
 
 logger.info(`Endpoint delay: ${process.env.ENDPOINT_DELAY}ms`);
+logger.info(
+  `Additional attempts on transaction status check: ${process.env.CHECK_STATUS_ADDITIONAL_ATTEMPTS}`
+);
 
 App.newExpressApp()
   .then(app => {
