@@ -22,6 +22,7 @@ This mock uses the following environment variables:
 |--------------------------------|-----------------------------------------------------------------|----------|
 | PAGOPA_FUNCTIONS_CHECKOUT_HOST | (†) Host of pagoPA functions supporting pagoPA Checkout backend | Yes      |
 | PAGOPA_FUNCTIONS_CHECKOUT_PORT | (†) Port of pagoPA functions supporting pagoPA Checkout backend | Yes      |
+| ENDPOINT_DELAY                 | Delay time applied to every endpoint                            | Yes      |
 
 (†): please refer to [this repo](https://github.com/pagopa/pagopa-functions-checkout)
 

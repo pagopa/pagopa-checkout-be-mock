@@ -25,6 +25,10 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.use(express.json());
   app.use(cookieParser());
 
+  app.use((req, res, next) => {
+    setTimeout(next, Number(process.env.ENDPOINT_DELAY));
+  });
+
   app.use((_req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
