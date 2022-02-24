@@ -25,13 +25,22 @@ import {
   ResponsePaymentError,
   ResponseSuccessfulCreated
 } from "../utils/types";
-import { ActivatePaymentT, GetActivationStatusT, GetPaymentInfoT } from "../generated/pagopa_proxy/requestTypes";
+import {
+  ActivatePaymentT,
+  GetActivationStatusT,
+  GetPaymentInfoT
+} from "../generated/pagopa_proxy/requestTypes";
 import { RptId } from "../generated/pagopa_proxy/RptId";
 import { PaymentRequestsGetResponse } from "../generated/pagopa_proxy/PaymentRequestsGetResponse";
 import { PaymentFaultV2Enum } from "../generated/pagopa_proxy/PaymentFaultV2";
 import { PaymentFaultEnum } from "../generated/pagopa_proxy/PaymentFault";
 import { PaymentActivationsPostRequest } from "../generated/pagopa_proxy/PaymentActivationsPostRequest";
-import { FlowCase, getFlowCookie, getFlowFromRptId, setFlowCookie } from "../flow";
+import {
+  FlowCase,
+  getFlowCookie,
+  getFlowFromRptId,
+  setFlowCookie
+} from "../flow";
 import { PaymentActivationsPostResponse } from "../generated/pagopa_proxy/PaymentActivationsPostResponse";
 import { PaymentActivationsGetResponse } from "../generated/pagopa_proxy/PaymentActivationsGetResponse";
 import { Pay3ds2UsingPOSTT } from "../generated/payment_manager/requestTypes";

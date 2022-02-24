@@ -25,6 +25,10 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.use(express.json());
   app.use(cookieParser());
 
+  app.use((req, res, next) => {
+    setTimeout(next, Number(process.env.ENDPOINT_DELAY));
+  });
+
   app.use((_req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
@@ -100,6 +104,17 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     "/checkout/payments/v1/payment-activations/:codiceContestoPagamento",
     toExpressHandler(checkPaymentStatusHandler(ID_PAYMENT))
   );
+
+  router.get("/checkout/payments/v1/browsers/current/info", (req, res) => {
+    res.set("Content-Type", "application/json");
+
+    const browserInfo = {
+      accept: req.get("Accept"),
+      ip: req.ip,
+      useragent: req.get("User-Agent")
+    };
+    res.send(browserInfo);
+  });
 
   return app;
 };
