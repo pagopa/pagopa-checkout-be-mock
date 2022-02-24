@@ -59,8 +59,8 @@ Build the package with
 $ yarn build
 ```
 
-then, if for some reason you don't want to run the project with docker, you can use this one-liner:
+then, if for some reason you don't want to run the project with docker, you can just use:
 
 ```shell
-$  (export $(grep -v '^#' .env | xargs) && yarn start)
+$ yarn start
 ```
