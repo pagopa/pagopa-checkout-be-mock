@@ -445,6 +445,11 @@ export const activatePaymentHandler = (): EndpointHandler<ActivatePaymentT> => a
   );
 };
 
+// eslint-disable-next-line functional/no-let
+let additionalAttempts = Number(
+  process.env.ACTIVATION_STATUS_ADDITIONAL_ATTEMPTS
+);
+
 const checkPaymentStatusController: (
   idPayment: string,
   flowId: FlowCase
@@ -474,7 +479,18 @@ const checkPaymentStatusController: (
           E.mapLeft<t.Errors, HandlerResponseType<GetActivationStatusT>>(e =>
             ResponseErrorFromValidationErrors(PaymentActivationsGetResponse)(e)
           ),
-          E.map(ResponseSuccessJson),
+          E.map(responseData => {
+            if (additionalAttempts > 0) {
+              const responseObj = ResponseErrorNotFound(
+                `Mock – Additional attempt #${additionalAttempts} on activation`,
+                ""
+              );
+              additionalAttempts--;
+              return responseObj;
+            } else {
+              return ResponseSuccessJson(responseData);
+            }
+          }),
           E.getOrElse(t.identity)
         ),
       flow => {
