@@ -27,10 +27,6 @@ import { FlowCase, getFlowCookie } from "../flow";
 let transactionStatus: Transaction3DSStatus =
   Transaction3DSStatus.AwaitingMethod;
 
-// eslint-disable-next-line functional/no-let
-let additionalAttempts: number =
-  Number(process.env.CHECK_STATUS_ADDITIONAL_ATTEMPTS) + 1;
-
 const checkTransactionController: (
   idPayment: string,
   flowId: FlowCase
@@ -39,8 +35,6 @@ const checkTransactionController: (
 ): HandlerResponseType<CheckStatusUsingGETT> => {
   const idTransaction = 7090106799;
 
-  logger.info(`Attempts: ${additionalAttempts}`);
-
   /* Here we skip all 3ds2 challenge verification steps and mock everything with a successful response */
   switch (transactionStatus) {
     case Transaction3DSStatus.AwaitingMethod: {
@@ -48,15 +42,10 @@ const checkTransactionController: (
       break;
     }
     case Transaction3DSStatus.AfterMethod: {
-      additionalAttempts--;
-      if (additionalAttempts <= 0) {
-        transactionStatus = Transaction3DSStatus.Confirmed;
-      }
+      transactionStatus = Transaction3DSStatus.Confirmed;
       break;
     }
     case Transaction3DSStatus.Confirmed: {
-      additionalAttempts =
-        Number(process.env.CHECK_STATUS_ADDITIONAL_ATTEMPTS) + 1;
       transactionStatus = Transaction3DSStatus.AwaitingMethod;
       break;
     }
