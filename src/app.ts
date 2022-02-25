@@ -1,12 +1,13 @@
 import * as express from "express";
 import { toExpressHandler } from "@pagopa/ts-commons/lib/express";
 import * as cookieParser from "cookie-parser";
+import { createProxyMiddleware } from "http-proxy-middleware";
 import {
   cancelPayment,
   pay3ds2Handler,
-  activatePaymentHandler,
   paymentCheckHandler,
   getPaymentInfoHandler,
+  activatePaymentHandler,
   checkPaymentStatusHandler
 } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
@@ -90,31 +91,33 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.put("/pp-restapi/v4/wallet/:id", updateWalletHandler);
 
-  router.get(
+  app.get(
     "/checkout/payments/v1/payment-requests/:rptId",
     getPaymentInfoHandler(ID_PAYMENT)
   );
 
-  router.post(
+  app.post(
     "/checkout/payments/v1/payment-activations",
     toExpressHandler(activatePaymentHandler())
   );
 
-  router.get(
+  app.get(
     "/checkout/payments/v1/payment-activations/:codiceContestoPagamento",
     toExpressHandler(checkPaymentStatusHandler(ID_PAYMENT))
   );
 
-  router.get("/checkout/payments/v1/browsers/current/info", (req, res) => {
-    res.set("Content-Type", "application/json");
-
-    const browserInfo = {
-      accept: req.get("Accept"),
-      ip: req.ip,
-      useragent: req.get("User-Agent")
-    };
-    res.send(browserInfo);
-  });
+  app.use(
+    createProxyMiddleware("/checkout/payment-transactions", {
+      onProxyReq: (proxyReq, _req, _res) => {
+        // eslint-disable-next-line functional/immutable-data
+        proxyReq.setHeader("X-Forwarded-For", "127.0.0.1");
+      },
+      pathRewrite: {
+        "^/checkout/payment-transactions": "/api"
+      },
+      target: `http://${process.env.PAGOPA_FUNCTIONS_CHECKOUT_HOST}:${process.env.PAGOPA_FUNCTIONS_CHECKOUT_PORT}`
+    })
+  );
 
   return app;
 };
