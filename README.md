@@ -74,33 +74,41 @@ If you invoke the `/checkout/payments/v1/payment-requests/:rptId` endpoint with 
 
 This is currently implemented via a `mockFlow` cookie which is returned from the endpoint with the flow name as the value.
 
-| Flow name                       | Flow code |
-|---------------------------------|-----------|
-| OK                              | 00        |
-| FAIL_VERIFY_400                 | 01        |
-| FAIL_VERIFY_424                 | 02        |
-| FAIL_VERIFY_500                 | 03        |
-| FAIL_ACTIVATE_400               | 04        |
-| FAIL_ACTIVATE_424               | 05        |
-| FAIL_ACTIVATE_500               | 06        |
-| FAIL_PAYMENT_STATUS_404         | 07        |
-| FAIL_PAYMENT_STATUS_424         | 08        |
-| FAIL_PAYMENT_STATUS_500         | 09        |
-| ANSWER_ADD_WALLET_STATUS_201    | 10        |
-| FAIL_ADD_WALLET_STATUS_403      | 11        |
-| FAIL_ADD_WALLET_STATUS_404      | 12        |
-| ANSWER_START_SESSION_STATUS_201 | 13        |
-| FAIL_START_SESSION_STATUS_401   | 14        |
-| FAIL_START_SESSION_STATUS_403   | 15        |
-| FAIL_START_SESSION_STATUS_404   | 16        |
-| FAIL_START_SESSION_STATUS_422   | 17        |
-| FAIL_APPROVE_TERMS_STATUS_404   | 18        |
-| FAIL_APPROVE_TERMS_STATUS_422   | 19        |
-| FAIL_APPROVE_TERMS_STATUS_500   | 20        |
-| ANSWER_PAY_3DS2_STATUS_201      | 21        |
-| FAIL_PAY_3DS2_STATUS_401        | 22        |
-| FAIL_PAY_3DS2_STATUS_403        | 23        |
-| FAIL_PAY_3DS2_STATUS_404        | 24        |
-| FAIL_CHECK_STATUS_404           | 25        |
-| FAIL_CHECK_STATUS_422           | 26        |
-| FAIL_CHECK_STATUS_500           | 27        |
+| Flow name                                | Flow code |
+|------------------------------------------|-----------|
+| OK                                       | 0         |
+| FAIL_VERIFY_400                          | 1         |
+| FAIL_VERIFY_424_INT_PA_IRRAGGIUNGIBILE   | 2         |
+| FAIL_VERIFY_424_PAA_PAGAMENTO_IN_CORSO   | 3         |
+| FAIL_VERIFY_424_PPT_SINTASSI_XSD         | 4         |
+| FAIL_VERIFY_424_PPT_SYSTEM_ERROR         | 5         |
+| FAIL_VERIFY_500                          | 6         |
+| FAIL_ACTIVATE_400                        | 7         |
+| FAIL_ACTIVATE_424_INT_PA_IRRAGGIUNGIBILE | 8         |
+| FAIL_ACTIVATE_424_PAA_PAGAMENTO_IN_CORSO | 9         |
+| FAIL_ACTIVATE_424_PPT_SINTASSI_XSD       | 10        |
+| FAIL_ACTIVATE_424_PPT_SYSTEM_ERROR       | 11        |
+| FAIL_ACTIVATE_500                        | 12        |
+| FAIL_PAYMENT_STATUS_400                  | 13        |
+| FAIL_PAYMENT_STATUS_404                  | 14        |
+| FAIL_PAYMENT_STATUS_424                  | 15        |
+| FAIL_PAYMENT_STATUS_500                  | 16        |
+| ANSWER_ADD_WALLET_STATUS_201             | 17        |
+| FAIL_ADD_WALLET_STATUS_403               | 18        |
+| FAIL_ADD_WALLET_STATUS_404               | 19        |
+| ANSWER_START_SESSION_STATUS_201          | 20        |
+| FAIL_START_SESSION_STATUS_401            | 21        |
+| FAIL_START_SESSION_STATUS_403            | 22        |
+| FAIL_START_SESSION_STATUS_404            | 23        |
+| FAIL_START_SESSION_STATUS_422            | 24        |
+| FAIL_START_SESSION_STATUS_500            | 25        |
+| FAIL_APPROVE_TERMS_STATUS_404            | 26        |
+| FAIL_APPROVE_TERMS_STATUS_422            | 27        |
+| FAIL_APPROVE_TERMS_STATUS_500            | 28        |
+| ANSWER_PAY_3DS2_STATUS_201               | 29        |
+| FAIL_PAY_3DS2_STATUS_401                 | 30        |
+| FAIL_PAY_3DS2_STATUS_403                 | 31        |
+| FAIL_PAY_3DS2_STATUS_404                 | 32        |
+| FAIL_CHECK_STATUS_404                    | 33        |
+| FAIL_CHECK_STATUS_422                    | 34        |
+| FAIL_CHECK_STATUS_500                    | 35        |

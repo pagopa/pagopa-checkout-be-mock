@@ -285,7 +285,10 @@ export const getPaymentInfoController: (
   const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
     [
       FlowCase.FAIL_VERIFY_400,
-      FlowCase.FAIL_VERIFY_424,
+      FlowCase.FAIL_VERIFY_424_INT_PA_IRRAGGIUNGIBILE,
+      FlowCase.FAIL_VERIFY_424_PAA_PAGAMENTO_IN_CORSO,
+      FlowCase.FAIL_VERIFY_424_PPT_SINTASSI_XSD,
+      FlowCase.FAIL_VERIFY_424_PPT_SYSTEM_ERROR,
       FlowCase.FAIL_VERIFY_500
     ].includes(flow)
   );
@@ -310,10 +313,25 @@ export const getPaymentInfoController: (
               `Mock – Failure case ${FlowCase[flow]}`,
               ""
             );
-          case FlowCase.FAIL_VERIFY_424:
+          case FlowCase.FAIL_VERIFY_424_INT_PA_IRRAGGIUNGIBILE:
             return ResponsePaymentError(
               PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.GENERIC_ERROR
+              PaymentFaultV2Enum.PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE
+            );
+          case FlowCase.FAIL_VERIFY_424_PAA_PAGAMENTO_IN_CORSO:
+            return ResponsePaymentError(
+              PaymentFaultEnum.GENERIC_ERROR,
+              PaymentFaultV2Enum.PAA_PAGAMENTO_IN_CORSO
+            );
+          case FlowCase.FAIL_VERIFY_424_PPT_SINTASSI_XSD:
+            return ResponsePaymentError(
+              PaymentFaultEnum.GENERIC_ERROR,
+              PaymentFaultV2Enum.PPT_SINTASSI_XSD
+            );
+          case FlowCase.FAIL_VERIFY_424_PPT_SYSTEM_ERROR:
+            return ResponsePaymentError(
+              PaymentFaultEnum.GENERIC_ERROR,
+              PaymentFaultV2Enum.PPT_SYSTEM_ERROR
             );
           case FlowCase.FAIL_VERIFY_500:
             return ResponseErrorInternal(
@@ -382,7 +400,10 @@ const activatePaymentController: (
   const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
     [
       FlowCase.FAIL_ACTIVATE_400,
-      FlowCase.FAIL_ACTIVATE_424,
+      FlowCase.FAIL_ACTIVATE_424_INT_PA_IRRAGGIUNGIBILE,
+      FlowCase.FAIL_ACTIVATE_424_PAA_PAGAMENTO_IN_CORSO,
+      FlowCase.FAIL_ACTIVATE_424_PPT_SINTASSI_XSD,
+      FlowCase.FAIL_ACTIVATE_424_PPT_SYSTEM_ERROR,
       FlowCase.FAIL_ACTIVATE_500
     ].includes(flow)
   );
@@ -407,10 +428,25 @@ const activatePaymentController: (
               `Mock – Failure case ${FlowCase[flow]}`,
               ""
             );
-          case FlowCase.FAIL_ACTIVATE_424:
+          case FlowCase.FAIL_ACTIVATE_424_INT_PA_IRRAGGIUNGIBILE:
             return ResponsePaymentError(
               PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.GENERIC_ERROR
+              PaymentFaultV2Enum.PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE
+            );
+          case FlowCase.FAIL_ACTIVATE_424_PAA_PAGAMENTO_IN_CORSO:
+            return ResponsePaymentError(
+              PaymentFaultEnum.GENERIC_ERROR,
+              PaymentFaultV2Enum.PAA_PAGAMENTO_IN_CORSO
+            );
+          case FlowCase.FAIL_ACTIVATE_424_PPT_SINTASSI_XSD:
+            return ResponsePaymentError(
+              PaymentFaultEnum.GENERIC_ERROR,
+              PaymentFaultV2Enum.PPT_SINTASSI_XSD
+            );
+          case FlowCase.FAIL_ACTIVATE_424_PPT_SYSTEM_ERROR:
+            return ResponsePaymentError(
+              PaymentFaultEnum.GENERIC_ERROR,
+              PaymentFaultV2Enum.PPT_SYSTEM_ERROR
             );
           case FlowCase.FAIL_ACTIVATE_500:
             return ResponseErrorInternal(
