@@ -76,16 +76,16 @@ This is currently implemented via a `mockFlow` cookie which is returned from the
 
 | Flow name                                | Flow code |
 |------------------------------------------|-----------|
-| OK                                       | 0         |
-| FAIL_VERIFY_400                          | 1         |
-| FAIL_VERIFY_424_INT_PA_IRRAGGIUNGIBILE   | 2         |
-| FAIL_VERIFY_424_PAA_PAGAMENTO_IN_CORSO   | 3         |
-| FAIL_VERIFY_424_PPT_SINTASSI_XSD         | 4         |
-| FAIL_VERIFY_424_PPT_SYSTEM_ERROR         | 5         |
-| FAIL_VERIFY_500                          | 6         |
-| FAIL_ACTIVATE_400                        | 7         |
-| FAIL_ACTIVATE_424_INT_PA_IRRAGGIUNGIBILE | 8         |
-| FAIL_ACTIVATE_424_PAA_PAGAMENTO_IN_CORSO | 9         |
+| OK                                       | 00        |
+| FAIL_VERIFY_400                          | 01        |
+| FAIL_VERIFY_424_INT_PA_IRRAGGIUNGIBILE   | 02        |
+| FAIL_VERIFY_424_PAA_PAGAMENTO_IN_CORSO   | 03        |
+| FAIL_VERIFY_424_PPT_SINTASSI_XSD         | 04        |
+| FAIL_VERIFY_424_PPT_SYSTEM_ERROR         | 05        |
+| FAIL_VERIFY_500                          | 06        |
+| FAIL_ACTIVATE_400                        | 07        |
+| FAIL_ACTIVATE_424_INT_PA_IRRAGGIUNGIBILE | 08        |
+| FAIL_ACTIVATE_424_PAA_PAGAMENTO_IN_CORSO | 09        |
 | FAIL_ACTIVATE_424_PPT_SINTASSI_XSD       | 10        |
 | FAIL_ACTIVATE_424_PPT_SYSTEM_ERROR       | 11        |
 | FAIL_ACTIVATE_500                        | 12        |
