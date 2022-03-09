@@ -2,7 +2,6 @@ import { pipe } from "fp-ts/function";
 import * as E from "fp-ts/Either";
 import {
   ResponseErrorForbiddenAnonymousUser,
-  ResponseErrorForbiddenNotAuthorized,
   ResponseErrorInternal,
   ResponseErrorNotFound,
   ResponseSuccessJson
@@ -22,6 +21,7 @@ import {
   EndpointHandler,
   HandlerResponseType,
   ResponseSuccessfulCreated,
+  ResponseUnauthorized,
   ResponseUnprocessableEntity
 } from "../utils/types";
 import { Session } from "../generated/payment_manager/Session";
@@ -82,7 +82,7 @@ export const startSessionController: (
           case FlowCase.ANSWER_START_SESSION_STATUS_201:
             return ResponseSuccessfulCreated;
           case FlowCase.FAIL_START_SESSION_STATUS_401:
-            return ResponseErrorForbiddenNotAuthorized;
+            return ResponseUnauthorized;
           case FlowCase.FAIL_START_SESSION_STATUS_403:
             return ResponseErrorForbiddenAnonymousUser;
           case FlowCase.FAIL_START_SESSION_STATUS_404:

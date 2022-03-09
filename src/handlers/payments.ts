@@ -6,7 +6,6 @@ import * as O from "fp-ts/lib/Option";
 import * as t from "io-ts";
 import {
   ResponseErrorForbiddenAnonymousUser,
-  ResponseErrorForbiddenNotAuthorized,
   ResponseErrorFromValidationErrors,
   ResponseErrorInternal,
   ResponseErrorNotFound,
@@ -23,7 +22,8 @@ import {
   EndpointHandler,
   HandlerResponseType,
   ResponsePaymentError,
-  ResponseSuccessfulCreated
+  ResponseSuccessfulCreated,
+  ResponseUnauthorized
 } from "../utils/types";
 import {
   ActivatePaymentT,
@@ -208,9 +208,9 @@ const pay3ds2Controller: (
           case FlowCase.ANSWER_PAY_3DS2_STATUS_201:
             return ResponseSuccessfulCreated;
           case FlowCase.FAIL_PAY_3DS2_STATUS_401:
-            return ResponseErrorForbiddenAnonymousUser;
+            return ResponseUnauthorized;
           case FlowCase.FAIL_PAY_3DS2_STATUS_403:
-            return ResponseErrorForbiddenNotAuthorized;
+            return ResponseErrorForbiddenAnonymousUser;
           case FlowCase.FAIL_PAY_3DS2_STATUS_404:
             return ResponseErrorNotFound(
               `Mock – Failure case ${FlowCase[flow]}`,
@@ -423,7 +423,7 @@ const activatePaymentController: (
         ),
       flow => {
         switch (flow) {
-          case FlowCase.FAIL_VERIFY_400:
+          case FlowCase.FAIL_ACTIVATE_400:
             return ResponseErrorValidation(
               `Mock – Failure case ${FlowCase[flow]}`,
               ""
@@ -531,7 +531,7 @@ const checkPaymentStatusController: (
         ),
       flow => {
         switch (flow) {
-          case FlowCase.FAIL_VERIFY_400:
+          case FlowCase.FAIL_PAYMENT_STATUS_400:
             return ResponseErrorValidation(
               `Mock – Failure case ${FlowCase[flow]}`,
               ""

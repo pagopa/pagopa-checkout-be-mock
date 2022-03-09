@@ -7,7 +7,6 @@ import {
   HttpStatusCodeEnum,
   IResponse,
   IResponseErrorForbiddenAnonymousUser,
-  IResponseErrorForbiddenNotAuthorized,
   IResponseErrorInternal,
   IResponseErrorNotFound,
   IResponseErrorValidation,
@@ -26,7 +25,7 @@ type InnerHandlerResponseType<T> = T extends IResponseType<200, infer R>
   : T extends IResponseType<400, infer _B>
   ? IResponseErrorValidation // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IResponseType<401, infer _C>
-  ? IResponseErrorForbiddenNotAuthorized // eslint-disable-next-line @typescript-eslint/no-unused-vars,
+  ? IResponseUnauthorized // eslint-disable-next-line @typescript-eslint/no-unused-vars,
   : T extends IResponseType<403, infer _D>
   ? IResponseErrorForbiddenAnonymousUser // eslint-disable-next-line @typescript-eslint/no-unused-vars,
   : T extends IResponseType<404, infer _E>
@@ -66,6 +65,17 @@ export const ResponseSuccessfulCreated: IResponseSuccessfulCreated = {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: res => res.status(HttpStatusCodeEnum.HTTP_STATUS_201).send(),
   kind: "IResponseSuccessfulCreated"
+};
+
+export declare type IResponseUnauthorized = IResponse<"IResponseUnauthorized">;
+
+/**
+ * Returns a 401 response without a body.
+ */
+export const ResponseUnauthorized: IResponseUnauthorized = {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  apply: res => res.status(HttpStatusCodeEnum.HTTP_STATUS_401).send(),
+  kind: "IResponseUnauthorized"
 };
 
 export declare type IResponseUnprocessableEntity = IResponse<
