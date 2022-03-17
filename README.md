@@ -1,4 +1,4 @@
-# pagopa-checkout-backend-mock
+# pagopa-checkout-be-mock
 
 **Table of contents**
  * [Prerequisites](#prerequisites)
