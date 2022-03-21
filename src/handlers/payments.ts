@@ -39,6 +39,7 @@ import {
   FlowCase,
   getFlowCookie,
   getFlowFromRptId,
+  maybeGetFlowCookie,
   setFlowCookie
 } from "../flow";
 import { PaymentActivationsPostResponse } from "../generated/pagopa_proxy/PaymentActivationsPostResponse";
@@ -356,8 +357,8 @@ export const getPaymentInfoHandler = (
     ),
     E.map(rptId => {
       const flowId = pipe(
-        rptId,
-        getFlowFromRptId,
+        maybeGetFlowCookie(req),
+        O.fold(() => pipe(rptId, getFlowFromRptId), O.of),
         O.getOrElse(() => FlowCase.OK)
       );
 

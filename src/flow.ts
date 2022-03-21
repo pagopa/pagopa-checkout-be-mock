@@ -68,11 +68,18 @@ export const getFlowFromRptId: (
   }
 };
 
-export const getFlowCookie: (req: express.Request) => FlowCase = req =>
+export const maybeGetFlowCookie: (
+  req: express.Request
+) => O.Option<FlowCase> = req =>
   pipe(
     O.fromNullable(req.cookies.mockFlow),
     O.filter(id => id in FlowCase),
-    O.map((id: FlowCaseKey) => FlowCase[id]),
+    O.map((id: FlowCaseKey) => FlowCase[id])
+  );
+
+export const getFlowCookie: (req: express.Request) => FlowCase = req =>
+  pipe(
+    maybeGetFlowCookie(req),
     O.getOrElse(() => FlowCase.OK as FlowCase)
   );
 
