@@ -274,10 +274,6 @@ export const getPaymentInfoController: (
   const response = {
     causaleVersamento: "TARI/TEFA 2021",
     codiceContestoPagamento,
-    enteBeneficiario: {
-      denominazioneBeneficiario: "EC_TE",
-      identificativoUnivocoBeneficiario: "77777777777"
-    },
     ibanAccredito: "IT21Q0760101600000000546200",
     importoSingoloVersamento: 12000
   };
