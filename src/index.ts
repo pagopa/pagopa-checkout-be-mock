@@ -11,7 +11,7 @@ App.newExpressApp()
   .then(app => {
     const listeningPorts = [8080, 8081];
 
-    logger.info("Starting PM mock...");
+    logger.info("Starting pagopa-checkout-be-mock...");
 
     for (const port of listeningPorts) {
       const server = http.createServer(app);
