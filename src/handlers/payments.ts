@@ -275,12 +275,17 @@ export const getPaymentInfoController: (
   const response = {
     causaleVersamento: "TARI/TEFA 2021",
     codiceContestoPagamento,
+    enteBeneficiario: {
+      denominazioneBeneficiario: "EC_TE",
+      identificativoUnivocoBeneficiario: "77777777777"
+    },
     ibanAccredito: "IT21Q0760101600000000546200",
     importoSingoloVersamento: 12000
   };
 
   const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
     [
+      FlowCase.ANSWER_VERIFY_NO_ENTE_BENEFICIARIO,
       FlowCase.FAIL_VERIFY_400,
       FlowCase.FAIL_VERIFY_424_INT_PA_IRRAGGIUNGIBILE,
       FlowCase.FAIL_VERIFY_424_PAA_PAGAMENTO_IN_CORSO,
@@ -305,6 +310,21 @@ export const getPaymentInfoController: (
         ),
       flow => {
         switch (flow) {
+          case FlowCase.ANSWER_VERIFY_NO_ENTE_BENEFICIARIO:
+            return pipe(
+              response,
+              PaymentRequestsGetResponse.decode,
+              E.mapLeft<t.Errors, HandlerResponseType<GetPaymentInfoT>>(e =>
+                ResponseErrorFromValidationErrors(PaymentRequestsGetResponse)(e)
+              ),
+              E.map(r => {
+                // eslint-disable-next-line functional/immutable-data
+                r.enteBeneficiario = undefined;
+                return r;
+              }),
+              E.map(ResponseSuccessJson),
+              E.getOrElse(t.identity)
+            );
           case FlowCase.FAIL_VERIFY_400:
             return ResponseErrorValidation(
               `Mock – Failure case ${FlowCase[flow]}`,

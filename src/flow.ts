@@ -5,6 +5,7 @@ import { pipe } from "fp-ts/function";
 export enum FlowCase {
   OK,
   /* pagopa-proxy: getPaymentInfo */
+  ANSWER_VERIFY_NO_ENTE_BENEFICIARIO,
   FAIL_VERIFY_400,
   FAIL_VERIFY_424_INT_PA_IRRAGGIUNGIBILE,
   FAIL_VERIFY_424_PAA_PAGAMENTO_IN_CORSO,
