@@ -1697,6 +1697,14 @@
   dependencies:
     "@types/express" "*"
 
+"@types/express-mung@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@types/express-mung/-/express-mung-0.5.2.tgz#d0df337a6c770f8dada08ddf101757c3698f8c50"
+  integrity sha512-QOPFfb4CAw1ZAhA2z7jAXSn+TduuqaoLw3baFiaU+S+9unIt3zz2vq8MM820nCs/pRX81K73YOvz6pHTjjmSrg==
+  dependencies:
+    "@types/express" "*"
+    "@types/node" "*"
+
 "@types/express-serve-static-core@^4.17.18":
   version "4.17.28"
   resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.28.tgz#c47def9f34ec81dc6328d0b1b5303d1ec98d86b8"
@@ -1778,10 +1786,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.6.1.tgz#aee62c7b966f55fc66c7b6dfa1d58db2a616da61"
   integrity sha512-Sr7BhXEAer9xyGuCN3Ek9eg9xPviCF2gfu9kTfuU2HkTVAMYSDeX40fvpmo72n5nansg3nsBjuQBrsS28r+NUw==
 
-"@types/node@10.14.1":
-  version "10.14.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.1.tgz#8701cd760acc20beba5ffe0b7a1b879f39cb8c41"
-  integrity sha512-Rymt08vh1GaW4vYB6QP61/5m/CFLGnFZP++bJpWbiNxceNa6RBipDmb413jvtSf/R1gg5a/jQVl2jY4XVRscEA==
+"@types/node@^14.16.0":
+  version "14.18.12"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.12.tgz#0d4557fd3b94497d793efd4e7d92df2f83b4ef24"
+  integrity sha512-q4jlIR71hUpWTnGhXWcakgkZeHa3CCjcQcnuzU8M891BAWA2jHiziiWEPEkdS5pFsz7H9HJiy8BrK7tBRNrY7A==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -4374,6 +4382,13 @@ expect@^25.5.0:
     jest-message-util "^25.5.0"
     jest-regex-util "^25.2.6"
 
+express-interceptor@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/express-interceptor/-/express-interceptor-1.2.0.tgz#33460a8e11dce7e5a022caf555d377e45ddb822a"
+  integrity sha1-M0YKjhHc5+WgIsr1VdN35F3bgio=
+  dependencies:
+    debug "^2.2.0"
+
 express@^4.17.1:
   version "4.17.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.17.2.tgz#c18369f265297319beed4e5558753cc8c1364cb3"
@@ -5026,6 +5041,11 @@ hex-color-regex@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
+
+hijackresponse@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/hijackresponse/-/hijackresponse-5.0.0.tgz#03174e70e582a244034af9254c71e7d0a7a763cd"
+  integrity sha512-9ErmDCl4BdTEgLTQh36ZFP62EXPeKyDd68K/FmQoQFaV3i2QY9l/kacf9Ygw+iuSvF/qsNIkwUz6NOCIZAaqMw==
 
 hmac-drbg@^1.0.1:
   version "1.0.1"

@@ -1,14 +1,16 @@
+import { Readable } from "stream";
 import * as express from "express";
 import { toExpressHandler } from "@pagopa/ts-commons/lib/express";
 import * as cookieParser from "cookie-parser";
 import { createProxyMiddleware } from "http-proxy-middleware";
+import * as hijackResponse from "hijackresponse";
 import {
-  cancelPayment,
-  pay3ds2Handler,
-  paymentCheckHandler,
-  getPaymentInfoHandler,
   activatePaymentHandler,
-  checkPaymentStatusHandler
+  cancelPayment,
+  checkPaymentStatusHandler,
+  getPaymentInfoHandler,
+  pay3ds2Handler,
+  paymentCheckHandler
 } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
 import { addWalletHandler, updateWalletHandler } from "./handlers/wallet";
@@ -18,6 +20,7 @@ import {
 } from "./handlers/transactions";
 import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
+import { streamToString } from "./utils/utils";
 
 export const newExpressApp: () => Promise<Express.Application> = async () => {
   const app = express();
@@ -25,6 +28,33 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   app.use(express.json());
   app.use(cookieParser());
+
+  app.use("/checkout/*", async (req, res, next) => {
+    const { readable, writable } = await hijackResponse(res, next);
+    res.removeHeader("Connection");
+    const originalResponseBody = JSON.parse(await streamToString(readable));
+
+    if (
+      (res.statusCode === 424 || res.statusCode === 500) &&
+      originalResponseBody.detail_v2 !== null
+    ) {
+      res.status(400);
+
+      const response = {
+        detail: originalResponseBody.detail_v2,
+        status: 400,
+        title: originalResponseBody.title
+      };
+
+      const responseStream = Readable.from([JSON.stringify(response)]);
+      responseStream.pipe(writable);
+    } else {
+      const responseStream = Readable.from([
+        JSON.stringify(originalResponseBody)
+      ]);
+      responseStream.pipe(writable);
+    }
+  });
 
   app.use((req, res, next) => {
     setTimeout(next, Number(process.env.ENDPOINT_DELAY));
