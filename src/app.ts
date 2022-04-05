@@ -1,9 +1,7 @@
-import { Readable } from "stream";
 import * as express from "express";
 import { toExpressHandler } from "@pagopa/ts-commons/lib/express";
 import * as cookieParser from "cookie-parser";
-import { createProxyMiddleware } from "http-proxy-middleware";
-import * as hijackResponse from "hijackresponse";
+// import { createProxyMiddleware } from "http-proxy-middleware";
 import {
   activatePaymentHandler,
   cancelPayment,
@@ -20,7 +18,6 @@ import {
 } from "./handlers/transactions";
 import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
-import { streamToString } from "./utils/utils";
 
 export const newExpressApp: () => Promise<Express.Application> = async () => {
   const app = express();
@@ -29,31 +26,37 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.use(express.json());
   app.use(cookieParser());
 
-  app.use("/checkout/*", async (req, res, next) => {
-    const { readable, writable } = await hijackResponse(res, next);
-    res.removeHeader("Connection");
-    const originalResponseBody = JSON.parse(await streamToString(readable));
+  app.use("/checkout/*", async (req, res: express.Response, next) => {
+    const oldJson = res.json;
 
-    if (
-      (res.statusCode === 424 || res.statusCode === 500) &&
-      originalResponseBody.detail_v2 !== null
-    ) {
-      res.status(400);
+    // eslint-disable-next-line functional/immutable-data
+    res.json = (
+      body: Record<string, unknown>
+    ): express.Response<Record<string, unknown>> => {
+      try {
+        const originalResponseBody = body;
 
-      const response = {
-        detail: originalResponseBody.detail_v2,
-        status: 400,
-        title: originalResponseBody.title
-      };
+        if (
+          (res.statusCode === 424 || res.statusCode === 500) &&
+          originalResponseBody.detail_v2 !== null
+        ) {
+          res.status(400);
 
-      const responseStream = Readable.from([JSON.stringify(response)]);
-      responseStream.pipe(writable);
-    } else {
-      const responseStream = Readable.from([
-        JSON.stringify(originalResponseBody)
-      ]);
-      responseStream.pipe(writable);
-    }
+          const response = {
+            detail: originalResponseBody.detail_v2,
+            status: 400,
+            title: originalResponseBody.title
+          };
+
+          return oldJson.call(res, response);
+        } else {
+          return oldJson.call(res, originalResponseBody);
+        }
+      } catch (e) {
+        return oldJson.call(res, body);
+      }
+    };
+    next();
   });
 
   app.use((req, res, next) => {
@@ -136,17 +139,29 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     toExpressHandler(checkPaymentStatusHandler(ID_PAYMENT))
   );
 
-  app.use(
-    createProxyMiddleware("/checkout/payment-transactions", {
-      onProxyReq: (proxyReq, _req, _res) => {
-        // eslint-disable-next-line functional/immutable-data
-        proxyReq.setHeader("X-Forwarded-For", "127.0.0.1");
-      },
-      pathRewrite: {
-        "^/checkout/payment-transactions": "/api"
-      },
-      target: `http://${process.env.PAGOPA_FUNCTIONS_CHECKOUT_HOST}:${process.env.PAGOPA_FUNCTIONS_CHECKOUT_PORT}`
-    })
+  // app.use(
+  //   createProxyMiddleware("/checkout/payment-transactions", {
+  //     onProxyReq: (proxyReq, _req, _res) => {
+  // eslint-disable-next-line extra-rules/no-commented-out-code
+  //       proxyReq.setHeader("X-Forwarded-For", "127.0.0.1");
+  //     },
+  //     pathRewrite: {
+  //       "^/checkout/payment-transactions": "/api"
+  //     },
+  //     target: `http://${process.env.PAGOPA_FUNCTIONS_CHECKOUT_HOST}:${process.env.PAGOPA_FUNCTIONS_CHECKOUT_PORT}`
+  //   })
+  // );
+  app.get(
+    "/checkout/payment-transactions/v1/browsers/current/info",
+    async (_req, res) => {
+      res.send({
+        accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        ip: "127.0.0.1",
+        useragent:
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36"
+      });
+    }
   );
 
   return app;
