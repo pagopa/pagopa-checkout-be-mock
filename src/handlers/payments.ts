@@ -377,8 +377,9 @@ export const getPaymentInfoHandler = (
     ),
     E.map(rptId => {
       const flowId = pipe(
-        maybeGetFlowCookie(req),
-        O.fold(() => pipe(rptId, getFlowFromRptId), O.of),
+        rptId,
+        getFlowFromRptId,
+        O.fold(() => maybeGetFlowCookie(req), O.of),
         O.getOrElse(() => FlowCase.OK)
       );
 
