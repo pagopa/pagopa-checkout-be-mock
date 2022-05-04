@@ -7,7 +7,6 @@ import * as t from "io-ts";
 import {
   ResponseErrorForbiddenAnonymousUser,
   ResponseErrorFromValidationErrors,
-  ResponseErrorInternal,
   ResponseErrorNotFound,
   ResponseErrorValidation,
   ResponseSuccessJson
@@ -21,7 +20,11 @@ import {
   EndpointController,
   EndpointHandler,
   HandlerResponseType,
+  ResponseErrorValidationFault,
+  ResponseGatewayTimeout,
+  ResponsePartyConfigurationError,
   ResponsePaymentError,
+  ResponsePaymentStatusFaultError,
   ResponseSuccessfulCreated,
   ResponseUnauthorized
 } from "../utils/types";
@@ -32,7 +35,6 @@ import {
 } from "../generated/pagopa_proxy/requestTypes";
 import { RptId } from "../generated/pagopa_proxy/RptId";
 import { PaymentRequestsGetResponse } from "../generated/pagopa_proxy/PaymentRequestsGetResponse";
-import { PaymentFaultV2Enum } from "../generated/pagopa_proxy/PaymentFaultV2";
 import { PaymentFaultEnum } from "../generated/pagopa_proxy/PaymentFault";
 import { PaymentActivationsPostRequest } from "../generated/pagopa_proxy/PaymentActivationsPostRequest";
 import {
@@ -47,6 +49,11 @@ import { PaymentActivationsGetResponse } from "../generated/pagopa_proxy/Payment
 import { Pay3ds2UsingPOSTT } from "../generated/payment_manager/requestTypes";
 import { logger } from "../logger";
 import { PayRequest } from "../generated/payment_manager/PayRequest";
+import { GatewayFaultEnum } from "../generated/pagopa_proxy/GatewayFault";
+import { PartyConfigurationFaultEnum } from "../generated/pagopa_proxy/PartyConfigurationFault";
+import { PartyTimeoutFaultEnum } from "../generated/pagopa_proxy/PartyTimeoutFault";
+import { PaymentStatusFaultEnum } from "../generated/pagopa_proxy/PaymentStatusFault";
+import { ValidationFaultEnum } from "../generated/pagopa_proxy/ValidationFault";
 
 export const paymentCheckHandler: (
   idPayment: string,
@@ -286,11 +293,12 @@ export const getPaymentInfoController: (
   const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
     [
       FlowCase.ANSWER_VERIFY_NO_ENTE_BENEFICIARIO,
-      FlowCase.FAIL_VERIFY_400,
-      FlowCase.FAIL_VERIFY_424_INT_PA_IRRAGGIUNGIBILE,
-      FlowCase.FAIL_VERIFY_424_PAA_PAGAMENTO_IN_CORSO,
-      FlowCase.FAIL_VERIFY_424_PPT_SINTASSI_XSD,
-      FlowCase.FAIL_VERIFY_424_PPT_SYSTEM_ERROR,
+      FlowCase.FAIL_VERIFY_400_PPT_STAZIONE_INT_PA_SCONOSCIUTA,
+      FlowCase.FAIL_VERIFY_404_PPT_DOMINIO_SCONOSCIUTO,
+      FlowCase.FAIL_VERIFY_409_PPT_PAGAMENTO_IN_CORSO,
+      FlowCase.FAIL_VERIFY_502_PPT_SINTASSI_XSD,
+      FlowCase.FAIL_VERIFY_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE,
+      FlowCase.FAIL_VERIFY_504_PPT_STAZIONE_INT_PA_TIMEOUT,
       FlowCase.FAIL_VERIFY_500
     ].includes(flow)
   );
@@ -325,35 +333,37 @@ export const getPaymentInfoController: (
               E.map(ResponseSuccessJson),
               E.getOrElse(t.identity)
             );
-          case FlowCase.FAIL_VERIFY_400:
+          case FlowCase.FAIL_VERIFY_400_PPT_STAZIONE_INT_PA_SCONOSCIUTA:
             return ResponseErrorValidation(
               `Mock – Failure case ${FlowCase[flow]}`,
               ""
             );
-          case FlowCase.FAIL_VERIFY_424_INT_PA_IRRAGGIUNGIBILE:
-            return ResponsePaymentError(
-              PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE
+          case FlowCase.FAIL_VERIFY_404_PPT_DOMINIO_SCONOSCIUTO:
+            return ResponseErrorValidationFault(
+              `Mock – Failure case ${FlowCase[flow]}`,
+              ValidationFaultEnum.PPT_DOMINIO_SCONOSCIUTO
             );
-          case FlowCase.FAIL_VERIFY_424_PAA_PAGAMENTO_IN_CORSO:
-            return ResponsePaymentError(
+          case FlowCase.FAIL_VERIFY_409_PPT_PAGAMENTO_IN_CORSO:
+            return ResponsePaymentStatusFaultError(
               PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.PAA_PAGAMENTO_IN_CORSO
+              PaymentStatusFaultEnum.PAA_PAGAMENTO_IN_CORSO
             );
-          case FlowCase.FAIL_VERIFY_424_PPT_SINTASSI_XSD:
+          case FlowCase.FAIL_VERIFY_502_PPT_SINTASSI_XSD:
             return ResponsePaymentError(
               PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.PPT_SINTASSI_XSD
+              GatewayFaultEnum.PPT_SINTASSI_XSD
             );
-          case FlowCase.FAIL_VERIFY_424_PPT_SYSTEM_ERROR:
-            return ResponsePaymentError(
+          case FlowCase.FAIL_VERIFY_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE:
+            return ResponsePartyConfigurationError(
               PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.PPT_SYSTEM_ERROR
+              PartyConfigurationFaultEnum.PPT_STAZIONE_INT_PA_ERRORE_RESPONSE
+            );
+          case FlowCase.FAIL_VERIFY_504_PPT_STAZIONE_INT_PA_TIMEOUT:
+            return ResponseGatewayTimeout(
+              PartyTimeoutFaultEnum.PPT_STAZIONE_INT_PA_TIMEOUT
             );
           case FlowCase.FAIL_VERIFY_500:
-            return ResponseErrorInternal(
-              `Mock – Failure case ${FlowCase[flow]}`
-            );
+            throw new Error(`Mock – Failure case ${FlowCase[flow]}`);
           default:
             // eslint-disable-next-line sonarjs/no-duplicate-string
             throw new Error("Bug – Unhandled flow case");
@@ -417,11 +427,12 @@ const activatePaymentController: (
 
   const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
     [
-      FlowCase.FAIL_ACTIVATE_400,
-      FlowCase.FAIL_ACTIVATE_424_INT_PA_IRRAGGIUNGIBILE,
-      FlowCase.FAIL_ACTIVATE_424_PAA_PAGAMENTO_IN_CORSO,
-      FlowCase.FAIL_ACTIVATE_424_PPT_SINTASSI_XSD,
-      FlowCase.FAIL_ACTIVATE_424_PPT_SYSTEM_ERROR,
+      FlowCase.FAIL_ACTIVATE_400_PPT_STAZIONE_INT_PA_SCONOSCIUTA,
+      FlowCase.FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO,
+      FlowCase.FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO,
+      FlowCase.FAIL_ACTIVATE_502_PPT_SINTASSI_XSD,
+      FlowCase.FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE,
+      FlowCase.FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT,
       FlowCase.FAIL_ACTIVATE_500
     ].includes(flow)
   );
@@ -441,35 +452,37 @@ const activatePaymentController: (
         ),
       flow => {
         switch (flow) {
-          case FlowCase.FAIL_ACTIVATE_400:
+          case FlowCase.FAIL_ACTIVATE_400_PPT_STAZIONE_INT_PA_SCONOSCIUTA:
             return ResponseErrorValidation(
               `Mock – Failure case ${FlowCase[flow]}`,
               ""
             );
-          case FlowCase.FAIL_ACTIVATE_424_INT_PA_IRRAGGIUNGIBILE:
-            return ResponsePaymentError(
+          case FlowCase.FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO:
+            return ResponseErrorValidationFault(
               PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE
+              ValidationFaultEnum.PPT_DOMINIO_SCONOSCIUTO
             );
-          case FlowCase.FAIL_ACTIVATE_424_PAA_PAGAMENTO_IN_CORSO:
-            return ResponsePaymentError(
+          case FlowCase.FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO:
+            return ResponsePaymentStatusFaultError(
               PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.PAA_PAGAMENTO_IN_CORSO
+              PaymentStatusFaultEnum.PAA_PAGAMENTO_IN_CORSO
             );
-          case FlowCase.FAIL_ACTIVATE_424_PPT_SINTASSI_XSD:
+          case FlowCase.FAIL_ACTIVATE_502_PPT_SINTASSI_XSD:
             return ResponsePaymentError(
               PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.PPT_SINTASSI_XSD
+              GatewayFaultEnum.PPT_SINTASSI_XSD
             );
-          case FlowCase.FAIL_ACTIVATE_424_PPT_SYSTEM_ERROR:
-            return ResponsePaymentError(
+          case FlowCase.FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE:
+            return ResponsePartyConfigurationError(
               PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.PPT_SYSTEM_ERROR
+              PartyConfigurationFaultEnum.PPT_STAZIONE_INT_PA_ERRORE_RESPONSE
+            );
+          case FlowCase.FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT:
+            return ResponseGatewayTimeout(
+              PartyTimeoutFaultEnum.PPT_STAZIONE_INT_PA_TIMEOUT
             );
           case FlowCase.FAIL_ACTIVATE_500:
-            return ResponseErrorInternal(
-              `Mock – Failure case ${FlowCase[flow]}`
-            );
+            throw new Error(`Mock – Failure case ${FlowCase[flow]}`);
           default:
             throw new Error("Bug – Unhandled flow case");
         }
@@ -518,7 +531,7 @@ const checkPaymentStatusController: (
     [
       FlowCase.FAIL_PAYMENT_STATUS_400,
       FlowCase.FAIL_PAYMENT_STATUS_404,
-      FlowCase.FAIL_PAYMENT_STATUS_424,
+      FlowCase.FAIL_PAYMENT_STATUS_502,
       FlowCase.FAIL_PAYMENT_STATUS_500
     ].includes(flow)
   );
@@ -559,15 +572,8 @@ const checkPaymentStatusController: (
               `Mock – Failure case ${FlowCase[flow]}`,
               "Not found"
             );
-          case FlowCase.FAIL_PAYMENT_STATUS_424:
-            return ResponsePaymentError(
-              PaymentFaultEnum.GENERIC_ERROR,
-              PaymentFaultV2Enum.GENERIC_ERROR
-            );
           case FlowCase.FAIL_PAYMENT_STATUS_500:
-            return ResponseErrorInternal(
-              `Mock – Failure case ${FlowCase[flow]}`
-            );
+            throw new Error(`Mock – Failure case ${FlowCase[flow]}`);
           default:
             throw new Error("Bug – Unhandled flow case");
         }
