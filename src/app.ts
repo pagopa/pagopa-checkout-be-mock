@@ -2,6 +2,7 @@ import * as express from "express";
 import { toExpressHandler } from "@pagopa/ts-commons/lib/express";
 import * as cookieParser from "cookie-parser";
 // import { createProxyMiddleware } from "http-proxy-middleware";
+import { ResponseErrorInternal } from "@pagopa/ts-commons/lib/responses";
 import {
   activatePaymentHandler,
   cancelPayment,
@@ -18,6 +19,7 @@ import {
 } from "./handlers/transactions";
 import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
+import { logger } from "./logger";
 
 export const newExpressApp: () => Promise<Express.Application> = async () => {
   const app = express();
@@ -37,7 +39,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
         const originalResponseBody = body;
 
         if (
-          (res.statusCode === 424 || res.statusCode === 500) &&
+          [404, 409, 502, 503, 504].includes(res.statusCode) &&
           originalResponseBody.detail_v2 !== null
         ) {
           res.status(400);
@@ -126,7 +128,15 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   app.get(
     "/checkout/payments/v1/payment-requests/:rptId",
-    getPaymentInfoHandler(ID_PAYMENT)
+    async (req, res, _next) => {
+      try {
+        return await getPaymentInfoHandler(ID_PAYMENT)(req, res);
+      } catch (e) {
+        logger.error("Got error while executing request handler:");
+        logger.error(e);
+        return ResponseErrorInternal("").apply(res);
+      }
+    }
   );
 
   app.post(
