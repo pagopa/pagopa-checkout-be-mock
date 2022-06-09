@@ -54,6 +54,7 @@ import { PartyConfigurationFaultEnum } from "../generated/pagopa_proxy/PartyConf
 import { PartyTimeoutFaultEnum } from "../generated/pagopa_proxy/PartyTimeoutFault";
 import { PaymentStatusFaultEnum } from "../generated/pagopa_proxy/PaymentStatusFault";
 import { ValidationFaultEnum } from "../generated/pagopa_proxy/ValidationFault";
+import { ActivationState, store } from "../store/store";
 
 export const paymentCheckHandler: (
   idPayment: string,
@@ -427,6 +428,7 @@ const activatePaymentController: (
 
   const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
     [
+      FlowCase.OK_ENABLE_PERSISTENCE,
       FlowCase.FAIL_ACTIVATE_400_PPT_STAZIONE_INT_PA_SCONOSCIUTA,
       FlowCase.FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO,
       FlowCase.FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO,
@@ -437,21 +439,35 @@ const activatePaymentController: (
     ].includes(flow)
   );
 
+  const successResponse = pipe(
+    response,
+    PaymentActivationsPostResponse.decode,
+    E.mapLeft<t.Errors, HandlerResponseType<ActivatePaymentT>>(e =>
+      ResponseErrorFromValidationErrors(PaymentActivationsPostResponse)(e)
+    ),
+    E.map(ResponseSuccessJson),
+    E.getOrElse(t.identity)
+  );
+
   return pipe(
     isModifiedFlow(flowId),
     O.fold(
-      () =>
-        pipe(
-          response,
-          PaymentActivationsPostResponse.decode,
-          E.mapLeft<t.Errors, HandlerResponseType<ActivatePaymentT>>(e =>
-            ResponseErrorFromValidationErrors(PaymentActivationsPostResponse)(e)
-          ),
-          E.map(ResponseSuccessJson),
-          E.getOrElse(t.identity)
-        ),
+      () => successResponse,
       flow => {
         switch (flow) {
+          case FlowCase.OK_ENABLE_PERSISTENCE: {
+            if (
+              store[FlowCase.OK_ENABLE_PERSISTENCE] ===
+              ActivationState.Activated
+            ) {
+              return ResponsePaymentStatusFaultError(
+                PaymentFaultEnum.GENERIC_ERROR,
+                PaymentStatusFaultEnum.PAA_PAGAMENTO_IN_CORSO
+              );
+            } else {
+              return successResponse;
+            }
+          }
           case FlowCase.FAIL_ACTIVATE_400_PPT_STAZIONE_INT_PA_SCONOSCIUTA:
             return ResponseErrorValidation(
               `Mock – Failure case ${FlowCase[flow]}`,
@@ -529,6 +545,7 @@ const checkPaymentStatusController: (
 
   const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
     [
+      FlowCase.OK_ENABLE_PERSISTENCE,
       FlowCase.FAIL_PAYMENT_STATUS_400,
       FlowCase.FAIL_PAYMENT_STATUS_404,
       FlowCase.FAIL_PAYMENT_STATUS_502,
@@ -536,49 +553,64 @@ const checkPaymentStatusController: (
     ].includes(flow)
   );
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const successResponse = () =>
+    pipe(
+      response,
+      PaymentActivationsGetResponse.decode,
+      E.mapLeft<t.Errors, HandlerResponseType<GetActivationStatusT>>(e =>
+        ResponseErrorFromValidationErrors(PaymentActivationsGetResponse)(e)
+      ),
+      E.map(responseData => {
+        logger.info(`Attempt number: ${additionalAttempts}`);
+        if (additionalAttempts > 0) {
+          const responseObj = ResponseErrorNotFound(
+            `Mock – Additional attempt #${additionalAttempts} on activation`,
+            ""
+          );
+          additionalAttempts--;
+          return responseObj;
+        } else {
+          additionalAttempts = Number(
+            process.env.CHECK_STATUS_ADDITIONAL_ATTEMPTS
+          );
+          return ResponseSuccessJson(responseData);
+        }
+      }),
+      E.getOrElse(t.identity)
+    );
   return pipe(
     isModifiedFlow(flowId),
-    O.fold(
-      () =>
-        pipe(
-          response,
-          PaymentActivationsGetResponse.decode,
-          E.mapLeft<t.Errors, HandlerResponseType<GetActivationStatusT>>(e =>
-            ResponseErrorFromValidationErrors(PaymentActivationsGetResponse)(e)
-          ),
-          E.map(responseData => {
-            if (additionalAttempts > 0) {
-              const responseObj = ResponseErrorNotFound(
-                `Mock – Additional attempt #${additionalAttempts} on activation`,
-                ""
-              );
-              additionalAttempts--;
-              return responseObj;
-            } else {
-              return ResponseSuccessJson(responseData);
-            }
-          }),
-          E.getOrElse(t.identity)
-        ),
-      flow => {
-        switch (flow) {
-          case FlowCase.FAIL_PAYMENT_STATUS_400:
-            return ResponseErrorValidation(
-              `Mock – Failure case ${FlowCase[flow]}`,
-              ""
-            );
-          case FlowCase.FAIL_PAYMENT_STATUS_404:
-            return ResponseErrorNotFound(
-              `Mock – Failure case ${FlowCase[flow]}`,
-              "Not found"
-            );
-          case FlowCase.FAIL_PAYMENT_STATUS_500:
-            throw new Error(`Mock – Failure case ${FlowCase[flow]}`);
-          default:
-            throw new Error("Bug – Unhandled flow case");
+    O.fold(successResponse, flow => {
+      switch (flow) {
+        case FlowCase.OK_ENABLE_PERSISTENCE: {
+          logger.info(`additional attempts: ${additionalAttempts}`);
+          if (additionalAttempts === 0) {
+            // eslint-disable-next-line functional/immutable-data
+            store[FlowCase.OK_ENABLE_PERSISTENCE] = ActivationState.Available;
+          } else {
+            // eslint-disable-next-line functional/immutable-data
+            store[FlowCase.OK_ENABLE_PERSISTENCE] = ActivationState.Activated;
+          }
+
+          return successResponse();
         }
+        case FlowCase.FAIL_PAYMENT_STATUS_400:
+          return ResponseErrorValidation(
+            `Mock – Failure case ${FlowCase[flow]}`,
+            ""
+          );
+        case FlowCase.FAIL_PAYMENT_STATUS_404:
+          return ResponseErrorNotFound(
+            `Mock – Failure case ${FlowCase[flow]}`,
+            "Not found"
+          );
+        case FlowCase.FAIL_PAYMENT_STATUS_500:
+          throw new Error(`Mock – Failure case ${FlowCase[flow]}`);
+        default:
+          throw new Error("Bug – Unhandled flow case");
       }
-    )
+    })
   );
 };
 
