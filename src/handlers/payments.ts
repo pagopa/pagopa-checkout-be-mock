@@ -529,9 +529,7 @@ export const activatePaymentHandler = (): EndpointHandler<ActivatePaymentT> => a
 };
 
 // eslint-disable-next-line functional/no-let
-let additionalAttempts = Number(
-  process.env.ACTIVATION_STATUS_ADDITIONAL_ATTEMPTS
-);
+let additionalAttempts = Number(process.env.CHECK_STATUS_ADDITIONAL_ATTEMPTS);
 
 const checkPaymentStatusController: (
   idPayment: string,
