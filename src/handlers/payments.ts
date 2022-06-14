@@ -449,7 +449,7 @@ const activatePaymentController: (
     E.getOrElse(t.identity)
   );
 
-  return pipe(
+  const clientResponse = pipe(
     isModifiedFlow(flowId),
     O.fold(
       () => successResponse,
@@ -457,7 +457,7 @@ const activatePaymentController: (
         switch (flow) {
           case FlowCase.OK_ENABLE_PERSISTENCE: {
             if (
-              store[FlowCase.OK_ENABLE_PERSISTENCE] ===
+              store[FlowCase.OK_ENABLE_PERSISTENCE]?.activationState ===
               ActivationState.Activated
             ) {
               return ResponsePaymentStatusFaultError(
@@ -505,6 +505,14 @@ const activatePaymentController: (
       }
     )
   );
+
+  // eslint-disable-next-line functional/immutable-data
+  store[flowId] = {
+    activationState: ActivationState.Activated,
+    attemptNumber: Number(process.env.CHECK_STATUS_ADDITIONAL_ATTEMPTS)
+  };
+
+  return clientResponse;
 };
 
 export const activatePaymentHandler = (): EndpointHandler<ActivatePaymentT> => async (
@@ -528,9 +536,6 @@ export const activatePaymentHandler = (): EndpointHandler<ActivatePaymentT> => a
   );
 };
 
-// eslint-disable-next-line functional/no-let
-let additionalAttempts = Number(process.env.CHECK_STATUS_ADDITIONAL_ATTEMPTS);
-
 const checkPaymentStatusController: (
   idPayment: string,
   flowId: FlowCase
@@ -551,6 +556,8 @@ const checkPaymentStatusController: (
     ].includes(flow)
   );
 
+  const additionalAttempts = store[flowId].attemptNumber;
+
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const successResponse = () =>
     pipe(
@@ -566,10 +573,12 @@ const checkPaymentStatusController: (
             `Mock – Additional attempt #${additionalAttempts} on activation`,
             ""
           );
-          additionalAttempts--;
+          // eslint-disable-next-line functional/immutable-data
+          store[flowId].attemptNumber = store[flowId].attemptNumber - 1;
           return responseObj;
         } else {
-          additionalAttempts = Number(
+          // eslint-disable-next-line functional/immutable-data
+          store[flowId].attemptNumber = Number(
             process.env.CHECK_STATUS_ADDITIONAL_ATTEMPTS
           );
           return ResponseSuccessJson(responseData);
@@ -585,10 +594,12 @@ const checkPaymentStatusController: (
           logger.info(`additional attempts: ${additionalAttempts}`);
           if (additionalAttempts === 0) {
             // eslint-disable-next-line functional/immutable-data
-            store[FlowCase.OK_ENABLE_PERSISTENCE] = ActivationState.Available;
+            store[FlowCase.OK_ENABLE_PERSISTENCE].activationState =
+              ActivationState.Available;
           } else {
             // eslint-disable-next-line functional/immutable-data
-            store[FlowCase.OK_ENABLE_PERSISTENCE] = ActivationState.Activated;
+            store[FlowCase.OK_ENABLE_PERSISTENCE].activationState =
+              ActivationState.Activated;
           }
 
           return successResponse();
