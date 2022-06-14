@@ -4,6 +4,7 @@ import { pipe } from "fp-ts/function";
 
 export enum FlowCase {
   OK,
+  OK_ENABLE_PERSISTENCE,
   /* pagopa-proxy: getPaymentInfo */
   ANSWER_VERIFY_NO_ENTE_BENEFICIARIO,
   FAIL_VERIFY_400_PPT_STAZIONE_INT_PA_SCONOSCIUTA,
