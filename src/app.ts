@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import * as express from "express";
 import { toExpressHandler } from "@pagopa/ts-commons/lib/express";
 import * as cookieParser from "cookie-parser";
@@ -21,6 +22,7 @@ import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
 import { logger } from "./logger";
 
+// eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
   const app = express();
   const router = express.Router();
@@ -173,6 +175,66 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       });
     }
   );
+
+  app.get("/checkout/ecommerce/v1/carts/:id", async (_req, res) => {
+    res.send({
+      paymentNotices: [
+        {
+          noticeNumber: "302012387654312384",
+          fiscalCode: "77777777777",
+          amount: 1000,
+          companyName: "test",
+          description: "test"
+        }
+      ],
+      returnUrls: {
+        returnOkUrl: "www.comune.di.prova.it/pagopa/success.html",
+        returnCancelUrl: "www.comune.di.prova.it/pagopa/cancel.html",
+        returnErrorUrl: "www.comune.di.prova.it/pagopa/error.html"
+      },
+      emailNotice: "myemail@mail.it"
+    });
+  });
+
+  // TODO refactoring to handle errors scenario
+  app.get(
+    "/checkout/ecommerce/v1/payment-requests/:rptid",
+    async (_req, res) => {
+      res.send({
+        amount: 12000,
+        paymentContextCode: "a5560817eabc44ba877aaf4db96a606f",
+        rptId: "77777777777302000100000009424",
+        paFiscalCode: "77777777777",
+        paName: "Pagamento di Test",
+        description: "Pagamento di Test",
+        dueDate: "2021-07-31"
+      });
+    }
+  );
+
+  // TODO refactoring to handle errors scenario
+  app.get("/checkout/ecommerce/v1/payment-methods", async (_req, res) => {
+    res.send([
+      {
+        id: "3ebea7a1-2e77-4a1b-ac1b-3aca0d67f813",
+        name: "Carte",
+        description: "Carte",
+        asset: "maestro",
+        status: "ENABLED",
+        paymentTypeCode: "CP",
+        ranges: [{ min: 0, max: 999999 }]
+      },
+      {
+        id: "1c23629f-8133-42f3-ad96-7e6527d27a43",
+        name: "PostePay",
+        description: "PostePay",
+        asset: "maestro",
+        status: "ENABLED",
+        paymentTypeCode: "PPAY",
+        ranges: [{ min: 0, max: 999999 }]
+      }
+    ]);
+  });
 
   return app;
 };
