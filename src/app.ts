@@ -200,15 +200,35 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.get(
     "/checkout/ecommerce/v1/payment-requests/:rptid",
     async (_req, res) => {
-      res.send({
-        amount: 12000,
-        paymentContextCode: "a5560817eabc44ba877aaf4db96a606f",
-        rptId: "77777777777302000100000009424",
-        paFiscalCode: "77777777777",
-        paName: "Pagamento di Test",
-        description: "Pagamento di Test",
-        dueDate: "2021-07-31"
-      });
+      if (_req.params.rptid.substring(0, 11) !== "77777777777") {
+        return res
+          .status(404)
+          .contentType("application/json")
+          .send(
+            '{"faultCodeCategory":"PAYMENT_UNKNOWN","faultCodeDetail":"PPT_DOMINIO_SCONOSCIUTO","title":"ValidationFault"}'
+          );
+      } else if (
+        _req.params.rptid
+          .substring(11, _req.params.rptid.length)
+          .startsWith("30201")
+      ) {
+        return res
+          .status(404)
+          .contentType("application/json")
+          .send(
+            '{"faultCodeCategory":"PAYMENT_UNKNOWN","faultCodeDetail":"PPT_STAZIONE_INT_PA_SCONOSCIUTA","title":"ValidationFault"}'
+          );
+      } else {
+        return res.send({
+          amount: 12000,
+          paymentContextCode: "a5560817eabc44ba877aaf4db96a606f",
+          rptId: "77777777777302000100000009424",
+          paFiscalCode: "77777777777",
+          paName: "Pagamento di Test",
+          description: "Pagamento di Test",
+          dueDate: "2021-07-31"
+        });
+      }
     }
   );
 
