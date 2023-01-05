@@ -21,6 +21,7 @@ import {
 import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
 import { logger } from "./logger";
+import { authRequestXpay } from "./handlers/pgs";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -255,6 +256,9 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       }
     ]);
   });
+
+  // payment-transaction-gateway xpay authorization requests mock
+  app.get("/request-payments/xpay/:transactionId", authRequestXpay);
 
   return app;
 };
