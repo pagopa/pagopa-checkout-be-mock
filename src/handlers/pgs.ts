@@ -10,7 +10,7 @@ import {
 
 export const authRequestXpay: RequestHandler = async (req, res) =>
   pipe(
-    req.params.transactionId,
+    req.params.requestId,
     E.fromPredicate(id => id.startsWith("0"), identity),
     E.mapLeft(_ => {
       logger.info("[authRequestXpay] - Return error case");
@@ -20,7 +20,7 @@ export const authRequestXpay: RequestHandler = async (req, res) =>
       logger.info("[authRequestXpay] - Return success case");
       res
         .status(200)
-        .send(createSuccessXPayPollingResponseEntity(req.params.transactionId));
+        .send(createSuccessXPayPollingResponseEntity(req.params.requestId));
     }),
     E.toUnion
   );

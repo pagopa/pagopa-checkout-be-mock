@@ -112,3 +112,11 @@ This is currently implemented via a `mockFlow` cookie which is returned from the
 | FAIL_CHECK_STATUS_404                    | 33        |
 | FAIL_CHECK_STATUS_422                    | 34        |
 | FAIL_CHECK_STATUS_500                    | 35        |
+
+## XPAY Authorization Error Flow
+The XPAY authorization polling endpoint `/request-payments/xpay/:requestId` require a requestId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`. It will returns an error otherwise (404 - Not Found).
+
+| Case      | Code                                  |
+|-----------|---------------------------------------|
+| Success   | 0XXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
+| Not found | XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
