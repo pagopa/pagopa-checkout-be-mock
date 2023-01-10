@@ -7,7 +7,8 @@ export enum Transaction3DSStatus {
   AfterMethod = 17,
   AwaitingChallenge = 16,
   AfterChallenge = 18,
-  Confirmed = 3
+  Confirmed = 3,
+  AcceptedNodoTimeout = 14
 }
 
 export const encode3ds2MethodData: (idTransaction: number) => string = (
