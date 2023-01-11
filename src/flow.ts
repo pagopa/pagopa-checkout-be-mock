@@ -50,7 +50,8 @@ export enum FlowCase {
   /* payment-manager: checkStatusUsingGET */
   FAIL_CHECK_STATUS_404,
   FAIL_CHECK_STATUS_422,
-  FAIL_CHECK_STATUS_500
+  FAIL_CHECK_STATUS_500,
+  NODO_TAKEN_IN_CHARGE
 }
 
 type FlowCaseKey = keyof typeof FlowCase;

@@ -22,6 +22,7 @@ import {
 import { CheckStatusUsingGETT } from "../generated/payment_manager/requestTypes";
 import { logger } from "../logger";
 import { FlowCase, getFlowCookie } from "../flow";
+import { ActivationState, store } from "../store/store";
 
 // eslint-disable-next-line functional/no-let
 let transactionStatus: Transaction3DSStatus =
@@ -34,7 +35,9 @@ const checkTransactionController: (
   _params
 ): HandlerResponseType<CheckStatusUsingGETT> => {
   const idTransaction = 7090106799;
-
+  const nodoTakeInChargeActivated: boolean =
+    store[FlowCase.NODO_TAKEN_IN_CHARGE]?.activationState ===
+    ActivationState.Activated;
   /* Here we skip all 3ds2 challenge verification steps and mock everything with a successful response */
   /* Cut away confirmed for test purpose */
   switch (transactionStatus) {
@@ -43,7 +46,9 @@ const checkTransactionController: (
       break;
     }
     case Transaction3DSStatus.AfterMethod: {
-      transactionStatus = Transaction3DSStatus.AcceptedNodoTimeout;
+      transactionStatus = nodoTakeInChargeActivated
+        ? Transaction3DSStatus.AcceptedNodoTimeout
+        : Transaction3DSStatus.Confirmed;
       break;
     }
     case Transaction3DSStatus.Confirmed: {
@@ -137,7 +142,6 @@ const checkTransactionController: (
       statusMessage: "Autorizzato"
     }
   };
-
   const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
     [
       FlowCase.FAIL_CHECK_STATUS_404,
