@@ -115,8 +115,10 @@ This is currently implemented via a `mockFlow` cookie which is returned from the
 
 ## XPAY Authorization Error Flow
 The XPAY authorization polling endpoint `/request-payments/xpay/:requestId` require a requestId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`. It will returns an error otherwise (404 - Not Found).
+To simulate the polling process all requests with a `requestId` that starts with `01` will require two polling attempt to obtain the success case.
 
-| Case      | Code                                  |
-|-----------|---------------------------------------|
-| Success   | 0XXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
-| Not found | XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
+| Case                        | Code                                  |
+|-----------------------------|---------------------------------------|
+| Success                     | 0XXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
+| Success (2 retry attempt)   | 01XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
+| Not found                   | XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
