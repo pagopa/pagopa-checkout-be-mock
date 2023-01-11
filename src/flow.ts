@@ -1,6 +1,7 @@
 import * as O from "fp-ts/lib/Option";
 import * as express from "express";
 import { pipe } from "fp-ts/function";
+import { logger } from "./logger";
 
 export enum FlowCase {
   OK,
@@ -78,6 +79,10 @@ export const maybeGetFlowCookie: (
 ) => O.Option<FlowCase> = req =>
   pipe(
     O.fromNullable(req.cookies.mockFlow),
+    id => {
+      logger.info(`Request mockFlow cookie: [${req.cookies.mockFlow}]`);
+      return id;
+    },
     O.filter(id => id in FlowCase),
     O.map((id: FlowCaseKey) => FlowCase[id])
   );
@@ -92,5 +97,6 @@ export const setFlowCookie: (
   res: express.Response,
   flowId: FlowCase
 ) => void = (res, flowId) => {
+  logger.info(`Set mockFlow cookie to: [${FlowCase[flowId]}]`);
   res.cookie("mockFlow", FlowCase[flowId]);
 };
