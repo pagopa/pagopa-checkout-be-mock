@@ -229,6 +229,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
             .substring(11, _req.params.rptid.length)
             .startsWith("30202")
         ) {
+          logger.info("Nodo take in charge response flow activated");
           activationState = ActivationState.Activated;
         }
         // eslint-disable-next-line functional/immutable-data
