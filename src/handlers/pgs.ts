@@ -33,7 +33,8 @@ const returnAuthorizedResponse = async (
   await new Promise(r => setTimeout(r, delay));
   res.status(200).send(createAuthorizedXPayPollingResponseEntity(requestId));
 };
-export const test: RequestHandler = async (req, res) => {
+
+export const authRequestXpay: RequestHandler = async (req, res) => {
   switch (getXPayFlowCase(req.params.requestId)) {
     case XPayFlowCase.OK:
       returnSuccessResponse(req.params.requestId, res);
