@@ -23,3 +23,10 @@ export const createNotFoundXPayPollingResponseEntity = (): XPayPollingResponseEn
     message: "RequestId not found"
   }
 });
+
+export const createAuthorizedXPayPollingResponseEntity = (
+  requestId: string
+): XPayPollingResponseEntity => ({
+  requestId,
+  status: "AUTHORIZED"
+});

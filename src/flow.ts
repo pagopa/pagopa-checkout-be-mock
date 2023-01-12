@@ -1,7 +1,11 @@
 import * as O from "fp-ts/lib/Option";
 import * as express from "express";
-import { pipe } from "fp-ts/function";
+import * as E from "fp-ts/Either";
+import { identity, pipe } from "fp-ts/function";
 import { logger } from "./logger";
+
+const XPAY_OK_PREFIX = "0";
+const XPAY_POLLING_PREFIX = "01";
 
 export enum FlowCase {
   OK,
@@ -100,3 +104,29 @@ export const setFlowCookie: (
   logger.info(`Set mockFlow cookie to: [${FlowCase[flowId]}]`);
   res.cookie("mockFlow", FlowCase[flowId]);
 };
+
+export enum XPayFlowCase {
+  OK,
+  NOT_FOUND,
+  MULTI_ATTEMPT_POLLING
+}
+
+export const getXPayFlowCase = (requestId: string): XPayFlowCase =>
+  pipe(
+    requestId,
+    E.fromPredicate(id => id.startsWith(XPAY_OK_PREFIX), identity),
+    E.mapLeft(_ => XPayFlowCase.NOT_FOUND),
+    E.map(id =>
+      pipe(
+        id,
+        E.fromPredicate(
+          reqId => reqId.startsWith(XPAY_POLLING_PREFIX),
+          identity
+        ),
+        E.mapLeft(_ => XPayFlowCase.OK),
+        E.map(_ => XPayFlowCase.MULTI_ATTEMPT_POLLING),
+        E.toUnion
+      )
+    ),
+    E.toUnion
+  );
