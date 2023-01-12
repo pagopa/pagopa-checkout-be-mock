@@ -9,6 +9,7 @@ import {
   createNotFoundXPayPollingResponseEntity,
   createSuccessXPayPollingResponseEntity
 } from "../utils/xpay";
+import { XPayFlowCase, getXPayFlowCase } from "../flow";
 
 // eslint-disable-next-line functional/no-let
 let pollingAttempt = 2;
@@ -32,37 +33,30 @@ const returnAuthorizedResponse = async (
   await new Promise(r => setTimeout(r, delay));
   res.status(200).send(createAuthorizedXPayPollingResponseEntity(requestId));
 };
-
-export const authRequestXpay: RequestHandler = async (req, res) =>
-  pipe(
-    req.params.requestId,
-    E.fromPredicate(id => id.startsWith("0"), identity),
-    E.mapLeft(_ => {
+export const test: RequestHandler = async (req, res) => {
+  switch (getXPayFlowCase(req.params.requestId)) {
+    case XPayFlowCase.OK:
+      returnSuccessResponse(req.params.requestId, res);
+      break;
+    case XPayFlowCase.NOT_FOUND:
       returnNotFoundResponse(res);
-    }),
-    E.map(id =>
+      break;
+    case XPayFlowCase.MULTI_ATTEMPT_POLLING:
       pipe(
-        id,
-        E.fromPredicate(requestId => requestId.startsWith("01"), identity),
-        E.mapLeft(_ => {
-          returnSuccessResponse(req.params.requestId, res);
+        pollingAttempt,
+        E.fromPredicate(retry => retry === 0, identity),
+        E.mapLeft(async r => {
+          pollingAttempt = r - 1;
+          await returnAuthorizedResponse(req.params.requestId, res, 2000);
         }),
-        E.map(_ =>
-          pipe(
-            pollingAttempt,
-            E.fromPredicate(retry => retry === 0, identity),
-            E.mapLeft(async r => {
-              pollingAttempt = r - 1;
-              await returnAuthorizedResponse(req.params.requestId, res, 2000);
-            }),
-            E.map(_r => {
-              pollingAttempt = 2;
-              returnSuccessResponse(req.params.requestId, res);
-            })
-          )
-        ),
-        E.toUnion
-      )
-    ),
-    E.toUnion
-  );
+        E.map(_r => {
+          pollingAttempt = 2;
+          returnSuccessResponse(req.params.requestId, res);
+        })
+      );
+      break;
+    default:
+      returnNotFoundResponse(res);
+      break;
+  }
+};
