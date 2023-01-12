@@ -74,44 +74,49 @@ If you invoke the `/checkout/payments/v1/payment-requests/:rptId` endpoint with 
 
 This is currently implemented via a `mockFlow` cookie which is returned from the endpoint with the flow name as the value.
 
-| Flow name                                | Flow code |
-|------------------------------------------|-----------|
-| OK                                       | 00        |
-| FAIL_VERIFY_400                          | 01        |
-| FAIL_VERIFY_424_INT_PA_IRRAGGIUNGIBILE   | 02        |
-| FAIL_VERIFY_424_PAA_PAGAMENTO_IN_CORSO   | 03        |
-| FAIL_VERIFY_424_PPT_SINTASSI_XSD         | 04        |
-| FAIL_VERIFY_424_PPT_SYSTEM_ERROR         | 05        |
-| FAIL_VERIFY_500                          | 06        |
-| FAIL_ACTIVATE_400                        | 07        |
-| FAIL_ACTIVATE_424_INT_PA_IRRAGGIUNGIBILE | 08        |
-| FAIL_ACTIVATE_424_PAA_PAGAMENTO_IN_CORSO | 09        |
-| FAIL_ACTIVATE_424_PPT_SINTASSI_XSD       | 10        |
-| FAIL_ACTIVATE_424_PPT_SYSTEM_ERROR       | 11        |
-| FAIL_ACTIVATE_500                        | 12        |
-| FAIL_PAYMENT_STATUS_400                  | 13        |
-| FAIL_PAYMENT_STATUS_404                  | 14        |
-| FAIL_PAYMENT_STATUS_424                  | 15        |
-| FAIL_PAYMENT_STATUS_500                  | 16        |
-| ANSWER_ADD_WALLET_STATUS_201             | 17        |
-| FAIL_ADD_WALLET_STATUS_403               | 18        |
-| FAIL_ADD_WALLET_STATUS_404               | 19        |
-| ANSWER_START_SESSION_STATUS_201          | 20        |
-| FAIL_START_SESSION_STATUS_401            | 21        |
-| FAIL_START_SESSION_STATUS_403            | 22        |
-| FAIL_START_SESSION_STATUS_404            | 23        |
-| FAIL_START_SESSION_STATUS_422            | 24        |
-| FAIL_START_SESSION_STATUS_500            | 25        |
-| FAIL_APPROVE_TERMS_STATUS_404            | 26        |
-| FAIL_APPROVE_TERMS_STATUS_422            | 27        |
-| FAIL_APPROVE_TERMS_STATUS_500            | 28        |
-| ANSWER_PAY_3DS2_STATUS_201               | 29        |
-| FAIL_PAY_3DS2_STATUS_401                 | 30        |
-| FAIL_PAY_3DS2_STATUS_403                 | 31        |
-| FAIL_PAY_3DS2_STATUS_404                 | 32        |
-| FAIL_CHECK_STATUS_404                    | 33        |
-| FAIL_CHECK_STATUS_422                    | 34        |
-| FAIL_CHECK_STATUS_500                    | 35        |
+| Flow name                                             | Flow code |
+|-------------------------------------------------------|-----------|
+| OK                                                    | 00        |
+| OK_ENABLE_PERSISTENCE                                 | 01        |
+| ANSWER_VERIFY_NO_ENTE_BENEFICIARIO                    | 02        |
+| FAIL_VERIFY_400_PPT_STAZIONE_INT_PA_SCONOSCIUTA       | 03        |
+| FAIL_VERIFY_404_PPT_DOMINIO_SCONOSCIUTO               | 04        |
+| FAIL_VERIFY_409_PPT_PAGAMENTO_IN_CORSO                | 05        |
+| FAIL_VERIFY_502_PPT_SINTASSI_XSD                      | 06        |
+| FAIL_VERIFY_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE   | 07        |
+| FAIL_VERIFY_504_PPT_STAZIONE_INT_PA_TIMEOUT           | 08        |
+| FAIL_VERIFY_500                                       | 09        |
+| FAIL_ACTIVATE_400_PPT_STAZIONE_INT_PA_SCONOSCIUTA     | 10        |
+| FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO             | 11        |
+| FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO              | 12        |
+| FAIL_ACTIVATE_502_PPT_SINTASSI_XSD                    | 13        |
+| FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE | 14        |
+| FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT         | 15        |
+| FAIL_ACTIVATE_500                                     | 16        |
+| FAIL_PAYMENT_STATUS_400                               | 17        |
+| FAIL_PAYMENT_STATUS_404                               | 18        |
+| FAIL_PAYMENT_STATUS_502                               | 19        |
+| FAIL_PAYMENT_STATUS_500                               | 20        |
+| ANSWER_ADD_WALLET_STATUS_201                          | 21        |
+| FAIL_ADD_WALLET_STATUS_403                            | 22        |
+| FAIL_ADD_WALLET_STATUS_404                            | 23        |
+| ANSWER_START_SESSION_STATUS_201                       | 24        |
+| FAIL_START_SESSION_STATUS_401                         | 25        |
+| FAIL_START_SESSION_STATUS_403                         | 26        |
+| FAIL_START_SESSION_STATUS_404                         | 27        |
+| FAIL_START_SESSION_STATUS_422                         | 28        |
+| FAIL_START_SESSION_STATUS_500                         | 29        |
+| FAIL_APPROVE_TERMS_STATUS_404                         | 30        |
+| FAIL_APPROVE_TERMS_STATUS_422                         | 31        |
+| FAIL_APPROVE_TERMS_STATUS_500                         | 32        |
+| ANSWER_PAY_3DS2_STATUS_201                            | 33        |
+| FAIL_PAY_3DS2_STATUS_401                              | 34        |
+| FAIL_PAY_3DS2_STATUS_403                              | 35        |
+| FAIL_PAY_3DS2_STATUS_404                              | 36        |
+| FAIL_CHECK_STATUS_404                                 | 37        |
+| FAIL_CHECK_STATUS_422                                 | 38        |
+| FAIL_CHECK_STATUS_500                                 | 39        |
+| NODO_TAKEN_IN_CHARGE                                  | 40        |
 
 ## XPAY Authorization Error Flow
 The XPAY authorization polling endpoint `/request-payments/xpay/:requestId` require a requestId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`. It will returns an error otherwise (404 - Not Found).
