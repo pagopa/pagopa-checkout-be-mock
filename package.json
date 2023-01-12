@@ -13,6 +13,7 @@
     "postversion": "git push && git push --tags",
     "test": "jest",
     "lint": "eslint . -c .eslintrc.js --ext .ts,.tsx --cache",
+    "lint-autofix": "eslint . -c .eslintrc.js --ext .ts,.tsx --fix",
     "clean": "npm-run-all -s clean:*",
     "clean:dist": "rimraf dist",
     "clean:yaml-files": "rimraf generated/yaml-file/*.yaml",

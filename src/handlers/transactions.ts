@@ -34,18 +34,25 @@ const checkTransactionController: (
   _params
 ): HandlerResponseType<CheckStatusUsingGETT> => {
   const idTransaction = 7090106799;
-
   /* Here we skip all 3ds2 challenge verification steps and mock everything with a successful response */
+  /* Cut away confirmed for test purpose */
   switch (transactionStatus) {
     case Transaction3DSStatus.AwaitingMethod: {
       transactionStatus = Transaction3DSStatus.AfterMethod;
       break;
     }
     case Transaction3DSStatus.AfterMethod: {
-      transactionStatus = Transaction3DSStatus.Confirmed;
+      transactionStatus =
+        flowId === FlowCase.NODO_TAKEN_IN_CHARGE
+          ? Transaction3DSStatus.AcceptedNodoTimeout
+          : Transaction3DSStatus.Confirmed;
       break;
     }
     case Transaction3DSStatus.Confirmed: {
+      transactionStatus = Transaction3DSStatus.AwaitingMethod;
+      break;
+    }
+    case Transaction3DSStatus.AcceptedNodoTimeout: {
       transactionStatus = Transaction3DSStatus.AwaitingMethod;
       break;
     }
@@ -119,9 +126,19 @@ const checkTransactionController: (
       paymentOrigin: "IO_PAY",
       result: "OK",
       statusMessage: "Confermato"
+    },
+    [Transaction3DSStatus.AcceptedNodoTimeout]: {
+      authorizationCode: "00",
+      expired: false,
+      finalStatus: true,
+      idPayment,
+      idStatus: Transaction3DSStatus.AcceptedNodoTimeout,
+      idTransaction,
+      paymentOrigin: "IO_PAY",
+      result: "OK",
+      statusMessage: "Autorizzato"
     }
   };
-
   const isModifiedFlow = O.fromPredicate((flow: FlowCase) =>
     [
       FlowCase.FAIL_CHECK_STATUS_404,

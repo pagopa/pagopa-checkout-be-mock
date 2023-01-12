@@ -22,6 +22,7 @@ import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
 import { logger } from "./logger";
 import { authRequestXpay } from "./handlers/pgs";
+import { FlowCase, setFlowCookie } from "./flow";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -220,6 +221,17 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
             '{"faultCodeCategory":"PAYMENT_UNKNOWN","faultCodeDetail":"PPT_STAZIONE_INT_PA_SCONOSCIUTA","title":"ValidationFault"}'
           );
       } else {
+        if (
+          _req.params.rptid
+            .substring(11, _req.params.rptid.length)
+            .startsWith("30202")
+        ) {
+          logger.info("Nodo take in charge response flow activated");
+          setFlowCookie(res, FlowCase.NODO_TAKEN_IN_CHARGE);
+        } else {
+          logger.info("OK flow activated");
+          setFlowCookie(res, FlowCase.OK);
+        }
         return res.send({
           amount: 12000,
           paymentContextCode: "a5560817eabc44ba877aaf4db96a606f",

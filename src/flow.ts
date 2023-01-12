@@ -2,6 +2,7 @@ import * as O from "fp-ts/lib/Option";
 import * as express from "express";
 import * as E from "fp-ts/Either";
 import { identity, pipe } from "fp-ts/function";
+import { logger } from "./logger";
 
 const XPAY_OK_PREFIX = "0";
 const XPAY_POLLING_PREFIX = "01";
@@ -54,7 +55,8 @@ export enum FlowCase {
   /* payment-manager: checkStatusUsingGET */
   FAIL_CHECK_STATUS_404,
   FAIL_CHECK_STATUS_422,
-  FAIL_CHECK_STATUS_500
+  FAIL_CHECK_STATUS_500,
+  NODO_TAKEN_IN_CHARGE
 }
 
 type FlowCaseKey = keyof typeof FlowCase;
@@ -81,6 +83,10 @@ export const maybeGetFlowCookie: (
 ) => O.Option<FlowCase> = req =>
   pipe(
     O.fromNullable(req.cookies.mockFlow),
+    id => {
+      logger.info(`Request mockFlow cookie: [${req.cookies.mockFlow}]`);
+      return id;
+    },
     O.filter(id => id in FlowCase),
     O.map((id: FlowCaseKey) => FlowCase[id])
   );
@@ -95,6 +101,7 @@ export const setFlowCookie: (
   res: express.Response,
   flowId: FlowCase
 ) => void = (res, flowId) => {
+  logger.info(`Set mockFlow cookie to: [${FlowCase[flowId]}]`);
   res.cookie("mockFlow", FlowCase[flowId]);
 };
 
