@@ -17,6 +17,7 @@ App.newExpressApp()
       const server = http.createServer(app);
       server.listen(port);
     }
+    logger.info("pagopa-checkout-be-mock started.");
   })
   .catch(error => {
     logger.error(`Error occurred starting server: ${error}`);

@@ -127,3 +127,33 @@ To simulate the polling process all requests with a `requestId` that starts with
 | Success                     | 0XXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
 | Success (2 retry attempt)   | 01XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
 | Not found                   | XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
+
+## Vpos Authorization Error Flow
+The Vpos authorization polling endpoint `/request-payments/vpos/:requestId` require a requestId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). 
+
+The first two UUID characters are used to simulate one specific flow as follows:
+
+| Case                  | Code                                  | Description                                                                   |
+|-----------------------|---------------------------------------|-------------------------------------------------------------------------------|
+| DIRECT_AUTH           | 00XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  | Transaction is authorized on the first call                                   |
+| METHOD_AUTH           | 01XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  | Transaction is authorized after method call                                   |
+| CHALLENGE_AUTH        | 02XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  | Transaction is authorized after challenge call                                |
+| METHOD_CHALLENGE_AUTH | 03XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  | Transaction is authorized after method and challenge call                     |
+| DIRECT_DENY           | 04XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  | Transaction is denied on the first call                                       |
+| METHOD_DENY           | 05XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  | Transaction is denied after method call                                       |
+| CHALLENGE_DENY        | 06XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  | Transaction is denied after challenge call                                    |
+| METHOD_CHALLENGE_DENY | 07XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  | Transaction is denied after a successfull method call and a KO challenge call |
+| PAYMENT_NOT_FOUND     | 08XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  | Transaction will return 404 not found error on each call                      |
+
+Each call return a 404 not found on the first two invocations and then return the expected value for let simulate front end request polling functionality.
+
+Here a brief explanation of the simulated flows:
+1) DIRECT_AUTH : payment is authorized on the first step
+2) METHOD_AUTH : payment flow is redirect to method phase and then authorized state
+3) CHALLENGE_AUTH : payment flow is redirect to challenge phase and then authorized state
+4) METHOD_CHALLENGE_AUTH : payment flow is redirect to method phase, then to challenge phase and finally to authorized state
+5) DIRECT_DENY : payment authorization is denied on the first step
+6) METHOD_DENY : payment authorization is redirect to method phase and then denied state
+7) CHALLENGE_DENY : payment authorization is redirect to challenge phase and then denied state
+8) METHOD_CHALLENGE_DENY : payment authorization is redirect to method phase, then challenge phase and finally to denied state
+9) PAYMENT_NOT_FOUND : each call will return 404 not found error
