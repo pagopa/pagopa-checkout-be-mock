@@ -170,7 +170,8 @@ export const vposNextStep = (
 
 export const vposHandleResponse = (
   res: any,
-  responseBody: any,
+  successResponseBody: any,
+  pollingResponseBody: any,
   currentStep: VposStep,
   nextStep: VposStep
 ): void => {
@@ -180,12 +181,12 @@ export const vposHandleResponse = (
     E.mapLeft(async r => {
       pollingAttempt = r - 1;
       setVposFlowCookies(res, currentStep);
-      res.status(404).send(createVposCcPaymentInfoError());
+      res.status(200).send(pollingResponseBody);
     }),
     E.map(_r => {
       pollingAttempt = 2;
       setVposFlowCookies(res, nextStep);
-      res.status(200).send(responseBody);
+      res.status(200).send(successResponseBody);
     })
   );
 };
@@ -203,6 +204,11 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
     case VposStep.AUTH:
       vposHandleResponse(
         res,
+        createVposCcPaymentInfoAcceptedResponse(
+          "AUTHORIZED",
+          requestId,
+          "http://client-return-url"
+        ),
         createVposCcPaymentInfoAcceptedResponse("AUTHORIZED", requestId),
         currentStep,
         VposStep.STEP_0
@@ -214,9 +220,10 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
         createVposCcPaymentInfoAcsResponse(
           "CREATED",
           requestId,
-          "challengeUrl",
-          "vposUrl"
+          "challenge",
+          "http://challenge-url"
         ),
+        createVposCcPaymentInfoAcceptedResponse("CREATED", requestId),
         currentStep,
         nextStep
       );
@@ -224,6 +231,11 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
     case VposStep.DENY:
       vposHandleResponse(
         res,
+        createVposCcPaymentInfoAcceptedResponse(
+          "DENIED",
+          requestId,
+          "http://client-return-url"
+        ),
         createVposCcPaymentInfoAcceptedResponse("DENIED", requestId),
         currentStep,
         VposStep.STEP_0
@@ -235,9 +247,10 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
         createVposCcPaymentInfoAcsResponse(
           "CREATED",
           requestId,
-          "methodUrl",
-          "vposUrl"
+          "method",
+          "http://method-url"
         ),
+        createVposCcPaymentInfoAcceptedResponse("CREATED", requestId),
         currentStep,
         nextStep
       );

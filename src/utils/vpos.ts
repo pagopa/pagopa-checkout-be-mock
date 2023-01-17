@@ -4,11 +4,13 @@ import { CcPaymentInfoError } from "../generated/pgs/CcPaymentInfoError";
 
 export const createVposCcPaymentInfoAcceptedResponse = (
   status: string,
-  requestId: string
+  requestId: string,
+  vposUrl?: string
 ): CcPaymentInfoAcceptedResponse => ({
   requestId,
   responseType: "",
-  status
+  status,
+  vposUrl
 });
 
 export const createVposCcPaymentInfoAcsResponse = (
