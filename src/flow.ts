@@ -130,3 +130,30 @@ export const getXPayFlowCase = (requestId: string): XPayFlowCase =>
     ),
     E.toUnion
   );
+
+export enum EcommerceActivationFlowCase {
+  OK,
+  FAIL_ACTIVATE_400,
+  FAIL_VERIFY_502_PPT_SINTASSI_XSD
+}
+
+export const getEcommerceActivationFlowCase = (
+  rptId: string
+): EcommerceActivationFlowCase =>
+  pipe(
+    rptId,
+    E.fromPredicate(reqId => reqId.endsWith("10"), identity),
+    E.mapLeft(_ => EcommerceActivationFlowCase.OK),
+    E.map(id =>
+      pipe(
+        id,
+        E.fromPredicate(reqId => reqId.startsWith("16"), identity),
+        E.mapLeft(_ => EcommerceActivationFlowCase.FAIL_ACTIVATE_400),
+        E.map(
+          _ => EcommerceActivationFlowCase.FAIL_VERIFY_502_PPT_SINTASSI_XSD
+        ),
+        E.toUnion
+      )
+    ),
+    E.toUnion
+  );
