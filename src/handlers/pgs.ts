@@ -209,7 +209,7 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
           requestId,
           "http://client-return-url"
         ),
-        createVposCcPaymentInfoAcceptedResponse("AUTHORIZED", requestId),
+        createVposCcPaymentInfoAcceptedResponse("CREATED", requestId),
         currentStep,
         VposStep.STEP_0
       );
@@ -236,7 +236,7 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
           requestId,
           "http://client-return-url"
         ),
-        createVposCcPaymentInfoAcceptedResponse("DENIED", requestId),
+        createVposCcPaymentInfoAcceptedResponse("CREATED", requestId),
         currentStep,
         VposStep.STEP_0
       );
