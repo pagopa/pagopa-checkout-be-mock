@@ -194,6 +194,10 @@ export const vposHandleResponse = (
   );
 };
 
+export const challengeUrl = "http://challenge-url";
+export const methodUrl = "http://method-url";
+export const clientReturnUrl = "http://client-return-url";
+
 export const authRequestVpos: RequestHandler = async (req, res) => {
   const vposMockInfo = getVposMockInfo(req);
   const requestId = req.params.requestId;
@@ -202,7 +206,14 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
   logStepChange(vposMockInfo.step, nextStep, vposMockInfo.flowCase);
   switch (nextStep) {
     case VposStep.STEP_0:
-      res.status(404).send(createPaymentRequestVposErrorResponse());
+      // STEP_0 is all flows initial value, having here STEP_0 as next step signal that an invalid state
+      // transaction is detected such as a flow request that arrives with an invalid cookie set for the choosen flow
+      // for example METHOD for a flow that has only challenge request
+      // in this case an error response is returned resetting the cookie to it's initial value
+      setVposFlowCookies(res, VposStep.STEP_0);
+      res
+        .status(500)
+        .send("Invalid step transaction detected, resetting state to STEP_0");
       break;
     case VposStep.AUTH:
       vposHandleResponse(
@@ -212,7 +223,7 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
           requestId,
           undefined,
           undefined,
-          "http://client-return-url"
+          clientReturnUrl
         ),
         createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
         currentStep,
@@ -226,7 +237,7 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
           StatusEnum.CREATED,
           requestId,
           ResponseTypeEnum.CHALLENGE,
-          "http://challenge-url",
+          challengeUrl,
           undefined
         ),
         createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
@@ -242,7 +253,7 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
           requestId,
           undefined,
           undefined,
-          "http://client-return-url"
+          clientReturnUrl
         ),
         createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
         currentStep,
@@ -256,7 +267,7 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
           StatusEnum.CREATED,
           requestId,
           ResponseTypeEnum.METHOD,
-          "http://method-url",
+          methodUrl,
           undefined
         ),
         createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
@@ -269,6 +280,7 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
       break;
     default:
       logger.error(`Unmanaged Vpos step: [${nextStep}]`);
+      setVposFlowCookies(res, VposStep.STEP_0);
       res.status(500).send(`Unmanaged Vpos step: [${nextStep}]`);
       break;
   }
