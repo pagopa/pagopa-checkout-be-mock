@@ -10,7 +10,7 @@ import {
   error504StazioneIntTimeout,
   error409PagamentoInCorso,
   error404DominioSconosciuto
-} from "../../utils/ecommerce/ecommerce_activation";
+} from "../../utils/ecommerce/activation";
 import { FlowCase, getFlowFromRptId } from "../../flow";
 
 const returnSuccessResponse = (req: express.Request, res: any): void => {

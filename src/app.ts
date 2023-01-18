@@ -23,6 +23,8 @@ import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
 import { logger } from "./logger";
 import { authRequestXpay } from "./handlers/pgs";
 import { ecommerceActivation } from "./handlers/ecommerce/activation";
+import { ecommerceGetPsp } from "./handlers/ecommerce/psp";
+import { ecommerceGetPaymentMethods } from "./handlers/ecommerce/payment-method";
 import { FlowCase, setFlowCookie } from "./flow";
 
 // eslint-disable-next-line max-lines-per-function
@@ -33,38 +35,41 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.use(express.json());
   app.use(cookieParser());
 
-  app.use("/checkout/*", async (req, res: express.Response, next) => {
-    const oldJson = res.json;
+  app.use(
+    ["/checkout/payments/*", "/checkout/payment-transactions/*"],
+    async (req, res: express.Response, next) => {
+      const oldJson = res.json;
 
-    // eslint-disable-next-line functional/immutable-data
-    res.json = (
-      body: Record<string, unknown>
-    ): express.Response<Record<string, unknown>> => {
-      try {
-        const originalResponseBody = body;
+      // eslint-disable-next-line functional/immutable-data
+      res.json = (
+        body: Record<string, unknown>
+      ): express.Response<Record<string, unknown>> => {
+        try {
+          const originalResponseBody = body;
 
-        if (
-          [404, 409, 502, 503, 504].includes(res.statusCode) &&
-          originalResponseBody.detail_v2 !== null
-        ) {
-          res.status(400);
+          if (
+            [404, 409, 502, 503, 504].includes(res.statusCode) &&
+            originalResponseBody.detail_v2 !== null
+          ) {
+            res.status(400);
 
-          const response = {
-            detail: originalResponseBody.detail_v2,
-            status: 400,
-            title: originalResponseBody.title
-          };
+            const response = {
+              detail: originalResponseBody.detail_v2,
+              status: 400,
+              title: originalResponseBody.title
+            };
 
-          return oldJson.call(res, response);
-        } else {
-          return oldJson.call(res, originalResponseBody);
+            return oldJson.call(res, response);
+          } else {
+            return oldJson.call(res, originalResponseBody);
+          }
+        } catch (e) {
+          return oldJson.call(res, body);
         }
-      } catch (e) {
-        return oldJson.call(res, body);
-      }
-    };
-    next();
-  });
+      };
+      next();
+    }
+  );
 
   app.use((req, res, next) => {
     setTimeout(next, Number(process.env.ENDPOINT_DELAY));
@@ -247,73 +252,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   );
 
   // TODO refactoring to handle errors scenario
-  app.get("/checkout/ecommerce/v1/payment-methods", async (_req, res) => {
-    res.send([
-      {
-        id: "3ebea7a1-2e77-4a1b-ac1b-3aca0d67f813",
-        name: "Carte",
-        description: "Carte",
-        asset: "maestro",
-        status: "ENABLED",
-        paymentTypeCode: "CP",
-        ranges: [{ min: 0, max: 999999 }]
-      },
-      {
-        id: "1c23629f-8133-42f3-ad96-7e6527d27a43",
-        name: "PostePay",
-        description: "PostePay",
-        asset: "maestro",
-        status: "ENABLED",
-        paymentTypeCode: "PPAY",
-        ranges: [{ min: 0, max: 999999 }]
-      }
-    ]);
-  });
+  app.get("/checkout/ecommerce/v1/payment-methods", ecommerceGetPaymentMethods);
 
-  app.get("/checkout/ecommerce/v1/payment-methods/psps", async (_req, res) => {
-    res.send([
-      {
-        brokerName: "50000000001",
-        businessName: "PSP TEST",
-        channelCode: "50000000001_03",
-        code: "50000000001",
-        description: "OK - PSP TEST",
-        fixedCost: 606,
-        language: "IT",
-        maxAmount: 3000,
-        minAmount: 2000,
-        paymentTypeCode: "AD",
-        status: "ENABLED"
-      },
-      {
-        brokerName: "50000000002",
-        businessName: "PSP TEST 2",
-        channelCode: "50000000002_03",
-        code: "50000000002",
-        description: "OK - PSP TEST 2",
-        fixedCost: 606,
-        language: "IT",
-        maxAmount: 2000,
-        minAmount: 1000,
-        paymentTypeCode: "AD",
-        status: "DISABLED"
-      },
-      {
-        brokerName: "50000000003",
-        businessName: "PSP TEST 3",
-        channelCode: "50000000003_03",
-        code: "50000000003",
-        description: "OK - PSP TEST 3",
-        fixedCost: 606,
-        language: "IT",
-        maxAmount: 4000,
-        minAmount: 2000,
-        paymentTypeCode: "AD",
-        status: "ENABLED"
-      }
-    ]);
-  });
+  // payment-methods-service get psp requests mock
+  app.get("/checkout/ecommerce/v1/payment-methods/psps", ecommerceGetPsp);
 
+  // transaction-service new transaction requests mock
   app.post("/checkout/ecommerce/v1/transactions", ecommerceActivation);
 
   // payment-transaction-gateway xpay authorization requests mock
