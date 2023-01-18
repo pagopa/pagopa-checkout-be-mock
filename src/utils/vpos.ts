@@ -1,30 +1,24 @@
-import { CcPaymentInfoAcceptedResponse } from "../generated/pgs/CcPaymentInfoAcceptedResponse";
-import { CcPaymentInfoAcsResponse } from "../generated/pgs/CcPaymentInfoAcsResponse";
-import { CcPaymentInfoError } from "../generated/pgs/CcPaymentInfoError";
+import {
+  PaymentRequestVposResponse,
+  ResponseTypeEnum,
+  StatusEnum
+} from "../generated/pgs/PaymentRequestVposResponse";
+import { PaymentRequestVposErrorResponse } from "../generated/pgs/PaymentRequestVposErrorResponse";
 
-export const createVposCcPaymentInfoAcceptedResponse = (
-  status: string,
+export const createPaymentRequestVposResponse = (
+  status: StatusEnum,
   requestId: string,
-  vposUrl?: string
-): CcPaymentInfoAcceptedResponse => ({
-  requestId,
-  responseType: "",
-  status,
-  vposUrl
-});
-
-export const createVposCcPaymentInfoAcsResponse = (
-  status: string,
-  requestId: string,
-  responseType: string,
-  vposUrl: string
-): CcPaymentInfoAcsResponse => ({
+  responseType?: ResponseTypeEnum,
+  vposUrl?: string,
+  clientReturnUrl?: string
+): PaymentRequestVposResponse => ({
+  clientReturnUrl,
   requestId,
   responseType,
   status,
   vposUrl
 });
 
-export const createVposCcPaymentInfoError = (): CcPaymentInfoError => ({
+export const createPaymentRequestVposErrorResponse = (): PaymentRequestVposErrorResponse => ({
   reason: "RequestId non trovato"
 });

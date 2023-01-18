@@ -18,10 +18,13 @@ import {
   setVposFlowCookies
 } from "../flow";
 import {
-  createVposCcPaymentInfoAcceptedResponse,
-  createVposCcPaymentInfoAcsResponse,
-  createVposCcPaymentInfoError
+  createPaymentRequestVposErrorResponse,
+  createPaymentRequestVposResponse
 } from "../utils/vpos";
+import {
+  ResponseTypeEnum,
+  StatusEnum
+} from "../generated/pgs/PaymentRequestVposResponse";
 
 // eslint-disable-next-line functional/no-let
 let pollingAttempt = 2;
@@ -199,17 +202,19 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
   logStepChange(vposMockInfo.step, nextStep, vposMockInfo.flowCase);
   switch (nextStep) {
     case VposStep.STEP_0:
-      res.status(404).send(createVposCcPaymentInfoError());
+      res.status(404).send(createPaymentRequestVposErrorResponse());
       break;
     case VposStep.AUTH:
       vposHandleResponse(
         res,
-        createVposCcPaymentInfoAcceptedResponse(
-          "AUTHORIZED",
+        createPaymentRequestVposResponse(
+          StatusEnum.AUTHORIZED,
           requestId,
+          undefined,
+          undefined,
           "http://client-return-url"
         ),
-        createVposCcPaymentInfoAcceptedResponse("CREATED", requestId),
+        createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
         currentStep,
         VposStep.STEP_0
       );
@@ -217,13 +222,14 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
     case VposStep.CHALLENGE:
       vposHandleResponse(
         res,
-        createVposCcPaymentInfoAcsResponse(
-          "CREATED",
+        createPaymentRequestVposResponse(
+          StatusEnum.CREATED,
           requestId,
-          "challenge",
-          "http://challenge-url"
+          ResponseTypeEnum.CHALLENGE,
+          "http://challenge-url",
+          undefined
         ),
-        createVposCcPaymentInfoAcceptedResponse("CREATED", requestId),
+        createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
         currentStep,
         nextStep
       );
@@ -231,12 +237,14 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
     case VposStep.DENY:
       vposHandleResponse(
         res,
-        createVposCcPaymentInfoAcceptedResponse(
-          "DENIED",
+        createPaymentRequestVposResponse(
+          StatusEnum.DENIED,
           requestId,
+          undefined,
+          undefined,
           "http://client-return-url"
         ),
-        createVposCcPaymentInfoAcceptedResponse("CREATED", requestId),
+        createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
         currentStep,
         VposStep.STEP_0
       );
@@ -244,19 +252,20 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
     case VposStep.METHOD:
       vposHandleResponse(
         res,
-        createVposCcPaymentInfoAcsResponse(
-          "CREATED",
+        createPaymentRequestVposResponse(
+          StatusEnum.CREATED,
           requestId,
-          "method",
-          "http://method-url"
+          ResponseTypeEnum.METHOD,
+          "http://method-url",
+          undefined
         ),
-        createVposCcPaymentInfoAcceptedResponse("CREATED", requestId),
+        createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
         currentStep,
         nextStep
       );
       break;
     case VposStep.NOT_FOUND:
-      res.status(404).send(createVposCcPaymentInfoError());
+      res.status(404).send(createPaymentRequestVposErrorResponse());
       break;
     default:
       logger.error(`Unmanaged Vpos step: [${nextStep}]`);
