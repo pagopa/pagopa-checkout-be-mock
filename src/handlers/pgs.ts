@@ -260,7 +260,7 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
       break;
     default:
       logger.error(`Unmanaged Vpos step: [${nextStep}]`);
-      res.status(404).send(createVposCcPaymentInfoError());
+      res.status(500).send(`Unmanaged Vpos step: [${nextStep}]`);
       break;
   }
 };
