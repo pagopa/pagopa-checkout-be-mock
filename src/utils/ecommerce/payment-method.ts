@@ -1,3 +1,4 @@
+import { NonNegativeInteger } from "@pagopa/ts-commons/lib/numbers";
 import { PaymentMethodsResponse } from "../../generated/ecommerce/PaymentMethodsResponse";
 import { StatusEnum } from "../../generated/ecommerce/Psp";
 export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => [
@@ -8,8 +9,8 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => [
     paymentTypeCode: "CP",
     ranges: [
       {
-        max: undefined,
-        min: undefined
+        max: 999999 as NonNegativeInteger,
+        min: 0 as NonNegativeInteger
       }
     ],
     status: StatusEnum.ENABLED
@@ -21,8 +22,8 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => [
     paymentTypeCode: "PPAY",
     ranges: [
       {
-        max: undefined,
-        min: undefined
+        max: 999999 as NonNegativeInteger,
+        min: 0 as NonNegativeInteger
       }
     ],
     status: StatusEnum.ENABLED
