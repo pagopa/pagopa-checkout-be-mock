@@ -22,6 +22,7 @@ import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
 import { logger } from "./logger";
 import { authRequestXpay } from "./handlers/pgs";
+import { ecommerceActivation } from "./handlers/ecommerce/activation";
 import { FlowCase, setFlowCookie } from "./flow";
 
 // eslint-disable-next-line max-lines-per-function
@@ -268,6 +269,52 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       }
     ]);
   });
+
+  app.get("/checkout/ecommerce/v1/payment-methods/psps", async (_req, res) => {
+    res.send([
+      {
+        brokerName: "50000000001",
+        businessName: "PSP TEST",
+        channelCode: "50000000001_03",
+        code: "50000000001",
+        description: "OK - PSP TEST",
+        fixedCost: 606,
+        language: "IT",
+        maxAmount: 3000,
+        minAmount: 2000,
+        paymentTypeCode: "AD",
+        status: "ENABLED"
+      },
+      {
+        brokerName: "50000000002",
+        businessName: "PSP TEST 2",
+        channelCode: "50000000002_03",
+        code: "50000000002",
+        description: "OK - PSP TEST 2",
+        fixedCost: 606,
+        language: "IT",
+        maxAmount: 2000,
+        minAmount: 1000,
+        paymentTypeCode: "AD",
+        status: "DISABLED"
+      },
+      {
+        brokerName: "50000000003",
+        businessName: "PSP TEST 3",
+        channelCode: "50000000003_03",
+        code: "50000000003",
+        description: "OK - PSP TEST 3",
+        fixedCost: 606,
+        language: "IT",
+        maxAmount: 4000,
+        minAmount: 2000,
+        paymentTypeCode: "AD",
+        status: "ENABLED"
+      }
+    ]);
+  });
+
+  app.post("/checkout/ecommerce/v1/transactions", ecommerceActivation);
 
   // payment-transaction-gateway xpay authorization requests mock
   app.get("/request-payments/xpay/:requestId", authRequestXpay);

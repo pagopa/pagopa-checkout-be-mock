@@ -66,11 +66,9 @@ export const getFlowFromRptId: (
 ) => O.Option<FlowCase> = rptId => {
   const prefix = rptId.slice(0, -2);
   const flowId = Number(rptId.slice(-2));
-
   if (prefix !== "777777777773020167237496700") {
     return O.none;
   }
-
   if (flowId in FlowCase) {
     return O.some(flowId as FlowCase);
   } else {
@@ -125,33 +123,6 @@ export const getXPayFlowCase = (requestId: string): XPayFlowCase =>
         ),
         E.mapLeft(_ => XPayFlowCase.OK),
         E.map(_ => XPayFlowCase.MULTI_ATTEMPT_POLLING),
-        E.toUnion
-      )
-    ),
-    E.toUnion
-  );
-
-export enum EcommerceActivationFlowCase {
-  OK,
-  FAIL_ACTIVATE_400,
-  FAIL_VERIFY_502_PPT_SINTASSI_XSD
-}
-
-export const getEcommerceActivationFlowCase = (
-  rptId: string
-): EcommerceActivationFlowCase =>
-  pipe(
-    rptId,
-    E.fromPredicate(reqId => reqId.endsWith("10"), identity),
-    E.mapLeft(_ => EcommerceActivationFlowCase.OK),
-    E.map(id =>
-      pipe(
-        id,
-        E.fromPredicate(reqId => reqId.startsWith("16"), identity),
-        E.mapLeft(_ => EcommerceActivationFlowCase.FAIL_ACTIVATE_400),
-        E.map(
-          _ => EcommerceActivationFlowCase.FAIL_VERIFY_502_PPT_SINTASSI_XSD
-        ),
         E.toUnion
       )
     ),
