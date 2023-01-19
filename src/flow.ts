@@ -131,6 +131,71 @@ export const getXPayFlowCase = (requestId: string): XPayFlowCase =>
     E.toUnion
   );
 
+export enum VposStep {
+  STEP_0,
+  METHOD,
+  CHALLENGE,
+  AUTH,
+  DENY,
+  NOT_FOUND
+}
+type VposStepKey = keyof typeof VposStep;
+
+export enum VposFlowCase {
+  DIRECT_AUTH,
+  METHOD_AUTH,
+  CHALLENGE_AUTH,
+  METHOD_CHALLENGE_AUTH,
+  DIRECT_DENY,
+  METHOD_DENY,
+  CHALLENGE_DENY,
+  METHOD_CHALLENGE_DENY,
+  PAYMENT_NOT_FOUND
+}
+
+interface IVposMockInfo {
+  readonly step: VposStep;
+  readonly flowCase: VposFlowCase;
+}
+
+export const getVposFlow: (req: express.Request) => VposFlowCase = req => {
+  const requestId = req.params.requestId.substring(0, 2);
+  const flowId = Number(requestId);
+  logger.info(`Request id: [${requestId}], flow id: [${flowId}]`);
+  if (flowId in VposFlowCase) {
+    return flowId as VposFlowCase;
+  } else {
+    return VposFlowCase.DIRECT_DENY;
+  }
+};
+
+export const getVposStepCookie: (req: express.Request) => VposStep = req =>
+  pipe(
+    O.fromNullable(req.cookies.vposMockStep),
+    id => {
+      logger.info(`Request vposMockStep cookie: [${req.cookies.vposMockStep}]`);
+      return id;
+    },
+    O.filter(id => id in VposStep),
+    O.map((id: VposStepKey) => VposStep[id]),
+    O.getOrElse(() => VposStep.STEP_0 as VposStep)
+  );
+
+export const getVposMockInfo: (
+  req: express.Request
+) => IVposMockInfo = req => ({
+  flowCase: getVposFlow(req),
+  step: getVposStepCookie(req)
+});
+
+export const setVposFlowCookies: (
+  res: express.Response,
+  vposStep: VposStep
+) => void = (res, vposStep) => {
+  logger.info(`Set vposMockStep cookie to: [${VposStep[vposStep]}]`);
+  res.cookie("vposMockStep", VposStep[vposStep]);
+};
+
 export enum AuthRequestFlowCase {
   TRANSACTION_SUCCESSFULLY_PROCESSED,
   TRANSACTION_ID_NOT_FOUND,
