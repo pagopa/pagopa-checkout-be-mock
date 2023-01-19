@@ -21,7 +21,7 @@ import {
 import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
 import { logger } from "./logger";
-import { authRequestXpay } from "./handlers/pgs";
+import { authRequestVpos, authRequestXpay } from "./handlers/pgs";
 import { FlowCase, setFlowCookie } from "./flow";
 
 // eslint-disable-next-line max-lines-per-function
@@ -271,6 +271,9 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // payment-transaction-gateway xpay authorization requests mock
   app.get("/request-payments/xpay/:requestId", authRequestXpay);
+
+  // payment-transaction-gateway vpos authorization requests mock
+  app.get("/request-payments/vpos/:requestId", authRequestVpos);
 
   return app;
 };
