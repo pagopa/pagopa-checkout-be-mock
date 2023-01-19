@@ -160,8 +160,8 @@ Here a brief explanation of the simulated flows:
 
 
 ## Ecommerce activation Error Flow
-The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with ith a cartload of notices to pay. To enforce the success case the last two characters of the first rptId into list are different from [`11`,`12`,`13`,`15`].
-The list of possible flow case:
+The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a cartload of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`].
+The list of possible flow cases:
 
 | Case                                          | RptID                           |
 |-----------------------------------------------|---------------------------------|
@@ -169,3 +169,13 @@ The list of possible flow case:
 | FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT | XXXXXXXXXXXXXXXXXXXXXXXXXXX15   |
 | FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO      | XXXXXXXXXXXXXXXXXXXXXXXXXXX12   |
 | FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO     | XXXXXXXXXXXXXXXXXXXXXXXXXXX11   |
+
+## Ecommerce auth-requests Error Flow
+The ecommerce transaction auth-requests endpoint `/checkout/ecommerce/v1/transactions/:transactionId/auth-requests` require a transactionId path param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`.
+The list of possible flow cases:
+
+| Case                               | TransactionId                         |
+|------------------------------------|---------------------------------------|
+| TRANSACTION_SUCCESSFULLY_PROCESSED | 0XXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
+| TRANSACTION_ID_ALREADY_PROCESSED   | 01XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
+| TRANSACTION_ID_NOT_FOUND           | XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  | 
