@@ -27,6 +27,7 @@ import {
   ecommerceGetPsp,
   ecommerceGetPspByPaymentMethods
 } from "./handlers/ecommerce/psp";
+import { ecommerceGetCart } from "./handlers/ecommerce/cart";
 import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import { ecommerceGetPaymentMethods } from "./handlers/ecommerce/payment-method";
 import { FlowCase, setFlowCookie } from "./flow";
@@ -188,26 +189,6 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     }
   );
 
-  app.get("/checkout/ecommerce/v1/carts/:id", async (_req, res) => {
-    res.send({
-      paymentNotices: [
-        {
-          noticeNumber: "302012387654312384",
-          fiscalCode: "77777777777",
-          amount: 1000,
-          companyName: "test",
-          description: "test"
-        }
-      ],
-      returnUrls: {
-        returnOkUrl: "www.comune.di.prova.it/pagopa/success.html",
-        returnCancelUrl: "www.comune.di.prova.it/pagopa/cancel.html",
-        returnErrorUrl: "www.comune.di.prova.it/pagopa/error.html"
-      },
-      emailNotice: "myemail@mail.it"
-    });
-  });
-
   // TODO refactoring to handle errors scenario
   app.get(
     "/checkout/ecommerce/v1/payment-requests/:rptid",
@@ -254,6 +235,9 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
       }
     }
   );
+
+  // payment-requests-service get cart requests mock
+  app.get("/checkout/ecommerce/v1/carts/:id", ecommerceGetCart);
 
   // TODO refactoring to handle errors scenario
   app.get("/checkout/ecommerce/v1/payment-methods", ecommerceGetPaymentMethods);
