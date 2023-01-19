@@ -196,7 +196,7 @@ export const vposHandleResponse = (
 
 export const challengeUrl = "http://challenge-url";
 export const methodUrl = "http://method-url";
-export const clientReturnUrl = "http://client-return-url";
+export const clientReturnUrl = "https://google.com";
 
 export const authRequestVpos: RequestHandler = async (req, res) => {
   const vposMockInfo = getVposMockInfo(req);
