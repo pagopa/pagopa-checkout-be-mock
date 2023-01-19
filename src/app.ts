@@ -23,7 +23,10 @@ import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
 import { logger } from "./logger";
 import { authRequestXpay } from "./handlers/pgs";
 import { ecommerceActivation } from "./handlers/ecommerce/activation";
-import { ecommerceGetPsp } from "./handlers/ecommerce/psp";
+import {
+  ecommerceGetPsp,
+  ecommerceGetPspByPaymentMethods
+} from "./handlers/ecommerce/psp";
 import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import { ecommerceGetPaymentMethods } from "./handlers/ecommerce/payment-method";
 import { FlowCase, setFlowCookie } from "./flow";
@@ -257,6 +260,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // payment-methods-service get psp requests mock
   app.get("/checkout/ecommerce/v1/payment-methods/psps", ecommerceGetPsp);
+
+  // payment-methods-service get psp by payment methods requests mock
+  app.get(
+    "/checkout/ecommerce/v1/payment-methods/:id/psps",
+    ecommerceGetPspByPaymentMethods
+  );
 
   // transaction-service new transaction request mock
   app.post("/checkout/ecommerce/v1/transactions", ecommerceActivation);

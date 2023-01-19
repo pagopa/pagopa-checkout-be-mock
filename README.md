@@ -127,3 +127,14 @@ To simulate the polling process all requests with a `requestId` that starts with
 | Success                     | 0XXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
 | Success (2 retry attempt)   | 01XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
 | Not found                   | XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
+
+## Ecommerce activation Error Flow
+The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with ith a cartload of notices to pay. To enforce the success case the last two characters of the first rptId into list are different from [`11`,`12`,`13`,`15`].
+The list of possible flow case:
+
+| Case                                           | RptID                           |
+|------------------------------------------------|--------------------------------|
+| FAIL_ACTIVATE_502_PPT_SINTASSI_XSD             | XXXXXXXXXXXXXXXXXXXXXXXXXXX13  |
+| FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT  | XXXXXXXXXXXXXXXXXXXXXXXXXXX15  |
+| FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO       | XXXXXXXXXXXXXXXXXXXXXXXXXXX12  |
+| FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO      | XXXXXXXXXXXXXXXXXXXXXXXXXXX11  |
