@@ -24,6 +24,7 @@ import { logger } from "./logger";
 import { authRequestXpay } from "./handlers/pgs";
 import { ecommerceActivation } from "./handlers/ecommerce/activation";
 import { ecommerceGetPsp } from "./handlers/ecommerce/psp";
+import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import { ecommerceGetPaymentMethods } from "./handlers/ecommerce/payment-method";
 import { FlowCase, setFlowCookie } from "./flow";
 
@@ -257,8 +258,14 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   // payment-methods-service get psp requests mock
   app.get("/checkout/ecommerce/v1/payment-methods/psps", ecommerceGetPsp);
 
-  // transaction-service new transaction requests mock
+  // transaction-service new transaction request mock
   app.post("/checkout/ecommerce/v1/transactions", ecommerceActivation);
+
+  // transaction-service auth-request mock
+  app.post(
+    "/checkout/ecommerce/v1/transactions/:transactionId/auth-requests",
+    ecommerceAuthRequest
+  );
 
   // payment-transaction-gateway xpay authorization requests mock
   app.get("/request-payments/xpay/:requestId", authRequestXpay);

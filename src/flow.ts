@@ -6,6 +6,8 @@ import { logger } from "./logger";
 
 const XPAY_OK_PREFIX = "0";
 const XPAY_POLLING_PREFIX = "01";
+const AUTH_REQUEST_TRANSACTION_SUCCESSFULLY_PROCESSED_PREFIX = "0";
+const AUTH_REQUEST_ALREADY_PROCESSED_TRANSACTION_ID_PREFIX = "01";
 
 export enum FlowCase {
   OK,
@@ -123,6 +125,41 @@ export const getXPayFlowCase = (requestId: string): XPayFlowCase =>
         ),
         E.mapLeft(_ => XPayFlowCase.OK),
         E.map(_ => XPayFlowCase.MULTI_ATTEMPT_POLLING),
+        E.toUnion
+      )
+    ),
+    E.toUnion
+  );
+
+export enum AuthRequestFlowCase {
+  TRANSACTION_SUCCESSFULLY_PROCESSED,
+  TRANSACTION_ID_NOT_FOUND,
+  TRANSACTION_ID_ALREADY_PROCESSED
+}
+
+export const getAuthRequestFlowCase = (
+  transactionId: string
+): AuthRequestFlowCase =>
+  pipe(
+    transactionId,
+    E.fromPredicate(
+      id =>
+        id.startsWith(AUTH_REQUEST_TRANSACTION_SUCCESSFULLY_PROCESSED_PREFIX),
+      identity
+    ),
+    E.mapLeft(_ => AuthRequestFlowCase.TRANSACTION_ID_NOT_FOUND),
+    E.map(id =>
+      pipe(
+        id,
+        E.fromPredicate(
+          reqId =>
+            reqId.startsWith(
+              AUTH_REQUEST_ALREADY_PROCESSED_TRANSACTION_ID_PREFIX
+            ),
+          identity
+        ),
+        E.mapLeft(_ => AuthRequestFlowCase.TRANSACTION_SUCCESSFULLY_PROCESSED),
+        E.map(_ => AuthRequestFlowCase.TRANSACTION_ID_ALREADY_PROCESSED),
         E.toUnion
       )
     ),
