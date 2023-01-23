@@ -13,6 +13,18 @@ import {
 } from "../../utils/ecommerce/activation";
 import { FlowCase, getFlowFromRptId, setFlowCookie } from "../../flow";
 
+const activationErrorCase = [
+  FlowCase.FAIL_ACTIVATE_502_PPT_SINTASSI_XSD,
+  FlowCase.FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT,
+  FlowCase.FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO,
+  FlowCase.FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO
+];
+
+const authErrorCase = [
+  FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED,
+  FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND
+];
+
 const returnSuccessResponse = (req: express.Request, res: any): void => {
   logger.info("[Activation ecommerce] - Return success case");
   res.status(200).send(createSuccessActivationResponseEntity(req));
@@ -45,14 +57,14 @@ const return404ErrorDominioSconosciuto = (res: any): void => {
 };
 
 export const ecommerceActivation: RequestHandler = async (req, res) => {
-  const authErrorCase = [
-    FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED,
-    FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND
-  ];
   const flowId = pipe(
     req.body.paymentNotices[0].rptId,
     getFlowFromRptId,
-    O.map(id => (!authErrorCase.includes(id) ? FlowCase.OK : id)),
+    O.map(id =>
+      !authErrorCase.includes(id) && !activationErrorCase.includes(id)
+        ? FlowCase.OK
+        : id
+    ),
     O.getOrElse(() => FlowCase.OK)
   );
   switch (flowId) {
