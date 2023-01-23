@@ -45,9 +45,14 @@ const return404ErrorDominioSconosciuto = (res: any): void => {
 };
 
 export const ecommerceActivation: RequestHandler = async (req, res) => {
+  const authErrorCase = [
+    FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED,
+    FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND
+  ];
   const flowId = pipe(
     req.body.paymentNotices[0].rptId,
     getFlowFromRptId,
+    O.map(id => (!authErrorCase.includes(id) ? FlowCase.OK : id)),
     O.getOrElse(() => FlowCase.OK)
   );
   switch (flowId) {

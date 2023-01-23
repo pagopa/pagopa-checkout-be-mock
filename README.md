@@ -160,22 +160,28 @@ Here a brief explanation of the simulated flows:
 
 
 ## Ecommerce activation Error Flow
-The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a cartload of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`].
+The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a cartload of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`]. Also, if the rptId ends in `41` or `42` the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND or FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED in the mockFlow cookies to simulate the error in auth request. 
+For the rest of the success cases, the cookie will be valued with OK to simulate a positive auth-request case.
 The list of possible flow cases:
 
-| Case                                          | RptID                           |
-|-----------------------------------------------|---------------------------------|
-| FAIL_ACTIVATE_502_PPT_SINTASSI_XSD            | XXXXXXXXXXXXXXXXXXXXXXXXXXX13   |
-| FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT | XXXXXXXXXXXXXXXXXXXXXXXXXXX15   |
-| FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO      | XXXXXXXXXXXXXXXXXXXXXXXXXXX12   |
-| FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO     | XXXXXXXXXXXXXXXXXXXXXXXXXXX11   |
+| Case                                          | RptID                           | COOKIE MOCK FLOW                                    |
+|-----------------------------------------------|---------------------------------|-----------------------------------------------------|
+| FAIL_ACTIVATE_502_PPT_SINTASSI_XSD            | XXXXXXXXXXXXXXXXXXXXXXXXXXX13   | N/A                                                 |
+| FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT | XXXXXXXXXXXXXXXXXXXXXXXXXXX15   | N/A                                                 |
+| FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO      | XXXXXXXXXXXXXXXXXXXXXXXXXXX12   | N/A                                                 |
+| FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO     | XXXXXXXXXXXXXXXXXXXXXXXXXXX11   | N/A                                                 |
+| OK                                            | XXXXXXXXXXXXXXXXXXXXXXXXXXX41   | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND          |
+| OK                                            | XXXXXXXXXXXXXXXXXXXXXXXXXXX42   | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED  |
+| OK                                            | XXXXXXXXXXXXXXXXXXXXXXXXXXXXX   | OK                                                  |
+
+
 
 ## Ecommerce auth-requests Error Flow
-The ecommerce transaction auth-requests endpoint `/checkout/ecommerce/v1/transactions/:transactionId/auth-requests` require a transactionId path param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`.
-The list of possible flow cases:
+The ecommerce transaction auth-requests endpoint `/checkout/ecommerce/v1/transactions/:transactionId/auth-requests` require a transactionId path param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX).The mockFlow cookie in the request must be set to OK to make the case run successfully.
+The list of possible cookie mockFlow cases:
 
-| Case                               | TransactionId                         |
-|------------------------------------|---------------------------------------|
-| TRANSACTION_SUCCESSFULLY_PROCESSED | 0XXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
-| TRANSACTION_ID_ALREADY_PROCESSED   | 01XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
-| TRANSACTION_ID_NOT_FOUND           | XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  | 
+| COOKIE MOCK FLOW                                   | HttpStatus                            |
+|----------------------------------------------------|---------------------------------------|
+| OK                                                 | 200 success case                      |
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         | 404 transactionId not fuond           |
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED | 409 transaction already processed     |   
