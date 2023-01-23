@@ -11,7 +11,7 @@ import {
   error409PagamentoInCorso,
   error404DominioSconosciuto
 } from "../../utils/ecommerce/activation";
-import { FlowCase, getFlowFromRptId } from "../../flow";
+import { FlowCase, getFlowFromRptId, setFlowCookie } from "../../flow";
 
 const returnSuccessResponse = (req: express.Request, res: any): void => {
   logger.info("[Activation ecommerce] - Return success case");
@@ -64,6 +64,7 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
       return404ErrorDominioSconosciuto(res);
       break;
     default:
+      setFlowCookie(res, flowId);
       returnSuccessResponse(req, res);
   }
 };

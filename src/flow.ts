@@ -6,8 +6,6 @@ import { logger } from "./logger";
 
 const XPAY_OK_PREFIX = "0";
 const XPAY_POLLING_PREFIX = "01";
-const AUTH_REQUEST_TRANSACTION_SUCCESSFULLY_PROCESSED_PREFIX = "0";
-const AUTH_REQUEST_ALREADY_PROCESSED_TRANSACTION_ID_PREFIX = "01";
 
 export enum FlowCase {
   OK,
@@ -58,7 +56,10 @@ export enum FlowCase {
   FAIL_CHECK_STATUS_404,
   FAIL_CHECK_STATUS_422,
   FAIL_CHECK_STATUS_500,
-  NODO_TAKEN_IN_CHARGE
+  NODO_TAKEN_IN_CHARGE,
+  /* pagopa-ecommerce: auth-request */
+  FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND,
+  FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED
 }
 
 type FlowCaseKey = keyof typeof FlowCase;
@@ -195,38 +196,3 @@ export const setVposFlowCookies: (
   logger.info(`Set vposMockStep cookie to: [${VposStep[vposStep]}]`);
   res.cookie("vposMockStep", VposStep[vposStep]);
 };
-
-export enum AuthRequestFlowCase {
-  TRANSACTION_SUCCESSFULLY_PROCESSED,
-  TRANSACTION_ID_NOT_FOUND,
-  TRANSACTION_ID_ALREADY_PROCESSED
-}
-
-export const getAuthRequestFlowCase = (
-  transactionId: string
-): AuthRequestFlowCase =>
-  pipe(
-    transactionId,
-    E.fromPredicate(
-      id =>
-        id.startsWith(AUTH_REQUEST_TRANSACTION_SUCCESSFULLY_PROCESSED_PREFIX),
-      identity
-    ),
-    E.mapLeft(_ => AuthRequestFlowCase.TRANSACTION_ID_NOT_FOUND),
-    E.map(id =>
-      pipe(
-        id,
-        E.fromPredicate(
-          reqId =>
-            reqId.startsWith(
-              AUTH_REQUEST_ALREADY_PROCESSED_TRANSACTION_ID_PREFIX
-            ),
-          identity
-        ),
-        E.mapLeft(_ => AuthRequestFlowCase.TRANSACTION_SUCCESSFULLY_PROCESSED),
-        E.map(_ => AuthRequestFlowCase.TRANSACTION_ID_ALREADY_PROCESSED),
-        E.toUnion
-      )
-    ),
-    E.toUnion
-  );

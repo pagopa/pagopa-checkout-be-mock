@@ -6,7 +6,7 @@ import {
   error404TransactionIdNotFound,
   error409TransactionAlreadyProcessed
 } from "../../utils/ecommerce/auth-request";
-import { getAuthRequestFlowCase, AuthRequestFlowCase } from "../../flow";
+import { FlowCase, getFlowCookie } from "../../flow";
 
 const returnSuccessResponse = (res: any): void => {
   logger.info("[Auth-request ecommerce] - Return success case");
@@ -33,11 +33,11 @@ const return404ErrorTransactionIdNotFound = (
 
 export const ecommerceAuthRequest: RequestHandler = async (req, res) => {
   const transactionId = req.params.transactionId;
-  switch (getAuthRequestFlowCase(transactionId)) {
-    case AuthRequestFlowCase.TRANSACTION_ID_ALREADY_PROCESSED:
+  switch (getFlowCookie(req)) {
+    case FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED:
       return409ErrorTransactionAlreadyProcessed(transactionId, res);
       break;
-    case AuthRequestFlowCase.TRANSACTION_ID_NOT_FOUND:
+    case FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND:
       return404ErrorTransactionIdNotFound(transactionId, res);
       break;
     default:
