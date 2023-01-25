@@ -335,10 +335,7 @@ export const getPaymentInfoController: (
               E.getOrElse(t.identity)
             );
           case FlowCase.FAIL_VERIFY_400_PPT_STAZIONE_INT_PA_SCONOSCIUTA:
-            return ResponseErrorValidation(
-              `Mock – Failure case ${FlowCase[flow]}`,
-              ""
-            );
+            return ResponseErrorValidation(`${FlowCase[flow]}`, "");
           case FlowCase.FAIL_VERIFY_404_PPT_DOMINIO_SCONOSCIUTO:
             return ResponseErrorValidationFault(
               `Mock – Failure case ${FlowCase[flow]}`,

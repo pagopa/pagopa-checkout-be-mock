@@ -67,11 +67,7 @@ type FlowCaseKey = keyof typeof FlowCase;
 export const getFlowFromRptId: (
   rptId: string
 ) => O.Option<FlowCase> = rptId => {
-  const prefix = rptId.slice(0, -2);
   const flowId = Number(rptId.slice(-2));
-  if (prefix !== "777777777773020167237496700") {
-    return O.none;
-  }
   if (flowId in FlowCase) {
     return O.some(flowId as FlowCase);
   } else {
