@@ -117,6 +117,8 @@ This is currently implemented via a `mockFlow` cookie which is returned from the
 | FAIL_CHECK_STATUS_422                                 | 38        |
 | FAIL_CHECK_STATUS_500                                 | 39        |
 | NODO_TAKEN_IN_CHARGE                                  | 40        |
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND            | 41        |
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED    | 42        |
 
 ## XPAY Authorization Error Flow
 The XPAY authorization polling endpoint `/request-payments/xpay/:requestId` require a requestId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`. It will returns an error otherwise (404 - Not Found).
@@ -157,3 +159,30 @@ Here a brief explanation of the simulated flows:
 7) CHALLENGE_DENY : payment authorization is redirect to challenge phase and then denied state
 8) METHOD_CHALLENGE_DENY : payment authorization is redirect to method phase, then challenge phase and finally to denied state
 9) PAYMENT_NOT_FOUND : each call will return 404 not found error
+
+
+## Ecommerce activation Error Flow
+The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a list of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`]. Also, if the rptId ends in `41` or `42` the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND or FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED in the mockFlow cookies to simulate the error in auth request.
+In the remaining success cases, the cookie will be valued with OK to simulate a positive auth-request case.
+The list of possible flow cases:
+
+| Case                                               | RptID                         | COOKIE MOCK FLOW                                   |
+|----------------------------------------------------|-------------------------------|----------------------------------------------------|
+| FAIL_ACTIVATE_502_PPT_SINTASSI_XSD                 | XXXXXXXXXXXXXXXXXXXXXXXXXXX13 | (not set)                                          |
+| FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT      | XXXXXXXXXXXXXXXXXXXXXXXXXXX15 | (not set)                                          |
+| FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO           | XXXXXXXXXXXXXXXXXXXXXXXXXXX12 | (not set)                                          |
+| FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO          | XXXXXXXXXXXXXXXXXXXXXXXXXXX11 | (not set)                                          |
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         | XXXXXXXXXXXXXXXXXXXXXXXXXXX41 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         |
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED | XXXXXXXXXXXXXXXXXXXXXXXXXXX42 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED |
+| OK                                                 | XXXXXXXXXXXXXXXXXXXXXXXXXXXXX | OK                                                 |
+
+
+
+## Ecommerce auth-requests Error Flow
+The ecommerce transaction auth-requests endpoint `/checkout/ecommerce/v1/transactions/:transactionId/auth-requests` is driven by the following cookie mockFlow values:
+
+| COOKIE MOCK FLOW                                   | HttpStatus                            |
+|----------------------------------------------------|---------------------------------------|
+| OK                                                 | 200 success case                      |
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         | 404 transactionId not fuond           |
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED | 409 transaction already processed     |   

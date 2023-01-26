@@ -56,7 +56,10 @@ export enum FlowCase {
   FAIL_CHECK_STATUS_404,
   FAIL_CHECK_STATUS_422,
   FAIL_CHECK_STATUS_500,
-  NODO_TAKEN_IN_CHARGE
+  NODO_TAKEN_IN_CHARGE,
+  /* pagopa-ecommerce: auth-request */
+  FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND,
+  FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED
 }
 
 type FlowCaseKey = keyof typeof FlowCase;
@@ -64,13 +67,7 @@ type FlowCaseKey = keyof typeof FlowCase;
 export const getFlowFromRptId: (
   rptId: string
 ) => O.Option<FlowCase> = rptId => {
-  const prefix = rptId.slice(0, -2);
   const flowId = Number(rptId.slice(-2));
-
-  if (prefix !== "777777777773020167237496700") {
-    return O.none;
-  }
-
   if (flowId in FlowCase) {
     return O.some(flowId as FlowCase);
   } else {
