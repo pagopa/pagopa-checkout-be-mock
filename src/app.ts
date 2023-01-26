@@ -23,6 +23,7 @@ import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
 import { logger } from "./logger";
 import { authRequestVpos, authRequestXpay } from "./handlers/pgs";
 import { ecommerceActivation } from "./handlers/ecommerce/activation";
+import { ecommerceGetTransaction } from "./handlers/ecommerce/transaction";
 import {
   ecommerceGetPsp,
   ecommerceGetPspByPaymentMethods
@@ -249,6 +250,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.get(
     "/checkout/ecommerce/v1/payment-methods/:id/psps",
     ecommerceGetPspByPaymentMethods
+  );
+
+  // transaction-service new transaction request mock
+  app.get(
+    "/checkout/ecommerce/v1/transactions/:transactionId",
+    ecommerceGetTransaction
   );
 
   // transaction-service new transaction request mock
