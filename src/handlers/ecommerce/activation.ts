@@ -11,13 +11,32 @@ import {
   error409PagamentoInCorso,
   error404DominioSconosciuto
 } from "../../utils/ecommerce/activation";
-import { FlowCase, getFlowFromRptId, setFlowCookie } from "../../flow";
+import {
+  FlowCase,
+  generateTransactionId,
+  getFlowFromRptId,
+  setFlowCookie,
+  VposFlowCase,
+  XPayFlowCase
+} from "../../flow";
 
 const activationErrorCase = [
   FlowCase.FAIL_ACTIVATE_502_PPT_SINTASSI_XSD,
   FlowCase.FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT,
   FlowCase.FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO,
-  FlowCase.FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO
+  FlowCase.FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO,
+  FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_NOT_FOUND,
+  FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS,
+  FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS_2_RETRY,
+  FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_DIRECT_AUTH,
+  FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_AUTH,
+  FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_CHALLENGE_AUTH,
+  FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_AUTH,
+  FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_DIRECT_DENY,
+  FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_DENY,
+  FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_CHALLENGE_DENY,
+  FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_DENY,
+  FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_PAYMENT_NOT_FOUND
 ];
 
 const authErrorCase = [
@@ -25,9 +44,20 @@ const authErrorCase = [
   FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND
 ];
 
-const returnSuccessResponse = (req: express.Request, res: any): void => {
+const returnSuccessResponse = (
+  req: express.Request,
+  res: any,
+  transactionIdPrefix?: number
+): void => {
   logger.info("[Activation ecommerce] - Return success case");
-  res.status(200).send(createSuccessActivationResponseEntity(req));
+  res
+    .status(200)
+    .send(
+      createSuccessActivationResponseEntity(
+        req,
+        generateTransactionId(transactionIdPrefix)
+      )
+    );
 };
 
 const return502ErrorSintassiXSD = (res: any): void => {
@@ -79,6 +109,42 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
       break;
     case FlowCase.FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO:
       return404ErrorDominioSconosciuto(res);
+      break;
+    case FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_NOT_FOUND:
+      returnSuccessResponse(req, res);
+      break;
+    case FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS_2_RETRY:
+      returnSuccessResponse(req, res, XPayFlowCase.MULTI_ATTEMPT_POLLING);
+      break;
+    case FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS:
+      returnSuccessResponse(req, res, XPayFlowCase.OK);
+      break;
+    case FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_DIRECT_AUTH:
+      returnSuccessResponse(req, res, VposFlowCase.DIRECT_AUTH);
+      break;
+    case FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_AUTH:
+      returnSuccessResponse(req, res, VposFlowCase.METHOD_AUTH);
+      break;
+    case FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_CHALLENGE_AUTH:
+      returnSuccessResponse(req, res, VposFlowCase.CHALLENGE_AUTH);
+      break;
+    case FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_AUTH:
+      returnSuccessResponse(req, res, VposFlowCase.METHOD_CHALLENGE_AUTH);
+      break;
+    case FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_DIRECT_DENY:
+      returnSuccessResponse(req, res, VposFlowCase.DIRECT_DENY);
+      break;
+    case FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_DENY:
+      returnSuccessResponse(req, res, VposFlowCase.METHOD_DENY);
+      break;
+    case FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_CHALLENGE_DENY:
+      returnSuccessResponse(req, res, VposFlowCase.CHALLENGE_DENY);
+      break;
+    case FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_DENY:
+      returnSuccessResponse(req, res, VposFlowCase.METHOD_CHALLENGE_DENY);
+      break;
+    case FlowCase.ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_PAYMENT_NOT_FOUND:
+      returnSuccessResponse(req, res, VposFlowCase.PAYMENT_NOT_FOUND);
       break;
     default:
       setFlowCookie(res, flowId);
