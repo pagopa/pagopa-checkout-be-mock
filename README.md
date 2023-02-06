@@ -164,10 +164,10 @@ Here a brief explanation of the simulated flows:
 ## Ecommerce activation Error Flow
 The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a list of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`]. Also, if the rptId ends in `41` or `42` the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND or FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED in the mockFlow cookies to simulate the error in auth request.
 In the remaining success cases, the cookie will be valued with OK to simulate a positive auth-request case.
-For generate a different transactionId for handle xpay and vpos result code there 
+To generate transaction ids with prefixes useful for xpay and vpos calls, the suffix of the RPTID must be one of these [`43`,`44`,`45`,`46`,`47`,`48`,`49`,`50`,`51`,`52`,`53`,`54`]
 The list of possible flow cases:
 
-| Case                                                           | RptID                         | COOKIE MOCK FLOW                                   | Generated code
+| Case                                                           | RptID                         | COOKIE MOCK FLOW                                   | Generated transactionId
 |----------------------------------------------------------------|-------------------------------|----------------------------------------------------|----------------------------------
 | FAIL_ACTIVATE_502_PPT_SINTASSI_XSD                             | XXXXXXXXXXXXXXXXXXXXXXXXXXX13 | (not set)                                          | (no)
 | FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT                  | XXXXXXXXXXXXXXXXXXXXXXXXXXX15 | (not set)                                          | (no)
