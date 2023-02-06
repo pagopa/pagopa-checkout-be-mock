@@ -24,6 +24,7 @@ import { logger } from "./logger";
 import { authRequestVpos, authRequestXpay } from "./handlers/pgs";
 import { ecommerceActivation } from "./handlers/ecommerce/activation";
 import { ecommerceGetTransaction } from "./handlers/ecommerce/transaction";
+import { ecommerceVerify } from "./handlers/ecommerce/verify";
 import {
   ecommerceGetPsp,
   ecommerceGetPspByPaymentMethods
@@ -31,7 +32,6 @@ import {
 import { ecommerceGetCart } from "./handlers/ecommerce/cart";
 import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import { ecommerceGetPaymentMethods } from "./handlers/ecommerce/payment-method";
-import { FlowCase, setFlowCookie } from "./flow";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -190,52 +190,8 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     }
   );
 
-  // TODO refactoring to handle errors scenario
-  app.get(
-    "/checkout/ecommerce/v1/payment-requests/:rptid",
-    async (_req, res) => {
-      if (_req.params.rptid.substring(0, 11) !== "77777777777") {
-        return res
-          .status(404)
-          .contentType("application/json")
-          .send(
-            '{"faultCodeCategory":"PAYMENT_UNKNOWN","faultCodeDetail":"PPT_DOMINIO_SCONOSCIUTO","title":"ValidationFault"}'
-          );
-      } else if (
-        _req.params.rptid
-          .substring(11, _req.params.rptid.length)
-          .startsWith("30201")
-      ) {
-        return res
-          .status(404)
-          .contentType("application/json")
-          .send(
-            '{"faultCodeCategory":"PAYMENT_UNKNOWN","faultCodeDetail":"PPT_STAZIONE_INT_PA_SCONOSCIUTA","title":"ValidationFault"}'
-          );
-      } else {
-        if (
-          _req.params.rptid
-            .substring(11, _req.params.rptid.length)
-            .startsWith("30202")
-        ) {
-          logger.info("Nodo take in charge response flow activated");
-          setFlowCookie(res, FlowCase.NODO_TAKEN_IN_CHARGE);
-        } else {
-          logger.info("OK flow activated");
-          setFlowCookie(res, FlowCase.OK);
-        }
-        return res.send({
-          amount: 12000,
-          paymentContextCode: "a5560817eabc44ba877aaf4db96a606f",
-          rptId: "77777777777302000100000009424",
-          paFiscalCode: "77777777777",
-          paName: "Pagamento di Test",
-          description: "Pagamento di Test",
-          dueDate: "2021-07-31"
-        });
-      }
-    }
-  );
+  // payment-requests-service get cart requests mock
+  app.get("/checkout/ecommerce/v1/payment-requests/:rptId", ecommerceVerify);
 
   // payment-requests-service get cart requests mock
   app.get("/checkout/ecommerce/v1/carts/:id", ecommerceGetCart);
