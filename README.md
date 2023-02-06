@@ -164,17 +164,30 @@ Here a brief explanation of the simulated flows:
 ## Ecommerce activation Error Flow
 The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a list of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`]. Also, if the rptId ends in `41` or `42` the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND or FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED in the mockFlow cookies to simulate the error in auth request.
 In the remaining success cases, the cookie will be valued with OK to simulate a positive auth-request case.
+For generate a different transactionId for handle xpay and vpos result code there 
 The list of possible flow cases:
 
-| Case                                               | RptID                         | COOKIE MOCK FLOW                                   |
-|----------------------------------------------------|-------------------------------|----------------------------------------------------|
-| FAIL_ACTIVATE_502_PPT_SINTASSI_XSD                 | XXXXXXXXXXXXXXXXXXXXXXXXXXX13 | (not set)                                          |
-| FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT      | XXXXXXXXXXXXXXXXXXXXXXXXXXX15 | (not set)                                          |
-| FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO           | XXXXXXXXXXXXXXXXXXXXXXXXXXX12 | (not set)                                          |
-| FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO          | XXXXXXXXXXXXXXXXXXXXXXXXXXX11 | (not set)                                          |
-| FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         | XXXXXXXXXXXXXXXXXXXXXXXXXXX41 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         |
-| FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED | XXXXXXXXXXXXXXXXXXXXXXXXXXX42 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED |
-| OK                                                 | XXXXXXXXXXXXXXXXXXXXXXXXXXXXX | OK                                                 |
+| Case                                                           | RptID                         | COOKIE MOCK FLOW                                   | Generated code
+|----------------------------------------------------------------|-------------------------------|----------------------------------------------------|----------------------------------
+| FAIL_ACTIVATE_502_PPT_SINTASSI_XSD                             | XXXXXXXXXXXXXXXXXXXXXXXXXXX13 | (not set)                                          | (no)
+| FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT                  | XXXXXXXXXXXXXXXXXXXXXXXXXXX15 | (not set)                                          | (no)
+| FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO                       | XXXXXXXXXXXXXXXXXXXXXXXXXXX12 | (not set)                                          | (no)
+| FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO                      | XXXXXXXXXXXXXXXXXXXXXXXXXXX11 | (not set)                                          | (no)
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND                     | XXXXXXXXXXXXXXXXXXXXXXXXXXX41 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         | (generic UUID)
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED             | XXXXXXXXXXXXXXXXXXXXXXXXXXX42 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED | (generic UUID)
+| OK                                                             | XXXXXXXXXXXXXXXXXXXXXXXXXXXXX | OK                                                 | (generic UUID)
+| ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS               | XXXXXXXXXXXXXXXXXXXXXXXXXXX43 | (not set)                                          | 0XXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+| ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS_2_RETRY       | XXXXXXXXXXXXXXXXXXXXXXXXXXX44 | (not set)                                          | 01XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+| ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_NOT_FOUND             | XXXXXXXXXXXXXXXXXXXXXXXXXXX45 | (not set)                                          | (generic UUID)           
+| ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_DIRECT_AUTH            | XXXXXXXXXXXXXXXXXXXXXXXXXXX46 | (not set)                                          | 00XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+| ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_AUTH            | XXXXXXXXXXXXXXXXXXXXXXXXXXX47 | (not set)                                          | 01XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+| ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_CHALLENGE_AUTH         | XXXXXXXXXXXXXXXXXXXXXXXXXXX48 | (not set)                                          | 02XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+| ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_AUTH  | XXXXXXXXXXXXXXXXXXXXXXXXXXX49 | (not set)                                          | 03XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+| ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_DIRECT_DENY            | XXXXXXXXXXXXXXXXXXXXXXXXXXX50 | (not set)                                          | 04XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+| ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_DENY            | XXXXXXXXXXXXXXXXXXXXXXXXXXX51 | (not set)                                          | 05XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+| ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_CHALLENGE_DENY         | XXXXXXXXXXXXXXXXXXXXXXXXXXX52 | (not set)                                          | 06XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+| ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_DENY  | XXXXXXXXXXXXXXXXXXXXXXXXXXX53 | (not set)                                          | 07XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+| ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_PAYMENT_NOT_FOUND      | XXXXXXXXXXXXXXXXXXXXXXXXXXX54 | (not set)                                          | 08XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 
 
 
