@@ -22,7 +22,6 @@
     "generate:ts-from-yaml:api": "shx mkdir -p src/generated/payment_manager && shx mkdir -p src/generated/pagopa_proxy && rimraf src/generated/payment_manager/* && rimraf src/generated/pagopa_proxy/* && gen-api-models --strict 0 --api-spec api_payment_manager.yaml --out-dir src/generated/payment_manager --request-types && gen-api-models --strict 0 --api-spec https://raw.githubusercontent.com/pagopa/io-pagopa-proxy/v1.2.0/api-spec/api-pagopa-proxy.yaml --out-dir src/generated/pagopa_proxy --request-types",
     "generate:ts-from-yaml:pgs": "shx rm -rf src/generated/pgs && shx mkdir -p src/generated/pgs && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/pagopa-infra/c39cea0b3ac4d992f4bda0026365b5a0eac96802/src/core/api/payment_transactions_gateway_api/external/v1/_openapi.json.tpl --no-strict --out-dir src/generated/pgs",
     "generate:ts-from-yaml:ecommerce": "shx rm -rf src/generated/ecommerce && shx mkdir -p src/generated/ecommerce && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/pagopa-infra/main/src/core/api/checkout/checkout_ecommerce/v1/_openapi.json.tpl --no-strict --out-dir src/generated/ecommerce"
-
   },
   "devDependencies": {
     "@pagopa/eslint-config": "^1.3.1",
@@ -31,6 +30,7 @@
     "@types/express-mung": "^0.5.2",
     "@types/jest": "^25.2.1",
     "@types/node": "^14.16.0",
+    "@types/uuid": "^9.0.0",
     "@types/winston": "^2.4.4",
     "danger": "^8.0.0",
     "danger-plugin-digitalcitizenship": "*",
@@ -56,6 +56,7 @@
     "io-ts": "^2.2.16",
     "io-ts-reporters": "^2.0.0",
     "parcel-bundler": "^1.12.5",
+    "uuid": "^3.4.0",
     "winston": "^3.2.1"
   }
 }

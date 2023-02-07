@@ -2,6 +2,7 @@ import * as O from "fp-ts/lib/Option";
 import * as express from "express";
 import * as E from "fp-ts/Either";
 import { identity, pipe } from "fp-ts/function";
+import { v4 as uuid } from "uuid";
 import { logger } from "./logger";
 
 const XPAY_OK_PREFIX = "0";
@@ -59,7 +60,21 @@ export enum FlowCase {
   NODO_TAKEN_IN_CHARGE,
   /* pagopa-ecommerce: auth-request */
   FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND,
-  FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED
+  FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED,
+  /* pagopa-ecommerce: ACTIVATION generate trasactionId for xpay */
+  ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS,
+  ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS_2_RETRY,
+  ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_NOT_FOUND,
+  /* pagopa-ecommerce: ACTIVATION generate trasactionId for vpos */
+  ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_DIRECT_AUTH,
+  ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_AUTH,
+  ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_CHALLENGE_AUTH,
+  ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_AUTH,
+  ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_DIRECT_DENY,
+  ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_DENY,
+  ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_CHALLENGE_DENY,
+  ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_DENY,
+  ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_PAYMENT_NOT_FOUND
 }
 
 type FlowCaseKey = keyof typeof FlowCase;
@@ -104,8 +119,8 @@ export const setFlowCookie: (
 
 export enum XPayFlowCase {
   OK,
-  NOT_FOUND,
-  MULTI_ATTEMPT_POLLING
+  MULTI_ATTEMPT_POLLING,
+  NOT_FOUND
 }
 
 export const getXPayFlowCase = (requestId: string): XPayFlowCase =>
@@ -192,3 +207,15 @@ export const setVposFlowCookies: (
   logger.info(`Set vposMockStep cookie to: [${VposStep[vposStep]}]`);
   res.cookie("vposMockStep", VposStep[vposStep]);
 };
+
+export const generateTransactionId = (prefix?: number): string =>
+  pipe(
+    O.fromNullable(prefix),
+    E.fromOption(() => uuid()),
+    E.map(() =>
+      String(prefix)
+        .padStart(2, "0")
+        .concat(uuid().substring(2))
+    ),
+    E.toUnion
+  );
