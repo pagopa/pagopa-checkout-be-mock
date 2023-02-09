@@ -224,10 +224,16 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   );
 
   // payment-transaction-gateway xpay authorization requests mock
-  app.get("/request-payments/xpay/:requestId", authRequestXpay);
+  app.get(
+    "/payment-transactions-gateway/external/v1/request-payments/xpay/:requestId",
+    authRequestXpay
+  );
 
   // payment-transaction-gateway vpos authorization requests mock
-  app.get("/request-payments/vpos/:requestId", authRequestVpos);
+  app.get(
+    "/payment-transactions-gateway/external/v1/request-payments/vpos/:requestId",
+    authRequestVpos
+  );
 
   return app;
 };
