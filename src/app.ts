@@ -191,35 +191,35 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   );
 
   // payment-requests-service get cart requests mock
-  app.get("/checkout/ecommerce/v1/payment-requests/:rptId", ecommerceVerify);
+  app.get("/ecommerce/checkout/v1/payment-requests/:rptId", ecommerceVerify);
 
   // payment-requests-service get cart requests mock
-  app.get("/checkout/ecommerce/v1/carts/:id", ecommerceGetCart);
+  app.get("/ecommerce/checkout/ecommerce/v1/carts/:id", ecommerceGetCart);
 
   // TODO refactoring to handle errors scenario
-  app.get("/checkout/ecommerce/v1/payment-methods", ecommerceGetPaymentMethods);
+  app.get("/ecommerce/checkout/v1/payment-methods", ecommerceGetPaymentMethods);
 
   // payment-methods-service get psp requests mock
-  app.get("/checkout/ecommerce/v1/payment-methods/psps", ecommerceGetPsp);
+  app.get("/ecommerce/checkout/v1/payment-methods/psps", ecommerceGetPsp);
 
   // payment-methods-service get psp by payment methods requests mock
   app.get(
-    "/checkout/ecommerce/v1/payment-methods/:id/psps",
+    "/ecommerce/checkout/v1/payment-methods/:id/psps",
     ecommerceGetPspByPaymentMethods
   );
 
   // transaction-service new transaction request mock
   app.get(
-    "/checkout/ecommerce/v1/transactions/:transactionId",
+    "/ecommerce/checkout/v1/transactions/:transactionId",
     ecommerceGetTransaction
   );
 
   // transaction-service new transaction request mock
-  app.post("/checkout/ecommerce/v1/transactions", ecommerceActivation);
+  app.post("/ecommerce/checkout/v1/transactions", ecommerceActivation);
 
   // transaction-service auth-request mock
   app.post(
-    "/checkout/ecommerce/v1/transactions/:transactionId/auth-requests",
+    "/ecommerce/checkout/v1/transactions/:transactionId/auth-requests",
     ecommerceAuthRequest
   );
 
