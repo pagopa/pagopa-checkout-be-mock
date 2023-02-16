@@ -3,6 +3,7 @@ import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 
 export const createSuccessAuthRequestResponseEntity = (): RequestAuthorizationResponse => ({
+  authorizationRequestId: "requestId",
   authorizationUrl: "https://example.com"
 });
 
