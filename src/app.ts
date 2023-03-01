@@ -204,7 +204,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // payment-methods-service get psp by payment methods requests mock
   app.post(
-    "/ecommerce/checkout/v1/payment-methods/:id/psps",
+    "/ecommerce/checkout/v1/payment-methods/fee/calculate",
     ecommerceGetPspByPaymentMethods
   );
 
