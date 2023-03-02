@@ -59,11 +59,11 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntity = (): BundleOpt
       idBundle: "123",
       idChannel: "aasd",
       idCiBundle: "dede",
-      idPsp: "PTTTG",
+      idPsp: "PTG1",
       onUs: true,
-      paymentMethod: "dehduheuhduedehud",
+      paymentMethod: "paymentMethod1",
       primaryCiIncurredFee: 0,
-      taxPayerFee: 0,
+      taxPayerFee: 10,
       touchpoint: "FHGHF"
     },
     {
@@ -74,11 +74,11 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntity = (): BundleOpt
       idBundle: "123",
       idChannel: "aasd",
       idCiBundle: "dede",
-      idPsp: "PTTTG",
+      idPsp: "PTG2",
       onUs: false,
-      paymentMethod: "frfrfrfrfrfrfrfrrf",
+      paymentMethod: "paymentMethod2",
       primaryCiIncurredFee: 0,
-      taxPayerFee: 0,
+      taxPayerFee: 15,
       touchpoint: "FHXHF"
     }
   ]
