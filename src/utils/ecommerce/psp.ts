@@ -71,7 +71,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntity = (): BundleOpt
       bundleDescription: "bundle 2",
       bundleName: "BUNDLE2",
       idBrokerPsp: "3243",
-      idBundle: "123",
+      idBundle: "456",
       idChannel: "aasd",
       idCiBundle: "dede",
       idPsp: "PTG2",
