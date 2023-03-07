@@ -25,10 +25,7 @@ import { authRequestVpos, authRequestXpay } from "./handlers/pgs";
 import { ecommerceActivation } from "./handlers/ecommerce/activation";
 import { ecommerceGetTransaction } from "./handlers/ecommerce/transaction";
 import { ecommerceVerify } from "./handlers/ecommerce/verify";
-import {
-  ecommerceGetPsp,
-  ecommerceGetPspByPaymentMethods
-} from "./handlers/ecommerce/psp";
+import { ecommerceGetPspByPaymentMethods } from "./handlers/ecommerce/psp";
 import { ecommerceGetCart } from "./handlers/ecommerce/cart";
 import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import { ecommerceGetPaymentMethods } from "./handlers/ecommerce/payment-method";
@@ -198,9 +195,6 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // TODO refactoring to handle errors scenario
   app.get("/ecommerce/checkout/v1/payment-methods", ecommerceGetPaymentMethods);
-
-  // payment-methods-service get psp requests mock
-  app.get("/ecommerce/checkout/v1/payment-methods/psps", ecommerceGetPsp);
 
   // payment-methods-service get psp by payment methods requests mock
   app.post(
