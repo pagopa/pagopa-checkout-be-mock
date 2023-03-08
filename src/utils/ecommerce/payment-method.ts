@@ -1,6 +1,6 @@
 import { NonNegativeInteger } from "@pagopa/ts-commons/lib/numbers";
+import { StatusEnum } from "../../generated/ecommerce/PaymentMethodResponse";
 import { PaymentMethodsResponse } from "../../generated/ecommerce/PaymentMethodsResponse";
-import { StatusEnum } from "../../generated/ecommerce/Psp";
 export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => [
   {
     description: "Carte",
