@@ -3,7 +3,7 @@ import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
 
-export const createSuccessGetPspByPaymentMethodsIdResponseEntity = (): BundleOption => ({
+export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold = (): BundleOption => ({
   belowThreshold: true,
   bundleOptions: [
     {
@@ -15,7 +15,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntity = (): BundleOpt
       idChannel: "aasd",
       idCiBundle: "dede",
       idPsp: "PTG1",
-      onUs: true,
+      onUs: false,
       paymentMethod: "paymentMethod1",
       primaryCiIncurredFee: 0,
       taxPayerFee: 10,
@@ -24,16 +24,53 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntity = (): BundleOpt
     {
       abi: "2222",
       bundleDescription: "bundle 2",
-      bundleName: "BUNDLE2",
+      bundleName: "BUNDLE2 ONUS",
       idBrokerPsp: "3243",
       idBundle: "456",
       idChannel: "aasd",
       idCiBundle: "dede",
       idPsp: "PTG2",
-      onUs: false,
+      onUs: true,
       paymentMethod: "paymentMethod2",
       primaryCiIncurredFee: 0,
       taxPayerFee: 15,
+      touchpoint: "FHXHF"
+    }
+  ],
+  paymentMethodName: "test",
+  paymentMethodStatus: PaymentMethodStatusEnum.ENABLED
+});
+
+export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = (): BundleOption => ({
+  belowThreshold: false,
+  bundleOptions: [
+    {
+      abi: "3333",
+      bundleDescription: "bundle 3 OnUs",
+      bundleName: "BUNDLE3 OnUs",
+      idBrokerPsp: "123445",
+      idBundle: "789",
+      idChannel: "aasd",
+      idCiBundle: "dede",
+      idPsp: "PTG3",
+      onUs: true,
+      primaryCiIncurredFee: 0,
+      taxPayerFee: 20,
+      touchpoint: "FHGHF"
+    },
+    {
+      abi: "4444",
+      bundleDescription: "bundle 4",
+      bundleName: "BUNDLE4",
+      idBrokerPsp: "3243",
+      idBundle: "012",
+      idChannel: "aasd",
+      idCiBundle: "dede",
+      idPsp: "PTG4",
+      onUs: false,
+      paymentMethod: "paymentMethod4",
+      primaryCiIncurredFee: 0,
+      taxPayerFee: 25,
       touchpoint: "FHXHF"
     }
   ],

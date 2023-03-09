@@ -189,7 +189,14 @@ The list of possible flow cases:
 | ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_DENY  | XXXXXXXXXXXXXXXXXXXXXXXXXXX53 | (not set)                                          | 07XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 | ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_PAYMENT_NOT_FOUND      | XXXXXXXXXXXXXXXXXXXXXXXXXXX54 | (not set)                                          | 08XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 
+## Ecommerce calculate fees Flow
+The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` also drive the calculate fee result, since that api is empty of any information about `transactionId` or `rptId`. So using specific suffix for rptId in the activation post, it will success and we will sure to obtain specific result from calculate fee. The calculate fee api returns the `BundleOption` object. By its boolean field `belowThreshold` the checkout frontend will show different disclaimer. The suffix of the RPTID must be one of these [`55`,`56`,`57`]. `55` will drive for a response with `belowThreshold` in `BundleOption` as false. `56` will drive for a response with `belowThreshold` in `BundleOption` as true. To make the call fail use suffix `57`. The default behaviour (all other rptId) is the `belowThreshold` in `BundleOption` as true. Everyone of this suffix put a specific cookie value in the browser.
+The ecommerce transaction fee/calculate endpoint `/ecommerce/checkout/v1/fee/calculate` is driven by the following cookie mockFlow values:
 
+| COOKIE MOCK FLOW                                   | HttpStatus                            | RptId Suffix |
+|----------------------------------------------------|---------------------------------------|--------------|
+| OK_UPTHRESHOLD_CALUCLATE_FEE                       | 200 success case belowThreshold false | 55           |
+| FAIL_CALCULATE_FEE                                 | 400 bad request                       | 56           |  
 
 ## Ecommerce auth-requests Error Flow
 The ecommerce transaction auth-requests endpoint `/checkout/ecommerce/v1/transactions/:transactionId/auth-requests` is driven by the following cookie mockFlow values:

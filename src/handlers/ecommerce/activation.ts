@@ -20,6 +20,12 @@ import {
   XPayFlowCase
 } from "../../flow";
 
+const caluclateFeeCase = [
+  FlowCase.OK_UPTHRESHOLD_CALUCLATE_FEE,
+  FlowCase.OK_BELOWTHRESHOLD_CALUCLATE_FEE,
+  FlowCase.FAIL_CALCULATE_FEE
+];
+
 const activationErrorCase = [
   FlowCase.FAIL_ACTIVATE_502_PPT_SINTASSI_XSD,
   FlowCase.FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT,
@@ -91,7 +97,9 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
     req.body.paymentNotices[0].rptId,
     getFlowFromRptId,
     O.map(id =>
-      !authErrorCase.includes(id) && !activationErrorCase.includes(id)
+      !authErrorCase.includes(id) &&
+      !activationErrorCase.includes(id) &&
+      !caluclateFeeCase.includes(id)
         ? FlowCase.OK
         : id
     ),
