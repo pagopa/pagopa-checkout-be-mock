@@ -1,6 +1,7 @@
 import { BundleOption } from "../../generated/ecommerce/BundleOption";
 import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
+import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
 
 export const createSuccessGetPspByPaymentMethodsIdResponseEntity = (): BundleOption => ({
   belowThreshold: true,
@@ -35,7 +36,9 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntity = (): BundleOpt
       taxPayerFee: 15,
       touchpoint: "FHXHF"
     }
-  ]
+  ],
+  paymentMethodName: "test",
+  paymentMethodStatus: PaymentMethodStatusEnum.ENABLED
 });
 
 export const error400BadRequest = (): ProblemJson => ({

@@ -1,6 +1,6 @@
 import { NonNegativeInteger } from "@pagopa/ts-commons/lib/numbers";
-import { StatusEnum } from "../../generated/ecommerce/PaymentMethodResponse";
 import { PaymentMethodsResponse } from "../../generated/ecommerce/PaymentMethodsResponse";
+import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
 export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => [
   {
     description: "Carte",
@@ -13,7 +13,7 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => [
         min: 0 as NonNegativeInteger
       }
     ],
-    status: StatusEnum.ENABLED
+    status: PaymentMethodStatusEnum.ENABLED
   },
   {
     description: "PostePay",
@@ -26,6 +26,6 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => [
         min: 0 as NonNegativeInteger
       }
     ],
-    status: StatusEnum.ENABLED
+    status: PaymentMethodStatusEnum.ENABLED
   }
 ];
