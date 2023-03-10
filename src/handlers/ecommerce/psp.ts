@@ -9,8 +9,8 @@ import {
   createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold,
   error400BadRequest
 } from "../../utils/ecommerce/psp";
-import { PaymentOption } from "../../generated/ecommerce/PaymentOption";
 import { FlowCase, getFlowCookie } from "../../flow";
+import { CalculateFeeRequest } from "../../generated/ecommerce/CalculateFeeRequest";
 
 export const ecommerceGetPspByPaymentMethods: RequestHandler = async (
   req,
@@ -21,7 +21,7 @@ export const ecommerceGetPspByPaymentMethods: RequestHandler = async (
   );
   return pipe(
     req.body,
-    PaymentOption.decode,
+    CalculateFeeRequest.decode,
     E.fold(
       () => res.status(400).send(error400BadRequest()),
       () => {
@@ -33,7 +33,7 @@ export const ecommerceGetPspByPaymentMethods: RequestHandler = async (
               .status(200)
               .send(
                 createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold()
-              ); 
+              );
           case FlowCase.OK_UPTHRESHOLD_CALUCLATE_FEE:
             return res
               .status(200)
@@ -59,7 +59,7 @@ export const ecommerceGetPspByPaymentMethodsError: RequestHandler = async (
   logger.info("[Get psps by payment method id ecommerce] - Return error case");
   return pipe(
     req.body,
-    PaymentOption.decode,
+    CalculateFeeRequest.decode,
     E.map(() => res.status(400).send(error400BadRequest()))
   );
 };

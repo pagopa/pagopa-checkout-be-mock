@@ -1,11 +1,11 @@
-import { BundleOption } from "../../generated/ecommerce/BundleOption";
 import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
+import { CalculateFeeResponse } from "../../generated/ecommerce/CalculateFeeResponse";
 
-export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold = (): BundleOption => ({
+export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold = (): CalculateFeeResponse => ({
   belowThreshold: true,
-  bundleOptions: [
+  bundles: [
     {
       abi: "1111",
       bundleDescription: "bundle 1",
@@ -41,9 +41,9 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
   paymentMethodStatus: PaymentMethodStatusEnum.ENABLED
 });
 
-export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = (): BundleOption => ({
+export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = (): CalculateFeeResponse => ({
   belowThreshold: false,
-  bundleOptions: [
+  bundles: [
     {
       abi: "3333",
       bundleDescription: "bundle 3 OnUs",
