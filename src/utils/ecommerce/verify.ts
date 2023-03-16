@@ -12,7 +12,6 @@ export const createSuccessVerifyRptIdEntity = (
   dueDate: "2021-07-31",
   paFiscalCode: rptId.substring(0, 11),
   paName: "Pagamento di Test",
-  paymentContextCode: "a5560817eabc44ba877aaf4db96a606f",
   rptId
 });
 
