@@ -34,7 +34,7 @@ export const ecommerceGetPspByPaymentMethods: RequestHandler = async (
               .send(
                 createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold()
               );
-          case FlowCase.OK_UPTHRESHOLD_CALUCLATE_FEE:
+          case FlowCase.OK_ABOVETHRESHOLD_CALUCLATE_FEE:
             return res
               .status(200)
               .send(

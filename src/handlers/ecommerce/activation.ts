@@ -21,7 +21,7 @@ import {
 } from "../../flow";
 
 const caluclateFeeCase = [
-  FlowCase.OK_UPTHRESHOLD_CALUCLATE_FEE,
+  FlowCase.OK_ABOVETHRESHOLD_CALUCLATE_FEE,
   FlowCase.OK_BELOWTHRESHOLD_CALUCLATE_FEE,
   FlowCase.FAIL_CALCULATE_FEE
 ];

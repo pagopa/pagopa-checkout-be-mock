@@ -1,43 +1,44 @@
+// eslint-disable-next-line sort-keys
 import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
 import { CalculateFeeResponse } from "../../generated/ecommerce/CalculateFeeResponse";
 
-export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold = (): CalculateFeeResponse => ({
-  belowThreshold: true,
+export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold = (): unknown => ({
+  belowThreshold: false,
   bundles: [
     {
-      abi: "1111",
-      bundleDescription: "bundle 1",
-      bundleName: "BUNDLE1",
-      idBrokerPsp: "12344",
-      idBundle: "123",
-      idChannel: "aasd",
-      idCiBundle: "dede",
-      idPsp: "PTG1",
+      abi: null,
+      bundleDescription: "description",
+      bundleName: "global-3",
+      idBrokerPsp: null,
+      idBundle: "35ab5e95-8a1c-4f69-ab94-dbf82c8d50cc",
+      idChannel: null,
+      idCiBundle: null,
+      idPsp: "1234567891",
       onUs: false,
-      paymentMethod: "paymentMethod1",
+      paymentMethod: "CP",
       primaryCiIncurredFee: 0,
-      taxPayerFee: 10,
-      touchpoint: "FHGHF"
+      taxPayerFee: 200,
+      touchpoint: "CHECKOUT"
     },
     {
-      abi: "2222",
-      bundleDescription: "bundle 2",
-      bundleName: "BUNDLE2 ONUS",
-      idBrokerPsp: "3243",
-      idBundle: "456",
-      idChannel: "aasd",
-      idCiBundle: "dede",
-      idPsp: "PTG2",
-      onUs: true,
-      paymentMethod: "paymentMethod2",
+      abi: null,
+      bundleDescription: "awesome bundle",
+      bundleName: "test1",
+      idBrokerPsp: null,
+      idBundle: "18228156-ccb4-4a24-b9e1-fc6d43e69762",
+      idChannel: null,
+      idCiBundle: null,
+      idPsp: "IDPSPFNZ",
+      onUs: false,
+      paymentMethod: "CP",
       primaryCiIncurredFee: 0,
-      taxPayerFee: 15,
-      touchpoint: "FHXHF"
+      taxPayerFee: 200,
+      touchpoint: "CHECKOUT"
     }
   ],
-  paymentMethodName: "test",
+  paymentMethodName: "Carte",
   paymentMethodStatus: PaymentMethodStatusEnum.ENABLED
 });
 

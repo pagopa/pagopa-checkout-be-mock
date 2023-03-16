@@ -195,8 +195,9 @@ The ecommerce transaction fee/calculate endpoint `/ecommerce/checkout/v1/fee/cal
 
 | COOKIE MOCK FLOW                                   | HttpStatus                            | RptId Suffix |
 |----------------------------------------------------|---------------------------------------|--------------|
-| OK_UPTHRESHOLD_CALUCLATE_FEE                       | 200 success case belowThreshold false | 55           |
-| FAIL_CALCULATE_FEE                                 | 400 bad request                       | 56           |  
+| OK_ABOVETHRESHOLD_CALUCLATE_FEE                    | 200 success case belowThreshold false | 55           |
+| OK_BELOWTHRESHOLD_CALUCLATE_FEE                    | 200 success case belowThreshold true  | 56           |
+| FAIL_CALCULATE_FEE                                 | 400 bad request                       | 57           |  
 
 ## Ecommerce auth-requests Error Flow
 The ecommerce transaction auth-requests endpoint `/checkout/ecommerce/v1/transactions/:transactionId/auth-requests` is driven by the following cookie mockFlow values:
