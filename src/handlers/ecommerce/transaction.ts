@@ -9,3 +9,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
     .status(200)
     .send(createSuccessGetTransactionEntity(req.params.transactionId));
 };
+
+export const ecommerceDeleteTransaction: RequestHandler = async (req, res) => {
+  logger.info("[User cancel transaction ecommerce]");
+  res.status(202).send();
+};
