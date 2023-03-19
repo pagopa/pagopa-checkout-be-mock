@@ -26,6 +26,12 @@ const caluclateFeeCase = [
   FlowCase.FAIL_CALCULATE_FEE
 ];
 
+const transactionUserCancelCase = [
+  FlowCase.ID_NOT_FOUND_TRANSACTION_USER_CANCEL,
+  FlowCase.OK_TRANSACTION_USER_CANCEL,
+  FlowCase.INTERNAL_SERVER_ERROR_TRANSACTION_USER_CANCEL
+];
+
 const activationErrorCase = [
   FlowCase.FAIL_ACTIVATE_502_PPT_SINTASSI_XSD,
   FlowCase.FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT,
@@ -99,7 +105,8 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
     O.map(id =>
       !authErrorCase.includes(id) &&
       !activationErrorCase.includes(id) &&
-      !caluclateFeeCase.includes(id)
+      !caluclateFeeCase.includes(id) &&
+      !transactionUserCancelCase.includes(id)
         ? FlowCase.OK
         : id
     ),

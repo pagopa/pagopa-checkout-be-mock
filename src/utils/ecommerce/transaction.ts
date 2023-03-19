@@ -1,3 +1,4 @@
+import { HttpStatusCode, ProblemJson } from "@pagopa/ts-commons/lib/responses";
 import { AmountEuroCents } from "../../generated/ecommerce/AmountEuroCents";
 import { ClientIdEnum } from "../../generated/ecommerce/NewTransactionResponse";
 import { RptId } from "../../generated/ecommerce/RptId";
@@ -21,4 +22,20 @@ export const createSuccessGetTransactionEntity = (
   ],
   status: TransactionStatusEnum.NOTIFIED,
   transactionId
+});
+
+export const error404TransactionIdNotFound = (
+  transactionId: string
+): ProblemJson => ({
+  detail: "Transaction with id: " + transactionId + " not found",
+  instance: "Example instance",
+  status: 404 as HttpStatusCode,
+  title: "Transaction not found"
+});
+
+export const internalServerError500 = (): ProblemJson => ({
+  detail: "Internal server error",
+  instance: "Example instance",
+  status: 500 as HttpStatusCode,
+  title: "Internal server error"
 });

@@ -78,7 +78,11 @@ export enum FlowCase {
   /* pagopa-ecommerce: calculate/fee */
   OK_ABOVETHRESHOLD_CALUCLATE_FEE,
   OK_BELOWTHRESHOLD_CALUCLATE_FEE,
-  FAIL_CALCULATE_FEE
+  FAIL_CALCULATE_FEE,
+  /* pagopa-ecommerce: user transaction calcel */
+  OK_TRANSACTION_USER_CANCEL,
+  ID_NOT_FOUND_TRANSACTION_USER_CANCEL,
+  INTERNAL_SERVER_ERROR_TRANSACTION_USER_CANCEL
 }
 
 type FlowCaseKey = keyof typeof FlowCase;
