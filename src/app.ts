@@ -23,7 +23,10 @@ import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
 import { logger } from "./logger";
 import { authRequestVpos, authRequestXpay } from "./handlers/pgs";
 import { ecommerceActivation } from "./handlers/ecommerce/activation";
-import { ecommerceGetTransaction } from "./handlers/ecommerce/transaction";
+import {
+  ecommerceDeleteTransaction,
+  ecommerceGetTransaction
+} from "./handlers/ecommerce/transaction";
 import { ecommerceVerify } from "./handlers/ecommerce/verify";
 import { ecommerceGetPspByPaymentMethods } from "./handlers/ecommerce/psp";
 import { ecommerceGetCart } from "./handlers/ecommerce/cart";
@@ -210,6 +213,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // transaction-service new transaction request mock
   app.post("/ecommerce/checkout/v1/transactions", ecommerceActivation);
+
+  // transaction-service transaction user cancel
+  app.delete(
+    "/ecommerce/checkout/v1/transactions/:transactionId",
+    ecommerceDeleteTransaction
+  );
 
   // transaction-service auth-request mock
   app.post(
