@@ -20,7 +20,7 @@ export const createSuccessGetTransactionEntity = (
       rptId: "77777777777302012387654312384" as RptId
     }
   ],
-  status: TransactionStatusEnum.NOTIFIED,
+  status: TransactionStatusEnum.NOTIFIED_OK,
   transactionId
 });
 
