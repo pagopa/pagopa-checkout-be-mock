@@ -17,7 +17,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
 
 const ecommerceDeleteTransaction500 = (res: any): void => {
   logger.info("[Delete transaction ecommerce] - Return error case 404");
-  res.status(404).send(internalServerError500());
+  res.status(500).send(internalServerError500());
 };
 
 const ecommerceDeleteTransaction404 = (
