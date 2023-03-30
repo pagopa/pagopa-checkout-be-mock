@@ -17,7 +17,21 @@ export const createSuccessGetTransactionEntity = (
       amount: 1000 as AmountEuroCents,
       paymentToken: "paymentToken1",
       reason: "reason1",
-      rptId: "77777777777302012387654312384" as RptId
+      rptId: "77777777777302012387654312384" as RptId,
+      transferList: [
+        {
+          digitalStamp: true,
+          paFiscalCode: "66666666666",
+          transferAmount: 100 as AmountEuroCents,
+          transferCategory: "transferCategory1"
+        },
+        {
+          digitalStamp: false,
+          paFiscalCode: "77777777777",
+          transferAmount: 900 as AmountEuroCents,
+          transferCategory: "transferCategory2"
+        }
+      ]
     }
   ],
   status: TransactionStatusEnum.NOTIFIED_OK,
