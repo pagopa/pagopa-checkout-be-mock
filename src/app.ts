@@ -194,7 +194,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.get("/ecommerce/checkout/v1/payment-requests/:rptId", ecommerceVerify);
 
   // payment-requests-service get cart requests mock
-  app.get("/ecommerce/checkout/ecommerce/v1/carts/:id", ecommerceGetCart);
+  app.get("/ecommerce/checkout/v1/carts/:id", ecommerceGetCart);
 
   // TODO refactoring to handle errors scenario
   app.get("/ecommerce/checkout/v1/payment-methods", ecommerceGetPaymentMethods);
