@@ -3,6 +3,7 @@ import { CartRequest } from "../../generated/ecommerce/CartRequest";
 
 export const createSuccessGetCartResponseEntity = (): CartRequest => ({
   emailNotice: "myemail@mail.it" as EmailString,
+  idCart: "ecCartIdExample",
   paymentNotices: [
     {
       amount: 1000,
