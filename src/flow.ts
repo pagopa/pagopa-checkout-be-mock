@@ -225,5 +225,6 @@ export const generateTransactionId = (prefix?: number): string =>
         .padStart(2, "0")
         .concat(uuid().substring(2))
     ),
-    E.toUnion
+    E.toUnion,
+    uuidStringValue => uuidStringValue.replace(/-/g, "")
   );
