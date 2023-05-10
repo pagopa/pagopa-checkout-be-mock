@@ -99,6 +99,9 @@ const return404ErrorDominioSconosciuto = (res: any): void => {
 };
 
 export const ecommerceActivation: RequestHandler = async (req, res) => {
+  if (req.query.recaptchaResponse == null) {
+    throw Error("Missing captcha in query");
+  }
   const flowId = pipe(
     req.body.paymentNotices[0].rptId,
     getFlowFromRptId,
