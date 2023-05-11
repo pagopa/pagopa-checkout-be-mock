@@ -17,6 +17,8 @@ import { PaymentStatusFaultEnum } from "../../generated/ecommerce/PaymentStatusF
 import { ValidationFaultPaymentProblemJson } from "../../generated/ecommerce/ValidationFaultPaymentProblemJson";
 import { ValidationFaultEnum } from "../../generated/ecommerce/ValidationFault";
 import { AmountEuroCents } from "../../generated/ecommerce/AmountEuroCents";
+import { GatewayFaultPaymentProblemJson } from "../../generated/ecommerce/GatewayFaultPaymentProblemJson";
+import { GatewayFaultEnum } from "../../generated/ecommerce/GatewayFault";
 
 export const fillRequestPaymentInfoWithMockData = (
   paymentsInfo?: ReadonlyArray<PaymentInfo>
@@ -84,4 +86,10 @@ export const error404DominioSconosciuto = (): ValidationFaultPaymentProblemJson 
   faultCodeCategory: FaultCategoryEnum.PAYMENT_UNAVAILABLE,
   faultCodeDetail: ValidationFaultEnum.PPT_DOMINIO_SCONOSCIUTO,
   title: "EC error"
+});
+
+export const error404ResourceNotFound = (): GatewayFaultPaymentProblemJson => ({
+  faultCodeCategory: FaultCategoryEnum.GENERIC_ERROR,
+  faultCodeDetail: GatewayFaultEnum.GENERIC_ERROR,
+  title: "Resource Not Found"
 });

@@ -9,7 +9,8 @@ import {
   error502SintassiXSD,
   error504StazioneIntTimeout,
   error409PagamentoInCorso,
-  error404DominioSconosciuto
+  error404DominioSconosciuto,
+  error404ResourceNotFound
 } from "../../utils/ecommerce/activation";
 import {
   FlowCase,
@@ -98,7 +99,16 @@ const return404ErrorDominioSconosciuto = (res: any): void => {
   res.status(404).send(error404DominioSconosciuto());
 };
 
+const return404ResourceNotFound = (res: any): void => {
+  logger.info("[Activation ecommerce] - Return 404 Resource not found");
+  res.status(404).send(error404ResourceNotFound());
+};
+
 export const ecommerceActivation: RequestHandler = async (req, res) => {
+  if (req.query.recaptchaResponse == null) {
+    return404ResourceNotFound(res);
+    return;
+  }
   const flowId = pipe(
     req.body.paymentNotices[0].rptId,
     getFlowFromRptId,
