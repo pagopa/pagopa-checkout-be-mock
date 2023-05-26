@@ -14,7 +14,6 @@ import {
 } from "../../utils/ecommerce/activation";
 import {
   FlowCase,
-  GatewayCase,
   generateTransactionId,
   getErrorCodeFromRptId,
   getFlowFromRptId,
@@ -142,7 +141,7 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
   const paymentGateway = pipe(
     req.body.paymentNotices[0].rptId,
     getGatewayFromRptId,
-    O.getOrElse(() => GatewayCase.UNDEFINED)
+    O.getOrElseW(() => undefined)
   );
 
   const errorCode = getErrorCodeFromRptId(req.body.paymentNotices[0].rptId);

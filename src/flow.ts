@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-identical-functions */
 import * as O from "fp-ts/lib/Option";
 import * as express from "express";
 import * as E from "fp-ts/Either";
@@ -9,7 +10,7 @@ import { SendPaymentResultOutcomeEnum } from "./generated/ecommerce/NewTransacti
 const XPAY_OK_PREFIX = "0";
 const XPAY_POLLING_PREFIX = "01";
 
-export enum ErrorCodeCaseVPOS {
+export enum ErrorCodeCaseXPAY {
   SUCCESS = "0",
   INCORRECT_PARAMS = "1",
   NOT_FOUND = "2",
@@ -38,7 +39,7 @@ export enum ErrorCodeCaseVPOS {
   INTERNAL_ERROR = "100"
 }
 
-export enum ErrorCodeCaseXPAY {
+export enum ErrorCodeCaseVPOS {
   SUCCESS = "00",
   ORDER_OR_REQREFNUM_NOT_FOUND = "01",
   REQREFNUM_INVALID = "02",
@@ -71,9 +72,8 @@ export enum ErrorCodeCaseXPAY {
 }
 
 export enum GatewayCase {
-  UNDEFINED,
-  XPAY,
-  VPOS
+  XPAY = 1,
+  VPOS = 2
 }
 
 export enum SendPaymentResultOutcomeCase {
@@ -165,16 +165,18 @@ export enum FlowCase {
   REFUND_REQUESTED,
   REFUND_ERROR,
   CLOSURE_ERROR,
+  EXPIRED,
   EXPIRED_NOT_AUTHORIZED,
   CANCELED,
   CANCELLATION_EXPIRED,
-  EXPIRED,
   UNAUTHORIZED
 }
 
 type FlowCaseKey = keyof typeof FlowCase;
 // type SendPaymentResultOutcomeCaseKey = keyof typeof SendPaymentResultOutcomeCase;
 type GatewayCaseKey = keyof typeof GatewayCase;
+type ErrorCodeCaseXPAYKey = keyof typeof ErrorCodeCaseXPAY;
+type ErrorCodeCaseVPOSKey = keyof typeof ErrorCodeCaseVPOS;
 type SendPaymentResultOutcomeEnumKey = keyof typeof SendPaymentResultOutcomeEnum;
 
 export const getFlowFromRptId: (
@@ -272,10 +274,39 @@ export const maybeGetPaymentGatewayCookie: (
     O.map((id: GatewayCaseKey) => id)
   );
 
-export const getPaymentGatewayCookie: (req: express.Request) => string = req =>
+export const getPaymentGatewayCookie: (
+  req: express.Request
+) => string | undefined = req =>
   pipe(
     maybeGetPaymentGatewayCookie(req),
-    O.getOrElse(() => GatewayCase.UNDEFINED.toString())
+    O.getOrElseW(() => undefined)
+  );
+
+export const maybeGetErrorCodeCookie: (
+  req: express.Request
+) => O.Option<string> = req =>
+  pipe(
+    O.fromNullable(req.cookies.resultCodeGateway),
+    id => {
+      logger.info(
+        `Request resultCode cookie: [${req.cookies.resultCodeGateway}]`
+      );
+      return id;
+    },
+    O.filter(
+      id =>
+        Object.values(ErrorCodeCaseXPAY).filter(v => v === id).length === 1 ||
+        Object.values(ErrorCodeCaseVPOS).filter(v => v === id).length === 1
+    ),
+    O.map((id: ErrorCodeCaseVPOSKey | ErrorCodeCaseXPAYKey) => id)
+  );
+
+export const getErrorCodeCookie: (
+  req: express.Request
+) => string | undefined = req =>
+  pipe(
+    maybeGetErrorCodeCookie(req),
+    O.getOrElseW(() => undefined)
   );
 
 export const setFlowCookie: (
@@ -289,44 +320,53 @@ export const setFlowCookie: (
 export const setErrorCodeCookie: (
   res: express.Response,
   errorCodeId: string,
-  gateway: GatewayCase
+  gateway: GatewayCase | undefined
 ) => void = (res, errorCodeId, gateway) => {
-  switch (GatewayCase[gateway]) {
-    case "XPAY":
-      const errorIdXPAY = ("" + errorCodeId).slice(-2);
-      if (
-        Object.values(ErrorCodeCaseXPAY).filter(v => v === errorIdXPAY)
-          .length === 1
-      ) {
-        logger.info(
-          `Set resultCodeGateway cookie to: [${errorIdXPAY as ErrorCodeCaseXPAY}]`
-        );
-        res.cookie("resultCodeGateway", errorIdXPAY as ErrorCodeCaseXPAY);
-      }
-      break;
-    case "VPOS":
-      const errorIdVPOS = Number(errorCodeId).toString();
-      if (
-        Object.values(ErrorCodeCaseVPOS).filter(v => v === errorIdVPOS)
-          .length === 1
-      ) {
-        logger.info(
-          `Set resultCodeGateway cookie to: [${errorIdVPOS as ErrorCodeCaseVPOS}]`
-        );
-        res.cookie("resultCodeGateway", errorIdVPOS as ErrorCodeCaseVPOS);
-      }
-      break;
-    default:
-      res.clearCookie("resultCodeGateway");
+  // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+  if (gateway !== undefined) {
+    switch (GatewayCase[gateway]) {
+      case "XPAY":
+        const errorIdXPAY = Number(errorCodeId).toString();
+        if (
+          Object.values(ErrorCodeCaseXPAY).filter(v => v === errorIdXPAY)
+            .length === 1
+        ) {
+          logger.info(
+            `Set resultCodeGateway cookie to: [${errorIdXPAY as ErrorCodeCaseXPAY}]`
+          );
+          res.cookie("resultCodeGateway", errorIdXPAY as ErrorCodeCaseXPAY);
+        }
+        break;
+      case "VPOS":
+        const errorIdVPOS = ("" + errorCodeId).slice(-2);
+        if (
+          Object.values(ErrorCodeCaseVPOS).filter(v => v === errorIdVPOS)
+            .length === 1
+        ) {
+          logger.info(
+            `Set resultCodeGateway cookie to: [${errorIdVPOS as ErrorCodeCaseVPOS}]`
+          );
+          res.cookie("resultCodeGateway", errorIdVPOS as ErrorCodeCaseVPOS);
+        }
+        break;
+      default:
+        res.clearCookie("resultCodeGateway");
+    }
   }
 };
 
 export const setPaymentGatewayCookie: (
   res: express.Response,
-  gatewayID: GatewayCase
+  gatewayID: GatewayCase | undefined
 ) => void = (res, gatewayID) => {
-  logger.info(`Set paymentGateway cookie to: [${GatewayCase[gatewayID]}]`);
-  res.cookie("paymentGateway", GatewayCase[gatewayID]);
+  pipe(
+    gatewayID,
+    O.fromNullable,
+    O.map(id => {
+      logger.info(`Set paymentGateway cookie to: [${GatewayCase[id]}]`);
+      res.cookie("paymentGateway", GatewayCase[id]);
+    })
+  );
 };
 
 export const setSendPaymentResultOutcomeCookie: (

@@ -2,6 +2,7 @@
 import { RequestHandler } from "express";
 import {
   FlowCase,
+  getErrorCodeCookie,
   getFlowCookie,
   getPaymentGatewayCookie,
   getSendPaymentResultCookie
@@ -17,7 +18,7 @@ import { TransactionStatusEnum } from "../../generated/ecommerce/TransactionStat
 export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
   logger.info("[Get transaction ecommerce] - Return success case");
   const gateway = getPaymentGatewayCookie(req);
-  const errorCode = undefined;
+  const errorCode = getErrorCodeCookie(req);
   const sendPaymentResultOutcome = getSendPaymentResultCookie(req);
   switch (getFlowCookie(req)) {
     case FlowCase.NOTIFICATION_REQUESTED:
