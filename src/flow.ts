@@ -445,33 +445,3 @@ export const generateTransactionId = (prefix?: number): string =>
     E.toUnion,
     uuidStringValue => uuidStringValue.replace(/-/g, "")
   );
-
-export const generateTransactionIdForEsito = (
-  sendPaymentResultOutcome?: number,
-  gateway?: number,
-  errorCode?: number
-): string => {
-  const sendPaymentResult = pipe(
-    O.fromNullable(sendPaymentResultOutcome),
-    O.map(() => String(sendPaymentResultOutcome)),
-    O.getOrElse(() => "0")
-  );
-
-  const paymentGateway = pipe(
-    O.fromNullable(gateway),
-    O.map(() => String(gateway)),
-    O.getOrElse(() => "0")
-  );
-
-  const error = pipe(
-    O.fromNullable(errorCode),
-    O.map(() => String(gateway)),
-    O.getOrElse(() => "00")
-  );
-  return uuid()
-    .replace(/-/g, "")
-    .substring(0, 28)
-    .concat(error)
-    .concat(paymentGateway)
-    .concat(sendPaymentResult);
-};
