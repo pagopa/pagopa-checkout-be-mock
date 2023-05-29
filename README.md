@@ -250,15 +250,12 @@ They follow 1 digit for gateway: 1=XPAY and 2=VPOS
 It follows 1 digit for send payment result outcome: 1=OK 2=KO
 
 This is the schema of an RPT id starting with 30201672374
-30201672374<1 digit for send payment result outcome><1 digit for gateway><3 digits for gateway result><2 digits for status>
-                              |                              |                      |                          |
-                              |-> 1 = OK                     |                      |                          |-> as listed before
-                              |                              |                      |
-                              |-> 2 = KO                     |                      |
-                                                             |-> 1 = XPAY           |
-                                                             |                      |
-                                                             |-> 2 = VPOS           |
-                                                                                    |-> XXX= result code based on gateway. It is significant iff the gateway is defined
+
+| RPT_ID FIRST 11 DIGITS                             | SEND PAYMENT RESULT OUTCOME DIGIT   | GATEWAY DIGIT  | GATEWAY CODE RESULT 3 DIGITS | STATUS DIGITS |
+|----------------------------------------------------|-------------------------------------|----------------|------------------------------|---------------|
+| 30201672374 (NOT FIXED)                            | 1 = OK                              | 1 = XPAY       | XXX (dependant from gateway) | (as listed)   |
+|                                                    | 2 = KO                              | 2 = VPOS       |                              |               |
+
 The possible error codes for XPAY are
 
 | RESULT CODE XPAY                                   | ERROR CODE   | RTPID-DIGITS |
@@ -324,3 +321,24 @@ The possible error codes for VPOS are
 | INSTALLMENT_NUMBER_OUT_OF_BOUNDS                   | 51           | 051          |
 | APPLICATION_ERROR                                  | 98           | 098          |
 | TRANSACTION_FAILED                                 | 99           | 099          |
+
+
+All values for all of these propertiest out of the ranges listed for each of them will be interpreted as UNDEFINED
+
+Example: Rpt id to drive Send payment result OK gateway VPOS result code DUPLICATED_ORDER and final status UNAUTHORIZED
+
+30201672374 (first 11 digits)
+1 (send payment result OK)
+2 (VPOS)
+013 (DUPLICATED ORDER)
+72 (UNAUTHORIZED)
+RPT ID is 302016723741201372
+
+Example: Rpt id to drive Send payment result UNDEFINED gateway XPAY result code TIMEOUT and final status EXPIRED
+
+30201672374 (first 11 digits)
+0 (each values different from1 or 2 are ok) (send payment result UNDEFINED)
+1 (XPAY)
+005 (TIMEOUT)
+68 (EXPIRED)
+RPT ID is 302016723740100568
