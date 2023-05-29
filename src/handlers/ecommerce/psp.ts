@@ -16,6 +16,12 @@ export const ecommerceGetPspByPaymentMethods: RequestHandler = async (
   req,
   res
 ) => {
+  if (req.headers["x-transaction-id"] == null) {
+    logger.info(
+      "[Get psps by payment method id ecommerce] - Return error case invalid x-transaction-id"
+    );
+    return res.status(401).send();
+  }
   logger.info(
     "[Get psps by payment method id ecommerce] - Return success case"
   );
