@@ -244,4 +244,18 @@ For some state it is important to evaluate also the following properties:
 
 also other position of teh rpt id become significant to drive this properties.
 
-/* FINAL STATE MAPPING 30201672374<1 cipher for send payment result outcome><1 cipher for gateway><3 ciphers for gateway result><2 ciphers for status>*/
+The last two digits drive the final state (as said from 61 to 72)
+They follow the three digits that drive the gateway result (from 000 to 100)
+They follow 1 digit for gateway: 1=XPAY and 2=VPOS  
+It follows 1 digit for send payment result outcome: 1=OK 2=KO
+
+This is the schema of an RPT id starting with 30201672374
+30201672374<1 digit for send payment result outcome><1 digit for gateway><3 digits for gateway result><2 digits for status>
+                              |                              |                      |                          |
+                              |- 1 = OK                      |                      |                          |- as listed before
+                              |                              |                      |
+                              |- 2 = KO                      |                      |
+                                                             |- 1 = XPAY            |
+                                                             |                      |
+                                                             |- 2 = VPOS            |
+                                                                                    |- XXX= result code based on gateway. It is significant iff the gateway is defined
