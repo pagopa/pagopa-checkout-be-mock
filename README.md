@@ -252,10 +252,75 @@ It follows 1 digit for send payment result outcome: 1=OK 2=KO
 This is the schema of an RPT id starting with 30201672374
 30201672374<1 digit for send payment result outcome><1 digit for gateway><3 digits for gateway result><2 digits for status>
                               |                              |                      |                          |
-                              |- 1 = OK                      |                      |                          |- as listed before
+                              |-> 1 = OK                     |                      |                          |-> as listed before
                               |                              |                      |
-                              |- 2 = KO                      |                      |
-                                                             |- 1 = XPAY            |
+                              |-> 2 = KO                     |                      |
+                                                             |-> 1 = XPAY           |
                                                              |                      |
-                                                             |- 2 = VPOS            |
-                                                                                    |- XXX= result code based on gateway. It is significant iff the gateway is defined
+                                                             |-> 2 = VPOS           |
+                                                                                    |-> XXX= result code based on gateway. It is significant iff the gateway is defined
+The possible error codes for XPAY are
+
+| RESULT CODE XPAY                                   | ERROR CODE   | RTPID-DIGITS |
+|----------------------------------------------------|--------------|--------------|
+| SUCCESS                                            | 0            | 000          |
+| INCORRECT_PARAMS                                   | 1            | 001          |
+| NOT_FOUND                                          | 2            | 002          |
+| INCORRECT_MAC                                      | 3            | 003          |
+| MAC_NOT_PRESENT                                    | 4            | 004          |
+| TIMEOUT                                            | 5            | 005          |
+| INVALID_APIKEY                                     | 7            | 007          |
+| INVALID_CONTRACT                                   | 8            | 008          |
+| DUPLICATE_TRANSACTION                              | 9            | 009          |
+| INVALID_GROUP                                      | 12           | 012          |
+| TRANSACTION_NOT_FOUND                              | 13           | 013          |
+| EXPIRED_CARD                                       | 14           | 014          |
+| CARD_BRAND_NOT_PERM                                | 15           | 015          |
+| INVALID_STATUS                                     | 16           | 016          |
+| EXCESSIVE_AMOUNT                                   | 17           | 017          |
+| RETRY_EXHAUSTED                                    | 18           | 018          |
+| REFUSED_PAYMENT                                    | 19           | 019          |
+| CANCELED_3DS_AUTH                                  | 20           | 020          |
+| FAILED_3DS_AUTH                                    | 21           | 021          |
+| INVALID_CARD                                       | 22           | 022          |
+| INVALID_MAC_ALIAS                                  | 50           | 050          |
+| KO_RETRIABLE                                       | 96           | 096          |
+| GENERIC_ERROR                                      | 97           | 097          |
+| UNAVAILABLE_METHOD                                 | 98           | 098          |
+| FORBIDDEN_OPERATION                                | 99           | 099          |
+| INTERNAL_ERROR                                     | 100          | 100          |
+
+
+The possible error codes for VPOS are
+
+| RESULT CODE VPOS                                   | ERROR CODE   | RTPID-DIGITS |
+|----------------------------------------------------|--------------|--------------|
+| SUCCESS                                            | 00           | 000          |
+| ORDER_OR_REQREFNUM_NOT_FOUND                       | 01           | 001          |
+| REQREFNUM_INVALID                                  | 02           | 002          |
+| INCORRECT_FORMAT                                   | 03           | 003          |
+| INCORRECT_MAC_OR_TIMESTAMP                         | 04           | 004          |
+| INCORRECT_DATE                                     | 05           | 005          |
+| UNKNOWN_ERROR                                      | 06           | 006          |
+| TRANSACTION_ID_NOT_FOUND                           | 07           | 007          |
+| OPERATOR_NOT_FOUND                                 | 08           | 008          |
+| TRANSACTION_ID_NOT_CONSISTENT                      | 09           | 009          |
+| EXCEEDING_AMOUNT                                   | 10           | 010          |
+| INCORRECT_STATUS                                   | 11           | 011          |
+| CIRCUIT_DISABLED                                   | 12           | 012          |
+| DUPLICATED_ORDER                                   | 13           | 013          |
+| UNSUPPORTED_CURRENCY                               | 16           | 016          |
+| UNSUPPORTED_EXPONENT                               | 17           | 017          |
+| REDIRECTION_3DS1                                   | 20           | 020          |
+| TIMEOUT                                            | 21           | 021          |
+| METHOD_REQUESTED                                   | 25           | 025          |
+| CHALLENGE_REQUESTED                                | 26           | 026          |
+| PAYMENT_INSTRUMENT_NOT_ACCEPTED                    | 35           | 035          |
+| MISSING_CVV2                                       | 37           | 037          |
+| INVALID_PAN                                        | 38           | 038          |
+| XML_EMPTY                                          | 40           | 040          |
+| XML_NOT_PARSABLE                                   | 41           | 041          |
+| INSTALLMENTS_NOT_AVAILABLE                         | 50           | 050          |
+| INSTALLMENT_NUMBER_OUT_OF_BOUNDS                   | 51           | 051          |
+| APPLICATION_ERROR                                  | 98           | 098          |
+| TRANSACTION_FAILED                                 | 99           | 099          |
