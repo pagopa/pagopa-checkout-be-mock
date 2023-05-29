@@ -217,3 +217,31 @@ The ecommerce transaction auth-requests endpoint `/checkout/ecommerce/v1/transac
 | OK                                                 | 200 success case                      |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         | 404 transactionId not fuond           |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED | 409 transaction already processed     |   
+
+## Ecommerce final state flow
+The ecommerce transaction get transaction endpoint `/checkout/ecommerce/v1/transactions/:transactionId` is driven by the following cookie mockFlow values:
+
+| COOKIE MOCK FLOW                                   | RptId Suffix |
+|----------------------------------------------------|--------------|
+| NOTIFICATION_REQUESTED                             | 61           |
+| NOTIFICATION_ERROR                                 | 62           |
+| NOTIFIED_KO                                        | 63           |  
+| REFUNDED                                           | 64           |  
+| REFUND_REQUESTED                                   | 65           |  
+| REFUND_ERROR                                       | 66           |  
+| CLOSURE_ERROR                                      | 67           |  
+| EXPIRED                                            | 68           |  
+| EXPIRED_NOT_AUTHORIZED                             | 69           |  
+| CANCELED                                           | 70           |  
+| CANCELLATION_EXPIRED                               | 71           |  
+| UNAUTHORIZED                                       | 72           |  
+
+For some state it is important to evaluate also the following properties:
+ 
+ - Gateway: VPOS or XPAY
+ - Error code: dependant from Gateway (see next two tables)
+ - Send payment result outcome 
+
+also other position of teh rpt id become significant to drive this properties.
+
+/* FINAL STATE MAPPING 30201672374<1 cipher for send payment result outcome><1 cipher for gateway><3 ciphers for gateway result><2 ciphers for status>*/
