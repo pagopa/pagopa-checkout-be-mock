@@ -217,3 +217,128 @@ The ecommerce transaction auth-requests endpoint `/checkout/ecommerce/v1/transac
 | OK                                                 | 200 success case                      |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         | 404 transactionId not fuond           |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED | 409 transaction already processed     |   
+
+## Ecommerce final state flow
+The ecommerce transaction get transaction endpoint `/checkout/ecommerce/v1/transactions/:transactionId` is driven by the following cookie mockFlow values:
+
+| COOKIE MOCK FLOW                                   | RptId Suffix |
+|----------------------------------------------------|--------------|
+| NOTIFICATION_REQUESTED                             | 61           |
+| NOTIFICATION_ERROR                                 | 62           |
+| NOTIFIED_KO                                        | 63           |  
+| REFUNDED                                           | 64           |  
+| REFUND_REQUESTED                                   | 65           |  
+| REFUND_ERROR                                       | 66           |  
+| CLOSURE_ERROR                                      | 67           |  
+| EXPIRED                                            | 68           |  
+| EXPIRED_NOT_AUTHORIZED                             | 69           |  
+| CANCELED                                           | 70           |  
+| CANCELLATION_EXPIRED                               | 71           |  
+| UNAUTHORIZED                                       | 72           |  
+
+For some state it is important to evaluate also the following properties:
+ 
+ - Gateway: VPOS or XPAY
+ - Error code: dependant from Gateway (see next two tables)
+ - Send payment result outcome 
+
+also other position of teh rpt id become significant to drive this properties.
+
+The last two digits drive the final state (as said from 61 to 72)
+They follow the three digits that drive the gateway result (from 000 to 100)
+They follow 1 digit for gateway: 1=XPAY and 2=VPOS  
+It follows 1 digit for send payment result outcome: 1=OK 2=KO
+
+This is the schema of an RPT id starting with 30201672374
+
+| RPT_ID FIRST 11 DIGITS                             | SEND PAYMENT RESULT OUTCOME DIGIT   | GATEWAY DIGIT  | GATEWAY CODE RESULT 3 DIGITS | STATUS DIGITS |
+|----------------------------------------------------|-------------------------------------|----------------|------------------------------|---------------|
+| 30201672374 (NOT FIXED)                            | 1 = OK                              | 1 = XPAY       | XXX (dependant from gateway) | (as listed)   |
+|                                                    | 2 = KO                              | 2 = VPOS       |                              |               |
+
+The possible error codes for XPAY are
+
+| RESULT CODE XPAY                                   | ERROR CODE   | RTPID-DIGITS |
+|----------------------------------------------------|--------------|--------------|
+| SUCCESS                                            | 0            | 000          |
+| INCORRECT_PARAMS                                   | 1            | 001          |
+| NOT_FOUND                                          | 2            | 002          |
+| INCORRECT_MAC                                      | 3            | 003          |
+| MAC_NOT_PRESENT                                    | 4            | 004          |
+| TIMEOUT                                            | 5            | 005          |
+| INVALID_APIKEY                                     | 7            | 007          |
+| INVALID_CONTRACT                                   | 8            | 008          |
+| DUPLICATE_TRANSACTION                              | 9            | 009          |
+| INVALID_GROUP                                      | 12           | 012          |
+| TRANSACTION_NOT_FOUND                              | 13           | 013          |
+| EXPIRED_CARD                                       | 14           | 014          |
+| CARD_BRAND_NOT_PERM                                | 15           | 015          |
+| INVALID_STATUS                                     | 16           | 016          |
+| EXCESSIVE_AMOUNT                                   | 17           | 017          |
+| RETRY_EXHAUSTED                                    | 18           | 018          |
+| REFUSED_PAYMENT                                    | 19           | 019          |
+| CANCELED_3DS_AUTH                                  | 20           | 020          |
+| FAILED_3DS_AUTH                                    | 21           | 021          |
+| INVALID_CARD                                       | 22           | 022          |
+| INVALID_MAC_ALIAS                                  | 50           | 050          |
+| KO_RETRIABLE                                       | 96           | 096          |
+| GENERIC_ERROR                                      | 97           | 097          |
+| UNAVAILABLE_METHOD                                 | 98           | 098          |
+| FORBIDDEN_OPERATION                                | 99           | 099          |
+| INTERNAL_ERROR                                     | 100          | 100          |
+
+
+The possible error codes for VPOS are
+
+| RESULT CODE VPOS                                   | ERROR CODE   | RTPID-DIGITS |
+|----------------------------------------------------|--------------|--------------|
+| SUCCESS                                            | 00           | 000          |
+| ORDER_OR_REQREFNUM_NOT_FOUND                       | 01           | 001          |
+| REQREFNUM_INVALID                                  | 02           | 002          |
+| INCORRECT_FORMAT                                   | 03           | 003          |
+| INCORRECT_MAC_OR_TIMESTAMP                         | 04           | 004          |
+| INCORRECT_DATE                                     | 05           | 005          |
+| UNKNOWN_ERROR                                      | 06           | 006          |
+| TRANSACTION_ID_NOT_FOUND                           | 07           | 007          |
+| OPERATOR_NOT_FOUND                                 | 08           | 008          |
+| TRANSACTION_ID_NOT_CONSISTENT                      | 09           | 009          |
+| EXCEEDING_AMOUNT                                   | 10           | 010          |
+| INCORRECT_STATUS                                   | 11           | 011          |
+| CIRCUIT_DISABLED                                   | 12           | 012          |
+| DUPLICATED_ORDER                                   | 13           | 013          |
+| UNSUPPORTED_CURRENCY                               | 16           | 016          |
+| UNSUPPORTED_EXPONENT                               | 17           | 017          |
+| REDIRECTION_3DS1                                   | 20           | 020          |
+| TIMEOUT                                            | 21           | 021          |
+| METHOD_REQUESTED                                   | 25           | 025          |
+| CHALLENGE_REQUESTED                                | 26           | 026          |
+| PAYMENT_INSTRUMENT_NOT_ACCEPTED                    | 35           | 035          |
+| MISSING_CVV2                                       | 37           | 037          |
+| INVALID_PAN                                        | 38           | 038          |
+| XML_EMPTY                                          | 40           | 040          |
+| XML_NOT_PARSABLE                                   | 41           | 041          |
+| INSTALLMENTS_NOT_AVAILABLE                         | 50           | 050          |
+| INSTALLMENT_NUMBER_OUT_OF_BOUNDS                   | 51           | 051          |
+| APPLICATION_ERROR                                  | 98           | 098          |
+| TRANSACTION_FAILED                                 | 99           | 099          |
+
+
+All values for all of these propertiest out of the ranges listed for each of them will be interpreted as UNDEFINED
+
+Example: Rpt id to drive Send payment result OK gateway VPOS result code DUPLICATED_ORDER and final status UNAUTHORIZED
+
+30201672374 (first 11 digits)
+1 (send payment result OK)
+2 (VPOS)
+013 (DUPLICATED ORDER)
+72 (UNAUTHORIZED)
+RPT ID is 302016723741201372
+
+Example: Rpt id to drive Send payment result UNDEFINED gateway XPAY result code TIMEOUT and final status EXPIRED
+
+30201672374 (first 11 digits)
+0 (each values different from1 or 2 are ok) (send payment result UNDEFINED)
+1 (XPAY)
+005 (TIMEOUT)
+68 (EXPIRED)
+RPT ID is 302016723740100568

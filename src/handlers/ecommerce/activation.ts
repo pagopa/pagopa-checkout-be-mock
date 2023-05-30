@@ -15,8 +15,15 @@ import {
 import {
   FlowCase,
   generateTransactionId,
+  getErrorCodeFromRptId,
   getFlowFromRptId,
+  getGatewayFromRptId,
+  getSendPaymentResultOutcomeFromRptId,
+  SendPaymentResultOutcomeCase,
+  setErrorCodeCookie,
   setFlowCookie,
+  setPaymentGatewayCookie,
+  setSendPaymentResultOutcomeCookie,
   VposFlowCase,
   XPayFlowCase
 } from "../../flow";
@@ -55,6 +62,21 @@ const activationErrorCase = [
 const authErrorCase = [
   FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED,
   FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND
+];
+
+const esitoMappingCase = [
+  FlowCase.NOTIFICATION_REQUESTED,
+  FlowCase.NOTIFICATION_ERROR,
+  FlowCase.NOTIFIED_KO,
+  FlowCase.REFUNDED,
+  FlowCase.REFUND_REQUESTED,
+  FlowCase.REFUND_ERROR,
+  FlowCase.CLOSURE_ERROR,
+  FlowCase.EXPIRED_NOT_AUTHORIZED,
+  FlowCase.CANCELED,
+  FlowCase.CANCELLATION_EXPIRED,
+  FlowCase.EXPIRED,
+  FlowCase.UNAUTHORIZED
 ];
 
 const returnSuccessResponse = (
@@ -109,6 +131,21 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
     return404ResourceNotFound(res);
     return;
   }
+
+  const sendPaymentResultOutcome = pipe(
+    req.body.paymentNotices[0].rptId,
+    getSendPaymentResultOutcomeFromRptId,
+    O.getOrElse(() => SendPaymentResultOutcomeCase.UNDEFINED)
+  );
+
+  const paymentGateway = pipe(
+    req.body.paymentNotices[0].rptId,
+    getGatewayFromRptId,
+    O.getOrElseW(() => undefined)
+  );
+
+  const errorCode = getErrorCodeFromRptId(req.body.paymentNotices[0].rptId);
+
   const flowId = pipe(
     req.body.paymentNotices[0].rptId,
     getFlowFromRptId,
@@ -116,7 +153,8 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
       !authErrorCase.includes(id) &&
       !activationErrorCase.includes(id) &&
       !caluclateFeeCase.includes(id) &&
-      !transactionUserCancelCase.includes(id)
+      !transactionUserCancelCase.includes(id) &&
+      !esitoMappingCase.includes(id)
         ? FlowCase.OK
         : id
     ),
@@ -173,6 +211,9 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
       break;
     default:
       setFlowCookie(res, flowId);
+      setSendPaymentResultOutcomeCookie(res, sendPaymentResultOutcome);
+      setPaymentGatewayCookie(res, paymentGateway);
+      setErrorCodeCookie(res, errorCode, paymentGateway);
       returnSuccessResponse(req, res);
   }
 };
