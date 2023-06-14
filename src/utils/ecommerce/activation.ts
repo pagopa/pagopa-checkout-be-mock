@@ -28,6 +28,7 @@ export const fillRequestPaymentInfoWithMockData = (
     O.map(paymentNotices =>
       paymentNotices.map(paymentNotice => ({
         amount: paymentNotice.amount,
+        isAllCCP: false,
         paymentToken: "paymentToken1",
         reason: "reason1",
         rptId: paymentNotice.rptId,

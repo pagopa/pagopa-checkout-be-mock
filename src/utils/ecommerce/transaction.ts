@@ -23,6 +23,7 @@ export const createSuccessGetTransactionEntity = (
   payments: [
     {
       amount: 1000 as AmountEuroCents,
+      isAllCCP: false,
       paymentToken: "paymentToken1",
       reason: "reason1",
       rptId: "77777777777302012387654312384" as RptId,
