@@ -342,3 +342,8 @@ Example: Rpt id to drive Send payment result UNDEFINED gateway XPAY result code 
 005 (TIMEOUT)
 68 (EXPIRED)
 RPT ID is 302016723740100568
+
+## Ecommerce waiting send payment result transaction status CLOSED
+| COOKIE MOCK FLOW                                   | RptId Suffix |
+|----------------------------------------------------|--------------|
+| CLOSED                                             | 73           |
