@@ -76,7 +76,8 @@ const esitoMappingCase = [
   FlowCase.CANCELED,
   FlowCase.CANCELLATION_EXPIRED,
   FlowCase.EXPIRED,
-  FlowCase.UNAUTHORIZED
+  FlowCase.UNAUTHORIZED,
+  FlowCase.CLOSED
 ];
 
 const returnSuccessResponse = (

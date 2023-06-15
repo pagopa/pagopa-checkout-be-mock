@@ -165,6 +165,15 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome
           )
         );
+    case FlowCase.CLOSED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.CLOSED
+          )
+        );
     default:
       return res
         .status(200)

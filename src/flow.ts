@@ -169,7 +169,9 @@ export enum FlowCase {
   EXPIRED_NOT_AUTHORIZED,
   CANCELED,
   CANCELLATION_EXPIRED,
-  UNAUTHORIZED
+  UNAUTHORIZED,
+  /* pagopa-ecommerce: waiting sendPaymentResult */
+  CLOSED
 }
 
 type FlowCaseKey = keyof typeof FlowCase;
