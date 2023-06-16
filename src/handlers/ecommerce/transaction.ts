@@ -14,6 +14,7 @@ import {
   internalServerError500
 } from "../../utils/ecommerce/transaction";
 import { TransactionStatusEnum } from "../../generated/ecommerce/TransactionStatus";
+import { SendPaymentResultOutcomeEnum } from "../../generated/ecommerce/NewTransactionResponse";
 
 export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
   logger.info("[Get transaction ecommerce] - Return success case");
@@ -171,7 +172,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         .send(
           createSuccessGetTransactionEntity(
             req.params.transactionId,
-            TransactionStatusEnum.CLOSED
+            TransactionStatusEnum.CLOSED,
+            SendPaymentResultOutcomeEnum.NOT_RECEIVED
           )
         );
     default:
