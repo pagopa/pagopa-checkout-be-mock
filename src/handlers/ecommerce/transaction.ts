@@ -173,6 +173,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           createSuccessGetTransactionEntity(
             req.params.transactionId,
             TransactionStatusEnum.CLOSED,
+            undefined,
+            undefined,
             SendPaymentResultOutcomeEnum.NOT_RECEIVED
           )
         );
