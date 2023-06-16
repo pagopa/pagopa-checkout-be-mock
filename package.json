@@ -21,7 +21,7 @@
     "generate": "npm-run-all -s generate:ts-from-yaml:*",
     "generate:ts-from-yaml:api": "shx mkdir -p src/generated/payment_manager && shx mkdir -p src/generated/pagopa_proxy && rimraf src/generated/payment_manager/* && rimraf src/generated/pagopa_proxy/* && gen-api-models --strict 0 --api-spec api_payment_manager.yaml --out-dir src/generated/payment_manager --request-types && gen-api-models --strict 0 --api-spec https://raw.githubusercontent.com/pagopa/io-pagopa-proxy/v1.2.0/api-spec/api-pagopa-proxy.yaml --out-dir src/generated/pagopa_proxy --request-types",
     "generate:ts-from-yaml:pgs": "shx rm -rf src/generated/pgs && shx mkdir -p src/generated/pgs && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/pagopa-infra/c39cea0b3ac4d992f4bda0026365b5a0eac96802/src/core/api/payment_transactions_gateway_api/external/v1/_openapi.json.tpl --no-strict --out-dir src/generated/pgs",
-    "generate:ts-from-yaml:ecommerce": "shx rm -rf src/generated/ecommerce && shx mkdir -p src/generated/ecommerce && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/pagopa-infra/CHK-1637-sendPaymentResultOutcome/src/domains/ecommerce-app/api/ecommerce-checkout/v1/_openapi.json.tpl --no-strict --out-dir src/generated/ecommerce"
+    "generate:ts-from-yaml:ecommerce": "shx rm -rf src/generated/ecommerce && shx mkdir -p src/generated/ecommerce && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/pagopa-infra/main/src/domains/ecommerce-app/api/ecommerce-checkout/v1/_openapi.json.tpl --no-strict --out-dir src/generated/ecommerce"
   },
   "devDependencies": {
     "@pagopa/eslint-config": "^1.3.1",
