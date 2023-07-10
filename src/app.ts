@@ -228,13 +228,13 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // payment-transaction-gateway xpay authorization requests mock
   app.get(
-    "/payment-transactions-gateway/external/v1/request-payments/xpay/:requestId",
+    "/payment-transactions-gateway/web/v1/xpay/authorizations/:paymentAuthorizationId",
     authRequestXpay
   );
 
   // payment-transaction-gateway vpos authorization requests mock
   app.get(
-    "/payment-transactions-gateway/external/v1/request-payments/vpos/:requestId",
+    "/payment-transactions-gateway/web/v1/vpos/authorizations/:paymentAuthorizationId",
     authRequestVpos
   );
 

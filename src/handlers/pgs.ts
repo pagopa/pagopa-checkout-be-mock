@@ -19,19 +19,24 @@ import {
 } from "../flow";
 import {
   createPaymentRequestVposErrorResponse,
-  createPaymentRequestVposResponse
+  createVposAcsResponse,
+  createVposAuthorizedResponse,
+  createVposResponse
 } from "../utils/vpos";
-import {
-  ResponseTypeEnum,
-  StatusEnum
-} from "../generated/pgs/PaymentRequestVposResponse";
+import { StatusEnum } from "../generated/pgs/CcPaymentInfoAuthorizedResponse";
+import { ResponseTypeEnum } from "../generated/pgs/CcPaymentInfoAcsResponse";
 
 // eslint-disable-next-line functional/no-let
 let pollingAttempt = 2;
 
-const returnSuccessResponse = (requestId: string, res: any): void => {
+const returnSuccessResponse = (
+  paymentAuthorizationId: string,
+  res: any
+): void => {
   logger.info("[authRequestXpay] - Return success case");
-  res.status(200).send(createSuccessXPayPollingResponseEntity(requestId));
+  res
+    .status(200)
+    .send(createSuccessXPayPollingResponseEntity(paymentAuthorizationId));
 };
 
 const returnNotFoundResponse = (res: any): void => {
@@ -40,19 +45,21 @@ const returnNotFoundResponse = (res: any): void => {
 };
 
 const returnAuthorizedResponse = async (
-  requestId: string,
+  paymentAuthorizationId: string,
   res: any,
   delay: number
 ): Promise<void> => {
   logger.info("[authRequestXpay] - Return Authorized case");
   await new Promise(r => setTimeout(r, delay));
-  res.status(200).send(createAuthorizedXPayPollingResponseEntity(requestId));
+  res
+    .status(200)
+    .send(createAuthorizedXPayPollingResponseEntity(paymentAuthorizationId));
 };
 
 export const authRequestXpay: RequestHandler = async (req, res) => {
-  switch (getXPayFlowCase(req.params.requestId)) {
+  switch (getXPayFlowCase(req.params.paymentAuthorizationId)) {
     case XPayFlowCase.OK:
-      returnSuccessResponse(req.params.requestId, res);
+      returnSuccessResponse(req.params.paymentAuthorizationId, res);
       break;
     case XPayFlowCase.NOT_FOUND:
       returnNotFoundResponse(res);
@@ -63,11 +70,15 @@ export const authRequestXpay: RequestHandler = async (req, res) => {
         E.fromPredicate(retry => retry === 0, identity),
         E.mapLeft(async r => {
           pollingAttempt = r - 1;
-          await returnAuthorizedResponse(req.params.requestId, res, 2000);
+          await returnAuthorizedResponse(
+            req.params.paymentAuthorizationId,
+            res,
+            2000
+          );
         }),
         E.map(_r => {
           pollingAttempt = 2;
-          returnSuccessResponse(req.params.requestId, res);
+          returnSuccessResponse(req.params.paymentAuthorizationId, res);
         })
       );
       break;
@@ -197,10 +208,11 @@ export const vposHandleResponse = (
 export const challengeUrl = "http://challenge-url";
 export const methodUrl = "http://method-url";
 export const clientReturnUrl = "https://google.com";
+export const authCode = "authCode123";
 
 export const authRequestVpos: RequestHandler = async (req, res) => {
   const vposMockInfo = getVposMockInfo(req);
-  const requestId = req.params.requestId;
+  const paymentAuthorizationId = req.params.paymentAuthorizationId;
   const currentStep = vposMockInfo.step;
   const nextStep = vposNextStep(vposMockInfo.step, vposMockInfo.flowCase);
   logStepChange(vposMockInfo.step, nextStep, vposMockInfo.flowCase);
@@ -218,14 +230,13 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
     case VposStep.AUTH:
       vposHandleResponse(
         res,
-        createPaymentRequestVposResponse(
+        createVposAuthorizedResponse(
           StatusEnum.AUTHORIZED,
-          requestId,
-          undefined,
-          undefined,
-          clientReturnUrl
+          paymentAuthorizationId,
+          clientReturnUrl,
+          authCode
         ),
-        createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
+        createVposResponse(StatusEnum.CREATED, paymentAuthorizationId),
         currentStep,
         VposStep.STEP_0
       );
@@ -233,14 +244,13 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
     case VposStep.CHALLENGE:
       vposHandleResponse(
         res,
-        createPaymentRequestVposResponse(
+        createVposAcsResponse(
           StatusEnum.CREATED,
-          requestId,
+          paymentAuthorizationId,
           ResponseTypeEnum.CHALLENGE,
-          challengeUrl,
-          undefined
+          challengeUrl
         ),
-        createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
+        createVposResponse(StatusEnum.CREATED, paymentAuthorizationId),
         currentStep,
         nextStep
       );
@@ -248,14 +258,12 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
     case VposStep.DENY:
       vposHandleResponse(
         res,
-        createPaymentRequestVposResponse(
+        createVposResponse(
           StatusEnum.DENIED,
-          requestId,
-          undefined,
-          undefined,
+          paymentAuthorizationId,
           clientReturnUrl
         ),
-        createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
+        createVposResponse(StatusEnum.CREATED, paymentAuthorizationId),
         currentStep,
         VposStep.STEP_0
       );
@@ -263,14 +271,13 @@ export const authRequestVpos: RequestHandler = async (req, res) => {
     case VposStep.METHOD:
       vposHandleResponse(
         res,
-        createPaymentRequestVposResponse(
+        createVposAcsResponse(
           StatusEnum.CREATED,
-          requestId,
+          paymentAuthorizationId,
           ResponseTypeEnum.METHOD,
-          methodUrl,
-          undefined
+          methodUrl
         ),
-        createPaymentRequestVposResponse(StatusEnum.CREATED, requestId),
+        createVposResponse(StatusEnum.CREATED, paymentAuthorizationId),
         currentStep,
         nextStep
       );

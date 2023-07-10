@@ -390,9 +390,9 @@ export enum XPayFlowCase {
   NOT_FOUND
 }
 
-export const getXPayFlowCase = (requestId: string): XPayFlowCase =>
+export const getXPayFlowCase = (paymentAuthorizationId: string): XPayFlowCase =>
   pipe(
-    requestId,
+    paymentAuthorizationId,
     E.fromPredicate(id => id.startsWith(XPAY_OK_PREFIX), identity),
     E.mapLeft(_ => XPayFlowCase.NOT_FOUND),
     E.map(id =>
@@ -438,9 +438,12 @@ interface IVposMockInfo {
 }
 
 export const getVposFlow: (req: express.Request) => VposFlowCase = req => {
-  const requestId = req.params.requestId.substring(0, 2);
-  const flowId = Number(requestId);
-  logger.info(`Request id: [${requestId}], flow id: [${flowId}]`);
+  const paymentAuthorizationId = req.params.paymentAuthorizationId.substring(
+    0,
+    2
+  );
+  const flowId = Number(paymentAuthorizationId);
+  logger.info(`Request id: [${paymentAuthorizationId}], flow id: [${flowId}]`);
   if (flowId in VposFlowCase) {
     return flowId as VposFlowCase;
   } else {

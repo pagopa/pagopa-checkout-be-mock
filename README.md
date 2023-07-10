@@ -121,8 +121,8 @@ This is currently implemented via a `mockFlow` cookie which is returned from the
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED    | 42        |
 
 ## XPAY Authorization Error Flow
-The XPAY authorization polling endpoint `/request-payments/xpay/:requestId` require a requestId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`. It will returns an error otherwise (404 - Not Found).
-To simulate the polling process all requests with a `requestId` that starts with `01` will require two polling attempt to obtain the success case.
+The XPAY authorization polling endpoint `/xpay/authorizations/:paymentAuthorizationId` require a paymentAuthorizationId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`. It will returns an error otherwise (404 - Not Found).
+To simulate the polling process all requests with a `paymentAuthorizationId` that starts with `01` will require two polling attempt to obtain the success case.
 
 | Case                        | Code                                  |
 |-----------------------------|---------------------------------------|
@@ -131,7 +131,7 @@ To simulate the polling process all requests with a `requestId` that starts with
 | Not found                   | XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  |
 
 ## Vpos Authorization Error Flow
-The Vpos authorization polling endpoint `/request-payments/vpos/:requestId` require a requestId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). 
+The Vpos authorization polling endpoint `/xpay/authorizations/vpos/:paymentAuthorizationId` require a paymentAuthorizationId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). 
 
 The first two UUID characters are used to simulate one specific flow as follows:
 
