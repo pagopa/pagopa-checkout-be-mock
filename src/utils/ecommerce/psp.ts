@@ -38,6 +38,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
       touchpoint: "FHXHF"
     }
   ],
+  paymentMethodDescription: "payment method description",
   paymentMethodName: "test",
   paymentMethodStatus: PaymentMethodStatusEnum.ENABLED
 });
@@ -75,6 +76,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = ()
       touchpoint: "FHXHF"
     }
   ],
+  paymentMethodDescription: "payment method description",
   paymentMethodName: "test",
   paymentMethodStatus: PaymentMethodStatusEnum.ENABLED
 });
