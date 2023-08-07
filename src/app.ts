@@ -32,6 +32,7 @@ import { ecommerceGetPspByPaymentMethods } from "./handlers/ecommerce/psp";
 import { ecommerceGetCart } from "./handlers/ecommerce/cart";
 import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import { ecommerceGetPaymentMethods } from "./handlers/ecommerce/payment-method";
+import ecommerceFormBuild from "./handlers/ecommerce/ecommerceFormBuild";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -164,6 +165,8 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     "/checkout/payments/v1/payment-activations/:codiceContestoPagamento",
     toExpressHandler(checkPaymentStatusHandler(ID_PAYMENT))
   );
+
+  app.get("/checkout/payments/v1/build", ecommerceFormBuild);
 
   // app.use(
   //   createProxyMiddleware("/checkout/payment-transactions", {
