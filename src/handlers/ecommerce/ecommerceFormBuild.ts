@@ -36,9 +36,8 @@ const ecommerceFormBuild: RequestHandler = async (_req, res) => {
       logger.error(error);
     });
   });
-
   const postData = JSON.stringify({
-    merchantUrl: "https://4k9fl8.csb.app",
+    merchantUrl: `${_req.protocol}://${_req.get("Host")}`,
     order: {
       amount: "1000",
       currency: "EUR",
