@@ -4,9 +4,12 @@ import { logger } from "../../logger";
 
 const { X_API_KEY } = process.env;
 
-const ecommerceGetPaymentMethodSession: RequestHandler = async (_req, res) => {
+const ecommercePaymentMethodpreauthorization: RequestHandler = async (
+  _req,
+  res
+) => {
   logger.info(
-    `[Get Payment Method Session id: ${_req.params.id}] - Return success case`
+    `[Get Payment Method preauthorization id: ${_req.params.id}] - Return success case`
   );
   const options = {
     headers: {
@@ -62,4 +65,4 @@ const ecommerceGetPaymentMethodSession: RequestHandler = async (_req, res) => {
   build.end();
 };
 
-export default ecommerceGetPaymentMethodSession;
+export default ecommercePaymentMethodpreauthorization;
