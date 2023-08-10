@@ -4,8 +4,10 @@ import { logger } from "../../logger";
 
 const { X_API_KEY } = process.env;
 
-const ecommerceFormBuild: RequestHandler = async (_req, res) => {
-  logger.info("[Get build ecommerce] - Return success case");
+const ecommerceGetPaymentMethodSession: RequestHandler = async (_req, res) => {
+  logger.info(
+    `[Get Payment Method Session id: ${_req.params.id}] - Return success case`
+  );
   const options = {
     headers: {
       "Content-Type": "application/json",
@@ -60,4 +62,4 @@ const ecommerceFormBuild: RequestHandler = async (_req, res) => {
   build.end();
 };
 
-export default ecommerceFormBuild;
+export default ecommerceGetPaymentMethodSession;
