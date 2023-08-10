@@ -32,7 +32,8 @@ import { ecommerceGetPspByPaymentMethods } from "./handlers/ecommerce/psp";
 import { ecommerceGetCart } from "./handlers/ecommerce/cart";
 import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import { ecommerceGetPaymentMethods } from "./handlers/ecommerce/payment-method";
-import ecommerceGetPaymentMethodSessionForm from "./handlers/ecommerce/payment-method-preauthorization";
+import ecommerceGetPaymentMethodPreauthorization from "./handlers/ecommerce/payment-method-preauthorization";
+import ecommerceGetPaymentMethodSession from "./handlers/ecommerce/payment-method-session";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -202,7 +203,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   app.post(
     "/ecommerce/checkout/v1/payment-methods/:id/preauthorization",
-    ecommerceGetPaymentMethodSessionForm
+    ecommerceGetPaymentMethodPreauthorization
+  );
+
+  app.get(
+    "/ecommerce/checkout/v1/payment-methods/:sessionId",
+    ecommerceGetPaymentMethodSession
   );
 
   // payment-methods-service get psp by payment methods requests mock
