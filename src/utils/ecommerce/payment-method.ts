@@ -1,6 +1,7 @@
 import { NonNegativeInteger } from "@pagopa/ts-commons/lib/numbers";
 import { PaymentMethodsResponse } from "../../generated/ecommerce/PaymentMethodsResponse";
 import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
+import { PreauthorizationResponse } from "../../generated/ecommerce_payment_methods/PreauthorizationResponse";
 export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
   paymentMethods: [
     {
@@ -32,3 +33,10 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
   ]
 });
 
+export const createFormNpg = (): PreauthorizationResponse => ({
+  fields: {
+    form: [{}],
+    paymentMethod: "card"
+  },
+  sessionId: "sessionId"
+});

@@ -31,7 +31,10 @@ import { ecommerceVerify } from "./handlers/ecommerce/verify";
 import { ecommerceGetPspByPaymentMethods } from "./handlers/ecommerce/psp";
 import { ecommerceGetCart } from "./handlers/ecommerce/cart";
 import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
-import { ecommerceGetPaymentMethods } from "./handlers/ecommerce/payment-method";
+import {
+  createFormWithNpg,
+  ecommerceGetPaymentMethods
+} from "./handlers/ecommerce/payment-method";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -203,6 +206,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.post(
     "/ecommerce/checkout/v1/payment-methods/:id/fees",
     ecommerceGetPspByPaymentMethods
+  );
+
+  // payment-methods-service preauthorizations npg proxy
+  app.post(
+    "/ecommerce/checkout/v1/payment-methods/:id/preauthorizations",
+    createFormWithNpg
   );
 
   // transaction-service new transaction request mock
