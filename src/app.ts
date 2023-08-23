@@ -210,7 +210,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // payment-methods-service preauthorizations npg proxy
   app.post(
-    "/ecommerce/checkout/v1/payment-methods/:id/preauthorizations",
+    "/ecommerce/checkout/v1/payment-methods/:id/sessions",
     createFormWithNpg
   );
 

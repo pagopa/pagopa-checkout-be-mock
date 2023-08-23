@@ -1,8 +1,13 @@
 /* eslint-disable sort-keys */
 import { RequestHandler } from "express";
 import fetch from "node-fetch";
+import { pipe } from "fp-ts/lib/function";
+import * as E from "fp-ts/lib/Either";
 import { logger } from "../../logger";
 import { createSuccessGetPaymentMethods } from "../../utils/ecommerce/payment-method";
+import { CreateSessionResponse } from "../../generated/ecommerce_payment_methods/CreateSessionResponse";
+import { ProblemJson } from "../../generated/ecommerce_payment_methods/ProblemJson";
+import { Field } from "../../generated/ecommerce_payment_methods/Field";
 
 export const ecommerceGetPaymentMethods: RequestHandler = async (req, res) => {
   logger.info("[Get payment-methods ecommerce] - Return success case");
@@ -49,8 +54,29 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
   );
 
   const jsonResponse = await response.json();
+
   logger.info(
     `[Get Payment Method npg-session status code: ${response.status}]`
   );
-  res.status(response.status).send(jsonResponse);
+
+  const data: CreateSessionResponse = {
+    sessionId: jsonResponse.sessionId,
+    fields: {
+      paymentMethod: "CARD",
+      form: jsonResponse.fields as ReadonlyArray<Field>
+    }
+  };
+
+  pipe(
+    data,
+    CreateSessionResponse.decode,
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    E.mapLeft(() => res.status(500).send(internalServerError())),
+    E.map(resp => res.status(response.status).send(resp))
+  );
 };
+
+export const internalServerError = (): ProblemJson => ({
+  detail: "Internal Server Error",
+  title: "Invalid npg body response"
+});
