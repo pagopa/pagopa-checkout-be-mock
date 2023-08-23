@@ -37,7 +37,7 @@ const addWalletController: (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   params
 ): HandlerResponseType<AddWalletUsingPOSTT> => {
-  const responseWallet = createResponseWallet({});
+  const responseWallet = createResponseWallet(params.walletRequest.data);
   creditCard = responseWallet.creditCard as CreditCard;
 
   const response: WalletResponse = {
