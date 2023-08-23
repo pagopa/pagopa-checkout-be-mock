@@ -34,7 +34,6 @@ let creditCard: CreditCard;
 const addWalletController: (
   flowId: FlowCase
 ) => EndpointController<AddWalletUsingPOSTT> = flowId => (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   params
 ): HandlerResponseType<AddWalletUsingPOSTT> => {
   const responseWallet = createResponseWallet(params.walletRequest.data);
