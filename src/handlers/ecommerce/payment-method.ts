@@ -27,7 +27,7 @@ export const buildCreateSessionResponse = (
   jsonResponse: any
 ): CreateSessionResponse => ({
   sessionId: jsonResponse.sessionId,
-  fields: {
+  paymentMethodData: {
     paymentMethod: "CARDS",
     form: jsonResponse.fields as ReadonlyArray<Field>
   }
@@ -70,22 +70,22 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
     }
   );
 
-  pipe(
-    await TE.tryCatch(
+  await pipe(
+    TE.tryCatch(
       async () => response.json(),
       _e => {
         logger.error("Error invoking npg order build");
       }
-    )(),
-    E.map(respon => {
+    ),
+    TE.map(resp => {
       pipe(
-        respon,
+        resp,
         buildCreateSessionResponse,
         CreateSessionResponse.decode,
         E.mapLeft(() => res.status(500).send(internalServerError())),
         E.map(val => res.status(response.status).send(val))
       );
     }),
-    E.mapLeft(() => res.status(500).send(internalServerError()))
-  );
+    TE.mapLeft(() => res.status(500).send(internalServerError()))
+  )();
 };
