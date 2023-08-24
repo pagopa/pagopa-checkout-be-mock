@@ -28,7 +28,7 @@ export const buildCreateSessionResponse = (
 ): CreateSessionResponse => ({
   sessionId: jsonResponse.sessionId,
   fields: {
-    paymentMethod: "CARD",
+    paymentMethod: "CARDS",
     form: jsonResponse.fields as ReadonlyArray<Field>
   }
 });
