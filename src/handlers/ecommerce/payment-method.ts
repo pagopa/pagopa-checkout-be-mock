@@ -3,6 +3,7 @@ import { RequestHandler } from "express";
 import fetch from "node-fetch";
 import { pipe } from "fp-ts/lib/function";
 import * as E from "fp-ts/lib/Either";
+import * as TE from "fp-ts/lib/TaskEither";
 import { logger } from "../../logger";
 import { createSuccessGetPaymentMethods } from "../../utils/ecommerce/payment-method";
 import { CreateSessionResponse } from "../../generated/ecommerce_payment_methods/CreateSessionResponse";
@@ -14,7 +15,23 @@ export const ecommerceGetPaymentMethods: RequestHandler = async (req, res) => {
   res.status(200).send(createSuccessGetPaymentMethods());
 };
 
-const { X_API_KEY } = process.env;
+const { NPG_APY_KEY } = process.env;
+
+export const internalServerError = (): ProblemJson => ({
+  detail: "Internal Server Error",
+  title: "Invalid npg body response"
+});
+
+export const buildCreateSessionResponse = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  jsonResponse: any
+): CreateSessionResponse => ({
+  sessionId: jsonResponse.sessionId,
+  fields: {
+    paymentMethod: "CARD",
+    form: jsonResponse.fields as ReadonlyArray<Field>
+  }
+});
 
 export const createFormWithNpg: RequestHandler = async (_req, res) => {
   logger.info(
@@ -47,36 +64,28 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
       headers: {
         "Content-Type": "application/json",
         "Correlation-Id": "df615d11-1159-43c9-bd07-fdc6f460e449",
-        "X-Api-key": X_API_KEY as string
+        "X-Api-key": NPG_APY_KEY as string
       },
       body: postData
     }
   );
 
-  const jsonResponse = await response.json();
-
-  logger.info(
-    `[Get Payment Method npg-session status code: ${response.status}]`
-  );
-
-  const data: CreateSessionResponse = {
-    sessionId: jsonResponse.sessionId,
-    fields: {
-      paymentMethod: "CARD",
-      form: jsonResponse.fields as ReadonlyArray<Field>
-    }
-  };
-
   pipe(
-    data,
-    CreateSessionResponse.decode,
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    E.mapLeft(() => res.status(500).send(internalServerError())),
-    E.map(resp => res.status(response.status).send(resp))
+    await TE.tryCatch(
+      async () => response.json(),
+      _e => {
+        logger.error("Error invoking npg order build");
+      }
+    )(),
+    E.map(respon => {
+      pipe(
+        respon,
+        buildCreateSessionResponse,
+        CreateSessionResponse.decode,
+        E.mapLeft(() => res.status(500).send(internalServerError())),
+        E.map(val => res.status(response.status).send(val))
+      );
+    }),
+    E.mapLeft(() => res.status(500).send(internalServerError()))
   );
 };
-
-export const internalServerError = (): ProblemJson => ({
-  detail: "Internal Server Error",
-  title: "Invalid npg body response"
-});
