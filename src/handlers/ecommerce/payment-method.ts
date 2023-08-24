@@ -15,7 +15,7 @@ export const ecommerceGetPaymentMethods: RequestHandler = async (req, res) => {
   res.status(200).send(createSuccessGetPaymentMethods());
 };
 
-const { NPG_APY_KEY } = process.env;
+const NPG_APY_KEY = process.env.NPG_APY_KEY;
 
 export const internalServerError = (): ProblemJson => ({
   detail: "Internal Server Error",
