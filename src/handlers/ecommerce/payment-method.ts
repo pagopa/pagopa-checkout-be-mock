@@ -9,6 +9,7 @@ import { createSuccessGetPaymentMethods } from "../../utils/ecommerce/payment-me
 import { CreateSessionResponse } from "../../generated/ecommerce_payment_methods/CreateSessionResponse";
 import { ProblemJson } from "../../generated/ecommerce_payment_methods/ProblemJson";
 import { Field } from "../../generated/ecommerce_payment_methods/Field";
+import { BrandEnum, SessionPaymentMethodResponse } from "../../generated/ecommerce_payment_methods/SessionPaymentMethodResponse";
 
 export const ecommerceGetPaymentMethods: RequestHandler = async (req, res) => {
   logger.info("[Get payment-methods ecommerce] - Return success case");
@@ -32,6 +33,21 @@ export const buildCreateSessionResponse = (
     form: jsonResponse.fields as ReadonlyArray<Field>
   }
 });
+
+export const mockSessionPaymentMethodResponse = (): SessionPaymentMethodResponse => ({
+  sessionId: "sessionId",
+  bin: "123456",
+  lastFourDigits: "0321",
+  expiringDate: "12/30",
+  brand: BrandEnum.AMEX
+});
+
+export const createSessionResponse: RequestHandler = async (_req, res) => {
+  logger.info(
+    `[Get session payment method id: ${_req.params.id} sessionId: ${_req.params.sessionId}] - Return success case`
+  );
+  res.status(200).send(mockSessionPaymentMethodResponse());
+};
 
 export const createFormWithNpg: RequestHandler = async (_req, res) => {
   logger.info(

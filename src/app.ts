@@ -33,6 +33,7 @@ import { ecommerceGetCart } from "./handlers/ecommerce/cart";
 import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import {
   createFormWithNpg,
+  createSessionResponse,
   ecommerceGetPaymentMethods
 } from "./handlers/ecommerce/payment-method";
 
@@ -212,6 +213,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.post(
     "/ecommerce/checkout/v1/payment-methods/:id/sessions",
     createFormWithNpg
+  );
+
+  // payment-methods-service session payment method npg proxy
+  app.post(
+    "/ecommerce/checkout/v1/payment-methods/:id/sessions/:idSession",
+    createSessionResponse
   );
 
   // transaction-service new transaction request mock
