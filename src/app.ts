@@ -33,8 +33,8 @@ import { ecommerceGetCart } from "./handlers/ecommerce/cart";
 import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import {
   createFormWithNpg,
-  createSessionResponse,
-  ecommerceGetPaymentMethods
+  ecommerceGetPaymentMethods,
+  retrieveCardDataFromNpg
 } from "./handlers/ecommerce/payment-method";
 
 // eslint-disable-next-line max-lines-per-function
@@ -216,9 +216,9 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   );
 
   // payment-methods-service session payment method npg proxy
-  app.post(
+  app.get(
     "/ecommerce/checkout/v1/payment-methods/:id/sessions/:idSession",
-    createSessionResponse
+    retrieveCardDataFromNpg
   );
 
   // transaction-service new transaction request mock
