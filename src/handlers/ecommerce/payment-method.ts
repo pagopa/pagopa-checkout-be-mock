@@ -26,13 +26,13 @@ export const internalServerError = (): ProblemJson => ({
 
 export const buildRetrieveCardDataResponse = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  jsonResponse: any
+  cardData: { readonly jsonResponse: any; readonly sessionId: string }
 ): SessionPaymentMethodResponse => ({
-  sessionId: "sessionId",
-  bin: jsonResponse.bin,
-  expiringDate: jsonResponse.expiringDate,
-  lastFourDigits: jsonResponse.lastFourDigits,
-  brand: jsonResponse.circuit
+  sessionId: cardData.sessionId,
+  bin: cardData.jsonResponse.bin,
+  expiringDate: cardData.jsonResponse.expiringDate,
+  lastFourDigits: cardData.jsonResponse.lastFourDigits,
+  brand: cardData.jsonResponse.circuit
 });
 
 export const buildCreateSessionResponse = (
@@ -129,10 +129,10 @@ export const retrieveCardDataFromNpg: RequestHandler = async (_req, res) => {
     ),
     TE.map(resp => {
       pipe(
-        resp,
+        { jsonResponse: resp, sessionId },
         buildRetrieveCardDataResponse,
         SessionPaymentMethodResponse.decode,
-        E.mapLeft(() => res.status(500).send(internalServerError())),
+        E.mapLeft(() => res.status(502).send(internalServerError())),
         E.map(val => {
           res.status(response.status).send(val);
         })
