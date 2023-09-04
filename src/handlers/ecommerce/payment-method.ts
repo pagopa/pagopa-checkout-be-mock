@@ -105,6 +105,12 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
 };
 
 export const retrieveCardDataFromNpg: RequestHandler = async (_req, res) => {
+  if (_req.headers["x-transaction-id-from-client"] == null) {
+    logger.info(
+      "[Retrieve card data from NPG] - Return error case invalid x-transaction-id"
+    );
+    return res.status(401).send();
+  }
   const sessionId = _req.params.idSession;
   const encodedSessionId = encodeURIComponent(sessionId);
   logger.info(
