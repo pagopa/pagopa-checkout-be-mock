@@ -4,7 +4,7 @@ import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 
 export const createSuccessAuthRequestResponseEntity = (): RequestAuthorizationResponse => ({
   authorizationRequestId: "requestId",
-  authorizationUrl: "https://example.com"
+  authorizationUrl: "http://localhost:1234/gdi-check#gdiIframeUrl=${url}"
 });
 
 export const error404TransactionIdNotFound = (
