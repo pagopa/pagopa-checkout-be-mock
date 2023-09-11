@@ -17,7 +17,7 @@ export const ecommerceGetPaymentMethods: RequestHandler = async (req, res) => {
   res.status(200).send(createSuccessGetPaymentMethods());
 };
 
-const NPG_APY_KEY = process.env.NPG_APY_KEY;
+const NPG_API_KEY = process.env.NPG_API_KEY;
 
 export const internalServerError = (): ProblemJson => ({
   detail: "Internal Server Error",
@@ -78,7 +78,7 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
       headers: {
         "Content-Type": "application/json",
         "Correlation-Id": correlationId,
-        "X-Api-key": NPG_APY_KEY as string
+        "X-Api-key": NPG_API_KEY as string
       },
       body: postData
     }
@@ -123,7 +123,7 @@ export const retrieveCardDataFromNpg: RequestHandler = async (_req, res) => {
     headers: {
       "Content-Type": "application/json",
       "Correlation-Id": correlationId,
-      "X-Api-key": NPG_APY_KEY as string
+      "X-Api-key": NPG_API_KEY as string
     }
   });
   await pipe(
