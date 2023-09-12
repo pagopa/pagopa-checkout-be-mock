@@ -48,7 +48,7 @@ export const buildCreateSessionResponse = (
 
 export const createFormWithNpg: RequestHandler = async (_req, res) => {
   logger.info(
-    `[Get Payment Method npg-session id: ${_req.params.id}] - Return success case`
+    `[Invoke NPG for create form using payment method id: ${_req.params.id}] - Return success case`
   );
 
   const postData = JSON.stringify({
@@ -69,7 +69,6 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
     },
     version: "2"
   });
-
   const correlationId = uuid();
   const response = await fetch(
     "https://stg-ta.nexigroup.com/api/phoenix-0.0/psp/api/v1/orders/build",
@@ -83,7 +82,6 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
       body: postData
     }
   );
-
   await pipe(
     TE.tryCatch(
       async () => response.json(),
