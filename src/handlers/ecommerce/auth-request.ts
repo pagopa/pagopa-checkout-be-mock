@@ -28,13 +28,6 @@ const confirmPaymentFromNpg = async (
   res: any,
   requestSessionId: string
 ): Promise<void> => {
-  if (_req.headers["x-transaction-id-from-client"] == null) {
-    logger.info(
-      "[Invoke NPG confirm payment] - Return error case invalid x-transaction-id"
-    );
-    return res.status(401).send();
-  }
-
   const postData = JSON.stringify({
     amount: _req.body.amount,
     sessionId: requestSessionId
@@ -68,18 +61,21 @@ const confirmPaymentFromNpg = async (
         createSuccessAuthRequestResponseEntityFromNPG,
         RequestAuthorizationResponse.decode,
         E.fold(
-          () => res.status(500),
+          () => {
+            logger.error("Error while invoke NPG unexpected body");
+            res.status(response.status).send(resp);
+          },
           responseBody => res.status(response.status).send(responseBody)
         )
       );
     }),
-    TE.mapLeft(() => res.status(500))
+    TE.mapLeft(() => res.status(response.status).send())
   )();
 };
 
 const processAuthorizationRequest = (req: any, res: any): void => {
   pipe(
-    res.body,
+    req.body,
     RequestAuthorizationRequest.decode,
     O.fromEither,
     O.fold(
@@ -110,7 +106,7 @@ const processAuthorizationRequest = (req: any, res: any): void => {
         );
       }
     )
-  )();
+  );
 };
 
 const return409ErrorTransactionAlreadyProcessed = (
@@ -141,6 +137,6 @@ export const ecommerceAuthRequest: RequestHandler = async (req, res) => {
       return404ErrorTransactionIdNotFound(transactionId, res);
       break;
     default:
-      processAuthorizationRequest(res, res);
+      processAuthorizationRequest(req, res);
   }
 };
