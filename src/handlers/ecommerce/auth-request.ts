@@ -92,8 +92,7 @@ const processAuthorizationRequest = (req: any, res: any): void => {
                 resp.details,
                 PaymentInstrumentDetail2.decode,
                 O.fromEither,
-                O.fold(
-                  () => res.status(400).send(error400InvalidRequestBody()),
+                O.map(
                   () =>
                     res
                       .status(200)
