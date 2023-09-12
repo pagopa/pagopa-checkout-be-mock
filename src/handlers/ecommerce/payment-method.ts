@@ -5,19 +5,21 @@ import { pipe } from "fp-ts/lib/function";
 import * as E from "fp-ts/lib/Either";
 import * as TE from "fp-ts/lib/TaskEither";
 import { v4 as uuid } from "uuid";
+import { formatValidationErrors } from "io-ts-reporters";
 import { logger } from "../../logger";
 import { createSuccessGetPaymentMethods } from "../../utils/ecommerce/payment-method";
 import { CreateSessionResponse } from "../../generated/ecommerce/CreateSessionResponse";
 import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { Field } from "../../generated/ecommerce/Field";
 import { SessionPaymentMethodResponse } from "../../generated/ecommerce/SessionPaymentMethodResponse";
+import { config } from "../../config";
 
 export const ecommerceGetPaymentMethods: RequestHandler = async (req, res) => {
   logger.info("[Get payment-methods ecommerce] - Return success case");
   res.status(200).send(createSuccessGetPaymentMethods());
 };
 
-const NPG_APY_KEY = process.env.NPG_APY_KEY;
+const NPG_API_KEY = config.NPG_API_KEY;
 
 export const internalServerError = (): ProblemJson => ({
   detail: "Internal Server Error",
@@ -78,7 +80,7 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
       headers: {
         "Content-Type": "application/json",
         "Correlation-Id": correlationId,
-        "X-Api-key": NPG_APY_KEY as string
+        "X-Api-key": NPG_API_KEY
       },
       body: postData
     }
@@ -94,9 +96,16 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
     TE.map(resp => {
       pipe(
         resp,
+        r => {
+          logger.info("response: " + JSON.stringify(r));
+          return r;
+        },
         buildCreateSessionResponse,
         CreateSessionResponse.decode,
-        E.mapLeft(() => res.status(500).send(internalServerError())),
+        E.mapLeft(e => {
+          logger.error(formatValidationErrors(e));
+          return res.status(500).send(internalServerError());
+        }),
         E.map(val => res.status(response.status).send(val))
       );
     }),
@@ -123,7 +132,7 @@ export const retrieveCardDataFromNpg: RequestHandler = async (_req, res) => {
     headers: {
       "Content-Type": "application/json",
       "Correlation-Id": correlationId,
-      "X-Api-key": NPG_APY_KEY as string
+      "X-Api-key": NPG_API_KEY
     }
   });
   await pipe(
