@@ -20,8 +20,9 @@ import {
   PaymentInstrumentDetail3
 } from "../../generated/ecommerce/PaymentInstrumentDetail";
 import { RequestAuthorizationResponse } from "../../generated/ecommerce/RequestAuthorizationResponse";
+import { config } from "../../config";
 
-const PSP_API_KEY = process.env.PSP_API_KEY;
+const PSP_API_KEY = config.PSP_API_KEY;
 
 const confirmPaymentFromNpg = async (
   _req: any,
@@ -43,7 +44,7 @@ const confirmPaymentFromNpg = async (
     headers: {
       "Content-Type": "application/json",
       "Correlation-Id": correlationId,
-      "X-Api-key": PSP_API_KEY as string
+      "X-Api-key": PSP_API_KEY
     },
     method: "POST"
   });

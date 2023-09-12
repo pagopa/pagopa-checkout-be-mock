@@ -23,6 +23,7 @@ This mock uses the following environment variables:
 | ENDPOINT_DELAY                   | Delay time in milliseconds applied to every endpoint                              | No       | 0             |
 | CHECK_STATUS_ADDITIONAL_ATTEMPTS | (‡) Additional attempts required when calling `pagopa-proxy` payment status check | No       | 0             |
 | NPG_API_KEY                      | API Key for NPG                                                                   | Yes      | N/A           |
+| PSP_API_KEY                      | API Key for psp used during NPG confirm payment method                            | Yes      | N/A           |
 
 (‡) Note that the total time to successfully complete a payment status check is `(ACTIVATION_STATUS_ADDITIONAL_ATTEMPTS + 1) * ENDPOINT_DELAY`
 

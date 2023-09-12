@@ -4,7 +4,8 @@ import * as E from "fp-ts/lib/Either";
 import { formatValidationErrors } from "io-ts-reporters";
 
 const ConfigR = t.type({
-  NPG_API_KEY: t.string
+  NPG_API_KEY: t.string,
+  PSP_API_KEY: t.string
 });
 
 const ConfigO = t.partial({
@@ -29,7 +30,8 @@ const decodeEnv = (
     "CHECK_STATUS_ADDITIONAL_ATTEMPTS"
   ),
   ENDPOINT_DELAY: getNumber(env, "ENDPOINT_DELAY"),
-  NPG_API_KEY: env.NPG_API_KEY
+  NPG_API_KEY: env.NPG_API_KEY,
+  PSP_API_KEY: env.PSP_API_KEY
 });
 
 const getConfig = (): Config =>
