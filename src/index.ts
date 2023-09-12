@@ -1,10 +1,11 @@
 import * as http from "http";
 import * as App from "./app";
 import { logger } from "./logger";
+import { config } from "./config";
 
-logger.info(`Endpoint delay: ${process.env.ENDPOINT_DELAY}ms`);
+logger.info(`Endpoint delay: ${config.ENDPOINT_DELAY}ms`);
 logger.info(
-  `Additional attempts on transaction status check: ${process.env.CHECK_STATUS_ADDITIONAL_ATTEMPTS}`
+  `Additional attempts on transaction status check: ${config.CHECK_STATUS_ADDITIONAL_ATTEMPTS}`
 );
 
 App.newExpressApp()
