@@ -13,6 +13,7 @@ import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { Field } from "../../generated/ecommerce/Field";
 import { SessionPaymentMethodResponse } from "../../generated/ecommerce/SessionPaymentMethodResponse";
 import { config } from "../../config";
+import { setSessionIdCookie } from "../../flow";
 
 export const ecommerceGetPaymentMethods: RequestHandler = async (req, res) => {
   logger.info("[Get payment-methods ecommerce] - Return success case");
@@ -39,12 +40,12 @@ export const buildRetrieveCardDataResponse = (
 
 export const buildCreateSessionResponse = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  jsonResponse: any
+  sessionResponse: { readonly jsonResponse: any; readonly orderId: string }
 ): CreateSessionResponse => ({
-  sessionId: jsonResponse.sessionId,
+  orderId: sessionResponse.orderId,
   paymentMethodData: {
     paymentMethod: "CARDS",
-    form: jsonResponse.fields as ReadonlyArray<Field>
+    form: sessionResponse.jsonResponse.fields as ReadonlyArray<Field>
   }
 });
 
@@ -53,12 +54,13 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
     `[Invoke NPG for create form using payment method id: ${_req.params.id}] - Return success case`
   );
 
+  const orderId = uuid().substring(0, 15);
   const postData = JSON.stringify({
     merchantUrl: `${_req.protocol}://${_req.get("Host")}`,
     order: {
       amount: "1000",
       currency: "EUR",
-      orderId: "btid23838555"
+      orderId
     },
     paymentSession: {
       actionType: "PAY",
@@ -93,18 +95,18 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
     ),
     TE.map(resp => {
       pipe(
-        resp,
-        r => {
-          logger.info("response: " + JSON.stringify(r));
-          return r;
-        },
+        { jsonResponse: resp, orderId },
         buildCreateSessionResponse,
         CreateSessionResponse.decode,
         E.mapLeft(e => {
           logger.error(formatValidationErrors(e));
           return res.status(500).send(internalServerError());
         }),
-        E.map(val => res.status(response.status).send(val))
+        E.map(val => {
+          logger.info(resp.sessionId);
+          setSessionIdCookie(res, resp.sessionId);
+          res.status(response.status).send(val);
+        })
       );
     }),
     TE.mapLeft(() => res.status(500).send(internalServerError()))
@@ -147,7 +149,7 @@ export const retrieveCardDataFromNpg: RequestHandler = async (_req, res) => {
         SessionPaymentMethodResponse.decode,
         E.mapLeft(() => res.status(502).send(internalServerError())),
         E.map(val => {
-          res.status(response.status).send(val);
+          setSessionIdCookie(res, val.sessionId);
         })
       );
     }),
