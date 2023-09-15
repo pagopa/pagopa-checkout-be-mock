@@ -103,7 +103,6 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
           return res.status(500).send(internalServerError());
         }),
         E.map(val => {
-          logger.info(resp.sessionId);
           setSessionIdCookie(res, resp.sessionId);
           res.status(response.status).send(val);
         })
@@ -148,9 +147,7 @@ export const retrieveCardDataFromNpg: RequestHandler = async (_req, res) => {
         buildRetrieveCardDataResponse,
         SessionPaymentMethodResponse.decode,
         E.mapLeft(() => res.status(502).send(internalServerError())),
-        E.map(val => {
-          setSessionIdCookie(res, val.sessionId);
-        })
+        E.map(val => res.status(response.status).send(val))
       );
     }),
     TE.mapLeft(() => res.status(500).send(internalServerError()))
