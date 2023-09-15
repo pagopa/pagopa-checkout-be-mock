@@ -2,6 +2,9 @@ import { RequestAuthorizationResponse } from "../../generated/ecommerce/RequestA
 import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 
+const encode = (str: string): string =>
+  Buffer.from(str, "binary").toString("base64");
+
 export const createSuccessAuthRequestResponseEntity = (): RequestAuthorizationResponse => ({
   authorizationRequestId: "requestId",
   authorizationUrl: "https://example.com"
@@ -12,7 +15,9 @@ export const createSuccessAuthRequestResponseEntityFromNPG = (
   jsonResponse: any
 ): RequestAuthorizationResponse => ({
   authorizationRequestId: "requestId",
-  authorizationUrl: jsonResponse.url
+  authorizationUrl:
+    "http://localhost:1234/gdi-check#gdiIframeUrl=" +
+    encode(jsonResponse.fieldSet.fields[0].src)
 });
 
 export const error404TransactionIdNotFound = (

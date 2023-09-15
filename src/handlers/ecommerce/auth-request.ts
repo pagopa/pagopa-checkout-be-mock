@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 import * as O from "fp-ts/Option";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { FlowCase, getFlowCookie } from "../../flow";
+import { FlowCase, getFlowCookie, getSessionIdCookie } from "../../flow";
 import {
   createSuccessAuthRequestResponseEntity,
   createSuccessAuthRequestResponseEntityFromNPG,
@@ -24,19 +24,17 @@ import { config } from "../../config";
 
 const PSP_API_KEY = config.PSP_API_KEY;
 
-const confirmPaymentFromNpg = async (
-  _req: any,
-  res: any,
-  requestSessionId: string
-): Promise<void> => {
+const confirmPaymentFromNpg = async (_req: any, res: any): Promise<void> => {
+  const sessionId = getSessionIdCookie(_req);
   const postData = JSON.stringify({
     amount: _req.body.amount,
-    sessionId: requestSessionId
+    sessionId
   });
 
   logger.info(
-    `[Invoke NPG confirm payment with npg-session id: ${requestSessionId}] - Return success case`
+    `[Invoke NPG confirm payment with npg-session id: ${sessionId}] - Return success case`
   );
+
   const correlationId = uuid();
   const url = `https://stg-ta.nexigroup.com/api/phoenix-0.0/psp/api/v1/build/confirm_payment`;
   const response = await fetch(url, {
@@ -100,8 +98,7 @@ const processAuthorizationRequest = (req: any, res: any): void => {
                 )
               );
             },
-            cardsDetails =>
-              confirmPaymentFromNpg(req, res, cardsDetails.orderId) // Type card invoke NPG
+            () => confirmPaymentFromNpg(req, res) // Type card invoke NPG
           )
         );
       }
