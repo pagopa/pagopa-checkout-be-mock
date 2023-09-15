@@ -13,7 +13,7 @@ import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { Field } from "../../generated/ecommerce/Field";
 import { SessionPaymentMethodResponse } from "../../generated/ecommerce/SessionPaymentMethodResponse";
 import { config } from "../../config";
-import { setSessionIdCookie } from "../../flow";
+import { getSessionIdCookie, setSessionIdCookie } from "../../flow";
 
 export const ecommerceGetPaymentMethods: RequestHandler = async (req, res) => {
   logger.info("[Get payment-methods ecommerce] - Return success case");
@@ -120,13 +120,13 @@ export const retrieveCardDataFromNpg: RequestHandler = async (_req, res) => {
     );
     return res.status(401).send();
   }
-  const sessionId = _req.params.idSession;
-  const encodedSessionId = encodeURIComponent(sessionId);
+  const orderId = _req.params.orderId;
+  const sessionId = getSessionIdCookie(_req);
   logger.info(
-    `[Retrieve card data from NPG with npg-session id: ${encodedSessionId}] - Return success case`
+    `[Retrieve card data from NPG with order id: ${orderId} npg-session id: ${sessionId}] - Return success case`
   );
   const correlationId = uuid();
-  const url = `https://stg-ta.nexigroup.com/api/phoenix-0.0/psp/api/v1/build/cardData?sessionId=${encodedSessionId}`;
+  const url = `https://stg-ta.nexigroup.com/api/phoenix-0.0/psp/api/v1/build/cardData?sessionId=${sessionId}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {

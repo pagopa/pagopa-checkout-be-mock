@@ -101,7 +101,7 @@ const processAuthorizationRequest = (req: any, res: any): void => {
               );
             },
             cardsDetails =>
-              confirmPaymentFromNpg(req, res, cardsDetails.sessionId) // Type card invoke NPG
+              confirmPaymentFromNpg(req, res, cardsDetails.orderId) // Type card invoke NPG
           )
         );
       }
