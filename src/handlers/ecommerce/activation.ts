@@ -128,11 +128,12 @@ const return404ResourceNotFound = (res: any): void => {
 };
 
 export const ecommerceActivation: RequestHandler = async (req, res) => {
+  const version = req.path.match(/\/ecommerce\/checkout\/(\w{2})/)?.slice(1);
+  logger.info(`[Activation ecommerce] - version: ${version}`);
   if (req.query.recaptchaResponse == null) {
     return404ResourceNotFound(res);
     return;
   }
-
   const sendPaymentResultOutcome = pipe(
     req.body.paymentNotices[0].rptId,
     getSendPaymentResultOutcomeFromRptId,
