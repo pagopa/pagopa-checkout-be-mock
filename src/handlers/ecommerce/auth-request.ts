@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestHandler } from "express";
+import fetch from "node-fetch";
 import * as TE from "fp-ts/lib/TaskEither";
 import { v4 as uuid } from "uuid";
 import * as O from "fp-ts/Option";
@@ -30,22 +31,25 @@ const confirmPaymentFromNpg = async (_req: any, res: any): Promise<void> => {
     amount: _req.body.amount,
     sessionId
   });
+  const origin = _req.headers.origin;
 
   logger.info(
     `[Invoke NPG confirm payment with npg-session id: ${sessionId}] - Return success case`
   );
 
   const correlationId = uuid();
-  const url = `https://stg-ta.nexigroup.com/api/phoenix-0.0/psp/api/v1/build/confirm_payment`;
-  const response = await fetch(url, {
-    body: postData,
-    headers: {
-      "Content-Type": "application/json",
-      "Correlation-Id": correlationId,
-      "X-Api-key": PSP_API_KEY
-    },
-    method: "POST"
-  });
+  const response = await fetch(
+    "https://stg-ta.nexigroup.com/api/phoenix-0.0/psp/api/v1/build/confirm_payment",
+    {
+      body: postData,
+      headers: {
+        "Content-Type": "application/json",
+        "Correlation-Id": correlationId,
+        "X-Api-key": PSP_API_KEY
+      },
+      method: "POST"
+    }
+  );
 
   await pipe(
     TE.tryCatch(
@@ -54,20 +58,21 @@ const confirmPaymentFromNpg = async (_req: any, res: any): Promise<void> => {
         logger.error("Error invoking npg order build");
       }
     ),
-    TE.map(resp => {
+    TE.map(jsonResponse =>
       pipe(
-        resp,
+        // eslint-disable-next-line sort-keys
+        { origin, jsonResponse },
         createSuccessAuthRequestResponseEntityFromNPG,
         RequestAuthorizationResponse.decode,
         E.fold(
           () => {
             logger.error("Error while invoke NPG unexpected body");
-            res.status(response.status).send(resp);
+            res.status(response.status).send(jsonResponse);
           },
           responseBody => res.status(response.status).send(responseBody)
         )
-      );
-    }),
+      )
+    ),
     TE.mapLeft(() => res.status(response.status).send())
   )();
 };

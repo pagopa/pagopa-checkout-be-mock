@@ -10,14 +10,16 @@ export const createSuccessAuthRequestResponseEntity = (): RequestAuthorizationRe
   authorizationUrl: "https://example.com"
 });
 
-export const createSuccessAuthRequestResponseEntityFromNPG = (
+export const createSuccessAuthRequestResponseEntityFromNPG = (_value: {
+  readonly origin: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  jsonResponse: any
-): RequestAuthorizationResponse => ({
+  readonly jsonResponse: any;
+}): RequestAuthorizationResponse => ({
   authorizationRequestId: "requestId",
   authorizationUrl:
-    "http://localhost:1234/gdi-check#gdiIframeUrl=" +
-    encode(jsonResponse.fieldSet.fields[0].src)
+    _value.origin +
+    "/gdi-check#gdiIframeUrl=" +
+    encode(_value.jsonResponse.fieldSet.fields[0].src)
 });
 
 export const error404TransactionIdNotFound = (
