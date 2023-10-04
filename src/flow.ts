@@ -253,6 +253,20 @@ export const maybeGetSendPaymentResultCookie: (
     )
   );
 
+export const maybeGetSessionIdCookie: (
+  req: express.Request
+) => O.Option<string> = req =>
+  pipe(O.fromNullable(req.cookies.sessionId), id => {
+    logger.info(`Request sessionId cookie: [${req.cookies.sessionId}]`);
+    return id;
+  });
+
+export const getSessionIdCookie: (req: express.Request) => string = req =>
+  pipe(
+    maybeGetSessionIdCookie(req),
+    O.getOrElse(() => "")
+  );
+
 export const getSendPaymentResultCookie: (
   req: express.Request
 ) => SendPaymentResultOutcomeEnum = req =>
@@ -317,6 +331,14 @@ export const setFlowCookie: (
 ) => void = (res, flowId) => {
   logger.info(`Set mockFlow cookie to: [${FlowCase[flowId]}]`);
   res.cookie("mockFlow", FlowCase[flowId]);
+};
+
+export const setSessionIdCookie: (
+  res: express.Response,
+  sessionId: string
+) => void = (res, sessionId) => {
+  logger.info(`Set session cookie to: [${sessionId}]`);
+  res.cookie("sessionId", sessionId);
 };
 
 export const setErrorCodeCookie: (

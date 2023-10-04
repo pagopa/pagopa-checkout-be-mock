@@ -2,17 +2,24 @@ import { RequestAuthorizationResponse } from "../../generated/ecommerce/RequestA
 import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 
+const encode = (str: string): string =>
+  Buffer.from(str, "binary").toString("base64");
+
 export const createSuccessAuthRequestResponseEntity = (): RequestAuthorizationResponse => ({
   authorizationRequestId: "requestId",
   authorizationUrl: "https://example.com"
 });
 
-export const createSuccessAuthRequestResponseEntityFromNPG = (
+export const createSuccessAuthRequestResponseEntityFromNPG = (_value: {
+  readonly origin: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  jsonResponse: any
-): RequestAuthorizationResponse => ({
+  readonly jsonResponse: any;
+}): RequestAuthorizationResponse => ({
   authorizationRequestId: "requestId",
-  authorizationUrl: jsonResponse.url
+  authorizationUrl:
+    _value.origin +
+    "/gdi-check#gdiIframeUrl=" +
+    encode(_value.jsonResponse.fieldSet.fields[0].src)
 });
 
 export const error404TransactionIdNotFound = (

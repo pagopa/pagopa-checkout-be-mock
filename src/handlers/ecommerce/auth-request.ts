@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestHandler } from "express";
+import fetch from "node-fetch";
 import * as TE from "fp-ts/lib/TaskEither";
 import { v4 as uuid } from "uuid";
 import * as O from "fp-ts/Option";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { FlowCase, getFlowCookie } from "../../flow";
+import { FlowCase, getFlowCookie, getSessionIdCookie } from "../../flow";
 import {
   createSuccessAuthRequestResponseEntity,
   createSuccessAuthRequestResponseEntityFromNPG,
@@ -24,30 +25,31 @@ import { config } from "../../config";
 
 const PSP_API_KEY = config.PSP_API_KEY;
 
-const confirmPaymentFromNpg = async (
-  _req: any,
-  res: any,
-  requestSessionId: string
-): Promise<void> => {
+const confirmPaymentFromNpg = async (_req: any, res: any): Promise<void> => {
+  const sessionId = getSessionIdCookie(_req);
   const postData = JSON.stringify({
     amount: _req.body.amount,
-    sessionId: requestSessionId
+    sessionId
   });
+  const origin = _req.headers.origin;
 
   logger.info(
-    `[Invoke NPG confirm payment with npg-session id: ${requestSessionId}] - Return success case`
+    `[Invoke NPG confirm payment with npg-session id: ${sessionId}] - Return success case`
   );
+
   const correlationId = uuid();
-  const url = `https://stg-ta.nexigroup.com/api/phoenix-0.0/psp/api/v1/build/confirm_payment`;
-  const response = await fetch(url, {
-    body: postData,
-    headers: {
-      "Content-Type": "application/json",
-      "Correlation-Id": correlationId,
-      "X-Api-key": PSP_API_KEY
-    },
-    method: "POST"
-  });
+  const response = await fetch(
+    "https://stg-ta.nexigroup.com/api/phoenix-0.0/psp/api/v1/build/confirm_payment",
+    {
+      body: postData,
+      headers: {
+        "Content-Type": "application/json",
+        "Correlation-Id": correlationId,
+        "X-Api-key": PSP_API_KEY
+      },
+      method: "POST"
+    }
+  );
 
   await pipe(
     TE.tryCatch(
@@ -56,20 +58,21 @@ const confirmPaymentFromNpg = async (
         logger.error("Error invoking npg order build");
       }
     ),
-    TE.map(resp => {
+    TE.map(jsonResponse =>
       pipe(
-        resp,
+        // eslint-disable-next-line sort-keys
+        { origin, jsonResponse },
         createSuccessAuthRequestResponseEntityFromNPG,
         RequestAuthorizationResponse.decode,
         E.fold(
           () => {
             logger.error("Error while invoke NPG unexpected body");
-            res.status(response.status).send(resp);
+            res.status(response.status).send(jsonResponse);
           },
           responseBody => res.status(response.status).send(responseBody)
         )
-      );
-    }),
+      )
+    ),
     TE.mapLeft(() => res.status(response.status).send())
   )();
 };
@@ -100,8 +103,7 @@ const processAuthorizationRequest = (req: any, res: any): void => {
                 )
               );
             },
-            cardsDetails =>
-              confirmPaymentFromNpg(req, res, cardsDetails.sessionId) // Type card invoke NPG
+            () => confirmPaymentFromNpg(req, res) // Type card invoke NPG
           )
         );
       }

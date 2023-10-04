@@ -13,6 +13,7 @@ import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { Field } from "../../generated/ecommerce/Field";
 import { SessionPaymentMethodResponse } from "../../generated/ecommerce/SessionPaymentMethodResponse";
 import { config } from "../../config";
+import { getSessionIdCookie, setSessionIdCookie } from "../../flow";
 
 export const ecommerceGetPaymentMethods: RequestHandler = async (req, res) => {
   logger.info("[Get payment-methods ecommerce] - Return success case");
@@ -39,12 +40,12 @@ export const buildRetrieveCardDataResponse = (
 
 export const buildCreateSessionResponse = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  jsonResponse: any
+  sessionResponse: { readonly jsonResponse: any; readonly orderId: string }
 ): CreateSessionResponse => ({
-  sessionId: jsonResponse.sessionId,
+  orderId: sessionResponse.orderId,
   paymentMethodData: {
     paymentMethod: "CARDS",
-    form: jsonResponse.fields as ReadonlyArray<Field>
+    form: sessionResponse.jsonResponse.fields as ReadonlyArray<Field>
   }
 });
 
@@ -53,12 +54,13 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
     `[Invoke NPG for create form using payment method id: ${_req.params.id}] - Return success case`
   );
 
+  const orderId = uuid().substring(0, 15);
   const postData = JSON.stringify({
     merchantUrl: `${_req.protocol}://${_req.get("Host")}`,
     order: {
       amount: "1000",
       currency: "EUR",
-      orderId: "btid23838555"
+      orderId
     },
     paymentSession: {
       actionType: "PAY",
@@ -93,18 +95,17 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
     ),
     TE.map(resp => {
       pipe(
-        resp,
-        r => {
-          logger.info("response: " + JSON.stringify(r));
-          return r;
-        },
+        { jsonResponse: resp, orderId },
         buildCreateSessionResponse,
         CreateSessionResponse.decode,
         E.mapLeft(e => {
           logger.error(formatValidationErrors(e));
           return res.status(500).send(internalServerError());
         }),
-        E.map(val => res.status(response.status).send(val))
+        E.map(val => {
+          setSessionIdCookie(res, resp.sessionId);
+          res.status(response.status).send(val);
+        })
       );
     }),
     TE.mapLeft(() => res.status(500).send(internalServerError()))
@@ -118,13 +119,13 @@ export const retrieveCardDataFromNpg: RequestHandler = async (_req, res) => {
     );
     return res.status(401).send();
   }
-  const sessionId = _req.params.idSession;
-  const encodedSessionId = encodeURIComponent(sessionId);
+  const orderId = _req.params.orderId;
+  const sessionId = getSessionIdCookie(_req);
   logger.info(
-    `[Retrieve card data from NPG with npg-session id: ${encodedSessionId}] - Return success case`
+    `[Retrieve card data from NPG with order id: ${orderId} npg-session id: ${sessionId}] - Return success case`
   );
   const correlationId = uuid();
-  const url = `https://stg-ta.nexigroup.com/api/phoenix-0.0/psp/api/v1/build/cardData?sessionId=${encodedSessionId}`;
+  const url = `https://stg-ta.nexigroup.com/api/phoenix-0.0/psp/api/v1/build/cardData?sessionId=${sessionId}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -146,9 +147,7 @@ export const retrieveCardDataFromNpg: RequestHandler = async (_req, res) => {
         buildRetrieveCardDataResponse,
         SessionPaymentMethodResponse.decode,
         E.mapLeft(() => res.status(502).send(internalServerError())),
-        E.map(val => {
-          res.status(response.status).send(val);
-        })
+        E.map(val => res.status(response.status).send(val))
       );
     }),
     TE.mapLeft(() => res.status(500).send(internalServerError()))

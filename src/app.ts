@@ -217,7 +217,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // payment-methods-service session payment method npg proxy
   app.get(
-    "/ecommerce/checkout/v1/payment-methods/:id/sessions/:idSession",
+    "/ecommerce/checkout/v1/payment-methods/:id/sessions/:orderId",
     retrieveCardDataFromNpg
   );
 
