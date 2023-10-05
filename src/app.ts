@@ -230,6 +230,9 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   // transaction-service new transaction request mock
   app.post("/ecommerce/checkout/v1/transactions", ecommerceActivation);
 
+  // transaction-service v2 new transaction request mock
+  app.post("/ecommerce/checkout/v2/transactions", ecommerceActivation);
+
   // transaction-service transaction user cancel
   app.delete(
     "/ecommerce/checkout/v1/transactions/:transactionId",
