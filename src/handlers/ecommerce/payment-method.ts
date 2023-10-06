@@ -53,6 +53,11 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
   logger.info(
     `[Invoke NPG for create form using payment method id: ${_req.params.id}] - Return success case`
   );
+  if (_req.query.recaptchaResponse == null) {
+    logger.error("Missing recaptchaResponse query param!");
+    res.status(404).send("Missing recaptchaResponse query param!");
+    return;
+  }
 
   const orderId = uuid().substring(0, 15);
   const postData = JSON.stringify({
