@@ -42,6 +42,11 @@ export const ecommerceVerify: RequestHandler = async (req, res) => {
     O.map(id => (!verifyErrorCase.includes(id) ? FlowCase.OK : id)),
     O.getOrElse(() => FlowCase.OK)
   );
+  if (req.query.recaptchaResponse == null) {
+    logger.error("Missing recaptchaResponse query param!");
+    res.status(404).send("Missing recaptchaResponse query param!");
+    return;
+  }
   switch (flowId) {
     case FlowCase.FAIL_VERIFY_400_PPT_STAZIONE_INT_PA_SCONOSCIUTA:
       return404ErrorStazioneIntTimeout(res);

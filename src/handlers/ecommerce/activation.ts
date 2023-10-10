@@ -131,6 +131,7 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
   const version = req.path.match(/\/ecommerce\/checkout\/(\w{2})/)?.slice(1);
   logger.info(`[Activation ecommerce] - version: ${version}`);
   if (req.query.recaptchaResponse == null) {
+    logger.error("Missing recaptchaResponse query param!");
     return404ResourceNotFound(res);
     return;
   }
