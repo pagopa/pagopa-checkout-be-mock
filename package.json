@@ -50,7 +50,7 @@
     "@pagopa/ts-commons": "^10.2.0",
     "@types/node-fetch": "^2.6.2",
     "cookie-parser": "^1.4.6",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-interceptor": "^1.2.0",
     "fp-ts": "^2.11.1",
     "hijackresponse": "^5.0.0",
