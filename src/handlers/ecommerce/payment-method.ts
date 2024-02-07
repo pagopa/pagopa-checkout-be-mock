@@ -43,6 +43,7 @@ export const buildCreateSessionResponse = (
   sessionResponse: { readonly jsonResponse: any; readonly orderId: string }
 ): CreateSessionResponse => ({
   orderId: sessionResponse.orderId,
+  correlationId: uuid(),
   paymentMethodData: {
     paymentMethod: "CARDS",
     form: sessionResponse.jsonResponse.fields as ReadonlyArray<Field>
