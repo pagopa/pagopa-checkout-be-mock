@@ -19,7 +19,6 @@ import { SendPaymentResultOutcomeEnum } from "../../generated/ecommerce/NewTrans
 export const NPG_GATEWAY = "NPG";
 
 export enum NpgErrorCode {
-  ERROR_CODE_000 = "000",
   ERROR_CODE_100 = "100",
   ERROR_CODE_101 = "101",
   ERROR_CODE_102 = "102",
@@ -63,10 +62,6 @@ export enum NpgErrorCode {
 }
 
 export const NpgErrorCodeToOutcome = new Map<FlowCase, NpgErrorCode>([
-  [
-    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_000,
-    NpgErrorCode.ERROR_CODE_000
-  ],
   [
     FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_100,
     NpgErrorCode.ERROR_CODE_100
@@ -406,19 +401,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             SendPaymentResultOutcomeEnum.NOT_RECEIVED
           )
         );
-    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_EXECUTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_AUTHORIZED:
       return res
         .status(200)
@@ -536,7 +518,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NpgAuthorizationStatus.THREEDS_FAILED
           )
         );
-    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_000:
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_100:
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_101:
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_102:
