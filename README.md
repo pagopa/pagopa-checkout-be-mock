@@ -235,6 +235,69 @@ The ecommerce transaction get transaction endpoint `/checkout/ecommerce/v1/trans
 | CANCELLATION_EXPIRED                               | 71           |  
 | UNAUTHORIZED                                       | 72           |  
 
+## Ecommerce final state flow for unauthorized transaction executed with NPG
+The ecommerce transaction get transaction endpoint `/checkout/ecommerce/v1/transactions/:transactionId` is driven by the following cookie mockFlow values:
+
+| COOKIE MOCK FLOW                                                    | RptId Suffix |
+|---------------------------------------------------------------------|--------------|
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_EXECUTED                          | 74           |
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_AUTHORIZED                        | 75           |
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_PENDING                           | 76           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_VOIDED                            | 77           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_REFUNDED                          | 78           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_FAILED                            | 79           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_CANCELED                          | 80           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DENIED_BY_RISK                    | 81           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_THREEDS_VALIDATED                 | 82           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_THREEDS_FAILED                    | 83           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_000           | 84           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_100           | 85           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_101           | 86           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_102           | 87           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_104           | 88           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_106           | 89           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_109           | 90           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_110           | 91           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_111           | 92           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_115           | 93           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_116           | 94           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_117           | 95           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_118           | 96           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_119           | 97           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_120           | 98           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_121           | 99           |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_122           | 100          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_123           | 101          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_124           | 102          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_125           | 103          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_126           | 104          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_129           | 105          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_200           | 106          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_202           | 107          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_204           | 108          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_208           | 109          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_209           | 110          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_210           | 111          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_413           | 112          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_888           | 113          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_902           | 114          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_903           | 115          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_904           | 116          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_906           | 117          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_907           | 118          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_908           | 119          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_909           | 120          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_911           | 121          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913           | 122          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999           | 123          |  
+| UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_UNKNOWN_ERROR_CODE | 124          |  
+
+
+
+
+
+
+
 For some state it is important to evaluate also the following properties:
  
  - Gateway: VPOS or XPAY
