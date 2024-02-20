@@ -293,11 +293,6 @@ The ecommerce transaction get transaction endpoint `/checkout/ecommerce/v1/trans
 | UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_UNKNOWN_ERROR_CODE | 124          |  
 
 
-
-
-
-
-
 For some state it is important to evaluate also the following properties:
  
  - Gateway: VPOS or XPAY
