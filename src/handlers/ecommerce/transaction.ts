@@ -16,6 +16,21 @@ import {
 import { TransactionStatusEnum } from "../../generated/ecommerce/TransactionStatus";
 import { SendPaymentResultOutcomeEnum } from "../../generated/ecommerce/NewTransactionResponse";
 
+export enum NpgAuthorizationStatus {
+  AUTHORIZED = "AUTHORIZED",
+  EXECUTED = "EXECUTED",
+  DECLINED = "DECLINED",
+  DENIED_BY_RISK = "DENIED_BY_RISK",
+  THREEDS_VALIDATED = "THREEDS_VALIDATED",
+  THREEDS_FAILED = "THREEDS_FAILED",
+  PENDING = "PENDING",
+  CANCELED = "CANCELED",
+  VOIDED = "VOIDED",
+  REFUNDED = "REFUNDED",
+  FAILED = "FAILED"
+}
+
+// eslint-disable-next-line max-lines-per-function, complexity
 export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
   logger.info("[Get transaction ecommerce] - Return success case");
   const gateway = getPaymentGatewayCookie(req);
@@ -176,6 +191,136 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             undefined,
             undefined,
             SendPaymentResultOutcomeEnum.NOT_RECEIVED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_EXECUTED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            "NPG",
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.EXECUTED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_AUTHORIZED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            "NPG",
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.AUTHORIZED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_PENDING:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            "NPG",
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.PENDING
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_VOIDED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            "NPG",
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.VOIDED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_REFUNDED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            "NPG",
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.REFUNDED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_FAILED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            "NPG",
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.FAILED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_CANCELED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            "NPG",
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.CANCELED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DENIED_BY_RISK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            "NPG",
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.DENIED_BY_RISK
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_THREEDS_VALIDATED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            "NPG",
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.THREEDS_VALIDATED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_THREEDS_FAILED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            "NPG",
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.THREEDS_FAILED
           )
         );
     default:

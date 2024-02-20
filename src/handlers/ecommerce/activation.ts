@@ -80,6 +80,19 @@ const esitoMappingCase = [
   FlowCase.CLOSED
 ];
 
+const npgUnauthorizedStatusCase = [
+  FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_EXECUTED,
+  FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_AUTHORIZED,
+  FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_PENDING,
+  FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_VOIDED,
+  FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_REFUNDED,
+  FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_FAILED,
+  FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_CANCELED,
+  FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DENIED_BY_RISK,
+  FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_THREEDS_VALIDATED,
+  FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_THREEDS_FAILED
+];
+
 const returnSuccessResponse = (
   req: express.Request,
   res: any,
@@ -157,6 +170,7 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
       !activationErrorCase.includes(id) &&
       !caluclateFeeCase.includes(id) &&
       !transactionUserCancelCase.includes(id) &&
+      !npgUnauthorizedStatusCase.includes(id) &&
       !esitoMappingCase.includes(id)
         ? FlowCase.OK
         : id
