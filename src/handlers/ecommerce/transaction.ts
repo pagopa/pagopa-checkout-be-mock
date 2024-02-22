@@ -550,6 +550,172 @@ export const closureErrorNpgErrorCode = new Map<FlowCase, NpgErrorCode>([
   ]
 ]);
 
+export const expiredTransactionForAuthCompletedNpgErrorCode = new Map<
+  FlowCase,
+  NpgErrorCode
+>([
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_100,
+    NpgErrorCode.ERROR_CODE_100
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_101,
+    NpgErrorCode.ERROR_CODE_101
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_102,
+    NpgErrorCode.ERROR_CODE_102
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_104,
+    NpgErrorCode.ERROR_CODE_104
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_106,
+    NpgErrorCode.ERROR_CODE_106
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_109,
+    NpgErrorCode.ERROR_CODE_109
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_110,
+    NpgErrorCode.ERROR_CODE_110
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_111,
+    NpgErrorCode.ERROR_CODE_111
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_115,
+    NpgErrorCode.ERROR_CODE_115
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_116,
+    NpgErrorCode.ERROR_CODE_116
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_117,
+    NpgErrorCode.ERROR_CODE_117
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_118,
+    NpgErrorCode.ERROR_CODE_118
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_119,
+    NpgErrorCode.ERROR_CODE_119
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_120,
+    NpgErrorCode.ERROR_CODE_120
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_121,
+    NpgErrorCode.ERROR_CODE_121
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_122,
+    NpgErrorCode.ERROR_CODE_122
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_123,
+    NpgErrorCode.ERROR_CODE_123
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_124,
+    NpgErrorCode.ERROR_CODE_124
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_125,
+    NpgErrorCode.ERROR_CODE_125
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_126,
+    NpgErrorCode.ERROR_CODE_126
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_129,
+    NpgErrorCode.ERROR_CODE_129
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_200,
+    NpgErrorCode.ERROR_CODE_200
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_202,
+    NpgErrorCode.ERROR_CODE_202
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_204,
+    NpgErrorCode.ERROR_CODE_204
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_208,
+    NpgErrorCode.ERROR_CODE_208
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_209,
+    NpgErrorCode.ERROR_CODE_209
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_210,
+    NpgErrorCode.ERROR_CODE_210
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_413,
+    NpgErrorCode.ERROR_CODE_413
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_888,
+    NpgErrorCode.ERROR_CODE_888
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_902,
+    NpgErrorCode.ERROR_CODE_902
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_903,
+    NpgErrorCode.ERROR_CODE_903
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_904,
+    NpgErrorCode.ERROR_CODE_904
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_906,
+    NpgErrorCode.ERROR_CODE_906
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_907,
+    NpgErrorCode.ERROR_CODE_907
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_908,
+    NpgErrorCode.ERROR_CODE_908
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_909,
+    NpgErrorCode.ERROR_CODE_909
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_911,
+    NpgErrorCode.ERROR_CODE_911
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_913,
+    NpgErrorCode.ERROR_CODE_913
+  ],
+  [
+    FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_999,
+    NpgErrorCode.ERROR_CODE_999
+  ],
+  [
+    FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC,
+    NpgErrorCode.UNKNOWN_ERROR_CODE
+  ]
+]);
+
 export enum NpgAuthorizationStatus {
   AUTHORIZED = "AUTHORIZED",
   EXECUTED = "EXECUTED",
@@ -564,13 +730,13 @@ export enum NpgAuthorizationStatus {
   FAILED = "FAILED"
 }
 
-// eslint-disable-next-line max-lines-per-function, complexity, sonarjs/max-switch-cases
+// eslint-disable-next-line max-lines-per-function, complexity
 export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
   logger.info("[Get transaction ecommerce] - Return success case");
   const gateway = getPaymentGatewayCookie(req);
   const errorCode = getErrorCodeCookie(req);
   const sendPaymentResultOutcome = getSendPaymentResultCookie(req);
-  // eslint-disable-next-line sonarjs/max-switch-cases
+  // eslint-disable-next-line sonarjs/max-switch-cases, sonarjs/no-duplicated-branches
   switch (getFlowCookie(req)) {
     case FlowCase.NOTIFICATION_REQUESTED:
       return res
@@ -1298,6 +1464,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           )
         );
     case FlowCase.NOTIFICATION_REQUESTED_WITH_NPG_AUTH_STATUS_EXECUTED_AND_END_PAYMENT_RESULT_OK:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
       return res
         .status(200)
         .send(
@@ -1311,6 +1478,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           )
         );
     case FlowCase.NOTIFICATION_REQUESTED_WITH_NPG_AUTH_STATUS_EXECUTED_AND_END_PAYMENT_RESULT_KO:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
       return res
         .status(200)
         .send(
@@ -1324,6 +1492,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           )
         );
     case FlowCase.NOTIFICATION_ERROR_WITH_NPG_AUTH_STATUS_EXECUTED_AND_END_PAYMENT_RESULT_OK:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_ERROR_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
       return res
         .status(200)
         .send(
@@ -1337,6 +1506,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           )
         );
     case FlowCase.NOTIFICATION_ERROR_WITH_NPG_AUTH_STATUS_EXECUTED_AND_END_PAYMENT_RESULT_KO:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_ERROR_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
       return res
         .status(200)
         .send(
@@ -1372,6 +1542,217 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             SendPaymentResultOutcomeEnum.KO,
+            NpgAuthorizationStatus.EXECUTED
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_REQUESTED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            undefined
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_EXECUTED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.EXECUTED
+          )
+        );
+
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_AUTHORIZED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.AUTHORIZED
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_PENDING:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.PENDING
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_VOIDED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.VOIDED
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_REFUNDED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.REFUNDED
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_FAILED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.FAILED
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_CANCELED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.CANCELED
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DENIED_BY_RISK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.DENIED_BY_RISK
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_THREEDS_VALIDATED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.THREEDS_VALIDATED
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_THREEDS_FAILED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.THREEDS_FAILED
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_100:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_101:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_102:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_104:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_106:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_109:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_110:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_111:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_115:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_116:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_117:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_118:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_119:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_120:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_121:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_122:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_123:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_124:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_125:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_126:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_129:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_200:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_202:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_204:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_208:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_209:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_210:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_413:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_888:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_902:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_903:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_904:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_906:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_907:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_908:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_909:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_911:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_913:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_999:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            expiredTransactionForAuthCompletedNpgErrorCode.get(
+              getFlowCookie(req)
+            ),
+            undefined,
+            NpgAuthorizationStatus.DECLINED
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_FOR_CLOSURE_REQUESTED_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_NOT_RECEIVED:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_CLOSURE_ERROR_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_NOT_RECEIVED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            NPG_GATEWAY,
+            undefined,
+            SendPaymentResultOutcomeEnum.NOT_RECEIVED,
             NpgAuthorizationStatus.EXECUTED
           )
         );
