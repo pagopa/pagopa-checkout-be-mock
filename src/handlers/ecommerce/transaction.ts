@@ -1538,7 +1538,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         .send(
           createSuccessGetTransactionEntity(
             req.params.transactionId,
-            TransactionStatusEnum.NOTIFIED_OK,
+            TransactionStatusEnum.NOTIFIED_KO,
             NPG_GATEWAY,
             undefined,
             SendPaymentResultOutcomeEnum.KO,
