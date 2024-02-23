@@ -174,7 +174,8 @@ export enum FlowCase {
   /* pagopa-ecommerce: waiting sendPaymentResult */
   CLOSED,
 
-  /** pagopa-ecommerce: handle final outcome page for NPG status */
+  /** start pagopa-ecommerce: handle final outcome page for NPG status */
+  /** Please note these tests are not used as a suffix of the rptId they only serve to reroute the flow for testing on the states of the CR pipeline of the checkout fe */
   // Status AUTHORIZATION_REQUESTED tests
   AUTHORIZATION_REQUESTED_NO_NPG_OUTCOME,
   // Status AUTHORIZATION_COMPLETED tests
@@ -403,6 +404,7 @@ export enum FlowCase {
 
   EXPIRED_TRANSACTION_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO,
   EXPIRED_TRANSACTION_FOR_NOTIFICATION_ERROR_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO
+  /** end pagopa-ecommerce: handle final outcome page for NPG status */
 }
 
 type FlowCaseKey = keyof typeof FlowCase;
