@@ -550,6 +550,169 @@ export const closureErrorNpgErrorCode = new Map<FlowCase, NpgErrorCode>([
   ]
 ]);
 
+export const unauthorizedNpgErrorCode = new Map<FlowCase, NpgErrorCode>([
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_100,
+    NpgErrorCode.ERROR_CODE_100
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_101,
+    NpgErrorCode.ERROR_CODE_101
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_102,
+    NpgErrorCode.ERROR_CODE_102
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_104,
+    NpgErrorCode.ERROR_CODE_104
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_106,
+    NpgErrorCode.ERROR_CODE_106
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_109,
+    NpgErrorCode.ERROR_CODE_109
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_110,
+    NpgErrorCode.ERROR_CODE_110
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_111,
+    NpgErrorCode.ERROR_CODE_111
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_115,
+    NpgErrorCode.ERROR_CODE_115
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_116,
+    NpgErrorCode.ERROR_CODE_116
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_117,
+    NpgErrorCode.ERROR_CODE_117
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_118,
+    NpgErrorCode.ERROR_CODE_118
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_119,
+    NpgErrorCode.ERROR_CODE_119
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_120,
+    NpgErrorCode.ERROR_CODE_120
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_121,
+    NpgErrorCode.ERROR_CODE_121
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_122,
+    NpgErrorCode.ERROR_CODE_122
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_123,
+    NpgErrorCode.ERROR_CODE_123
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_124,
+    NpgErrorCode.ERROR_CODE_124
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_125,
+    NpgErrorCode.ERROR_CODE_125
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_126,
+    NpgErrorCode.ERROR_CODE_126
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_129,
+    NpgErrorCode.ERROR_CODE_129
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_200,
+    NpgErrorCode.ERROR_CODE_200
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_202,
+    NpgErrorCode.ERROR_CODE_202
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_204,
+    NpgErrorCode.ERROR_CODE_204
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_208,
+    NpgErrorCode.ERROR_CODE_208
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_209,
+    NpgErrorCode.ERROR_CODE_209
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_210,
+    NpgErrorCode.ERROR_CODE_210
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_413,
+    NpgErrorCode.ERROR_CODE_413
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_888,
+    NpgErrorCode.ERROR_CODE_888
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_902,
+    NpgErrorCode.ERROR_CODE_902
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_903,
+    NpgErrorCode.ERROR_CODE_903
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_904,
+    NpgErrorCode.ERROR_CODE_904
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_906,
+    NpgErrorCode.ERROR_CODE_906
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_907,
+    NpgErrorCode.ERROR_CODE_907
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_908,
+    NpgErrorCode.ERROR_CODE_908
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_909,
+    NpgErrorCode.ERROR_CODE_909
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_911,
+    NpgErrorCode.ERROR_CODE_911
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913,
+    NpgErrorCode.ERROR_CODE_913
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999,
+    NpgErrorCode.ERROR_CODE_999
+  ],
+  [
+    FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC,
+    NpgErrorCode.UNKNOWN_ERROR_CODE
+  ]
+]);
+
 export const expiredTransactionForAuthCompletedNpgErrorCode = new Map<
   FlowCase,
   NpgErrorCode
@@ -1754,6 +1917,174 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             undefined,
             SendPaymentResultOutcomeEnum.NOT_RECEIVED,
             NpgAuthorizationStatus.EXECUTED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_AUTHORIZED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.AUTHORIZED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_PENDING:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.PENDING
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_VOIDED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.VOIDED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_REFUNDED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.REFUNDED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_FAILED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.FAILED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_CANCELED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.CANCELED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DENIED_BY_RISK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.DENIED_BY_RISK
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_THREEDS_VALIDATED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.THREEDS_VALIDATED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_THREEDS_FAILED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.THREEDS_FAILED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_100:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_101:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_102:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_104:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_106:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_109:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_110:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_111:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_115:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_116:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_117:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_118:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_119:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_120:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_121:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_122:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_123:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_124:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_125:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_126:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_129:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_200:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_202:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_204:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_208:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_209:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_210:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_413:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_888:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_902:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_903:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_904:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_906:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_907:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_908:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_909:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_911:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            NPG_GATEWAY,
+            unauthorizedNpgErrorCode.get(getFlowCookie(req)),
+            undefined,
+            NpgAuthorizationStatus.DECLINED
           )
         );
     default:
