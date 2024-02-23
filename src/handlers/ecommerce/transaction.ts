@@ -1239,6 +1239,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_911:
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913:
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999:
+    case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC:
       return res
         .status(200)
         .send(
@@ -1420,6 +1421,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_911:
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913:
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999:
+    case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC:
       return res
         .status(200)
         .send(
@@ -1601,6 +1603,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_911:
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913:
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999:
+    case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC:
       return res
         .status(200)
         .send(
@@ -1891,6 +1894,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_911:
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_913:
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_999:
+    case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC:
       return res
         .status(200)
         .send(
@@ -2075,6 +2079,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_911:
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913:
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999:
+    case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC:
       return res
         .status(200)
         .send(
@@ -2085,6 +2090,45 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             unauthorizedNpgErrorCode.get(getFlowCookie(req)),
             undefined,
             NpgAuthorizationStatus.DECLINED
+          )
+        );
+    case FlowCase.REFUND_REQUESTED_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.REFUND_REQUESTED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.EXECUTED
+          )
+        );
+    case FlowCase.REFUND_ERROR_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.REFUND_ERROR,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.EXECUTED
+          )
+        );
+    case FlowCase.REFUNDED_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.REFUNDED,
+            NPG_GATEWAY,
+            undefined,
+            undefined,
+            NpgAuthorizationStatus.EXECUTED
           )
         );
     default:
