@@ -1445,7 +1445,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_ERROR,
             NPG_GATEWAY,
-            closureRequestedNpgErrorCode.get(getFlowCookie(req)),
+            closureErrorNpgErrorCode.get(getFlowCookie(req)),
             undefined,
             NpgAuthorizationStatus.DECLINED
           )
