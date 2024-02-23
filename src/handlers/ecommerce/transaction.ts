@@ -1463,7 +1463,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NpgAuthorizationStatus.EXECUTED
           )
         );
-    case FlowCase.NOTIFICATION_REQUESTED_WITH_NPG_AUTH_STATUS_EXECUTED_AND_END_PAYMENT_RESULT_OK:
+    case FlowCase.NOTIFICATION_REQUESTED_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
     case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
       return res
         .status(200)
@@ -1477,7 +1477,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NpgAuthorizationStatus.EXECUTED
           )
         );
-    case FlowCase.NOTIFICATION_REQUESTED_WITH_NPG_AUTH_STATUS_EXECUTED_AND_END_PAYMENT_RESULT_KO:
+    case FlowCase.NOTIFICATION_REQUESTED_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
     case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
       return res
         .status(200)
@@ -1491,7 +1491,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NpgAuthorizationStatus.EXECUTED
           )
         );
-    case FlowCase.NOTIFICATION_ERROR_WITH_NPG_AUTH_STATUS_EXECUTED_AND_END_PAYMENT_RESULT_OK:
+    case FlowCase.NOTIFICATION_ERROR_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
     case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_ERROR_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
       return res
         .status(200)
@@ -1505,7 +1505,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NpgAuthorizationStatus.EXECUTED
           )
         );
-    case FlowCase.NOTIFICATION_ERROR_WITH_NPG_AUTH_STATUS_EXECUTED_AND_END_PAYMENT_RESULT_KO:
+    case FlowCase.NOTIFICATION_ERROR_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
     case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_ERROR_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
       return res
         .status(200)
@@ -1519,7 +1519,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NpgAuthorizationStatus.EXECUTED
           )
         );
-    case FlowCase.NOTIFIED_OK_WITH_NPG_AUTH_STATUS_EXECUTED_AND_END_PAYMENT_RESULT_OK:
+    case FlowCase.NOTIFIED_OK_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
       return res
         .status(200)
         .send(
@@ -1532,7 +1532,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NpgAuthorizationStatus.EXECUTED
           )
         );
-    case FlowCase.NOTIFIED_KO_WITH_NPG_AUTH_STATUS_EXECUTED_AND_END_PAYMENT_RESULT_KO:
+    case FlowCase.NOTIFIED_KO_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
       return res
         .status(200)
         .send(
