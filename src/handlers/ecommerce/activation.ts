@@ -64,7 +64,7 @@ const authErrorCase = [
   FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND
 ];
 
-const esitoMappingCase = [
+const pgsEsitoMappingCase = [
   FlowCase.NOTIFICATION_REQUESTED,
   FlowCase.NOTIFICATION_ERROR,
   FlowCase.NOTIFIED_KO,
@@ -157,7 +157,7 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
       !activationErrorCase.includes(id) &&
       !caluclateFeeCase.includes(id) &&
       !transactionUserCancelCase.includes(id) &&
-      !esitoMappingCase.includes(id)
+      !pgsEsitoMappingCase.includes(id)
         ? FlowCase.OK
         : id
     ),

@@ -12,7 +12,8 @@ export const createSuccessGetTransactionEntity = (
   status: TransactionStatusEnum,
   gateway?: string,
   errorCode?: string,
-  sendPaymentResultOutcome?: SendPaymentResultOutcomeEnum
+  sendPaymentResultOutcome?: SendPaymentResultOutcomeEnum,
+  gatewayAuthorizationStatus?: string
 ): TransactionInfo => ({
   authToken:
     "eyJhbGciOiJIUzUxMiJ9.eyJ0cmFuc2FjdGlvbklkIjoiMTdhYzhkZTMtMjAzMy00YzQ2LWI1MzQtZjE5MTk2NmNlODRjIiwicnB0SWQiOiI3Nzc3Nzc3Nzc3NzMzMDIwMDAwMDAwMDAwMDAwMCIsImVtYWlsIjoibmFtZS5zdXJuYW1lQHBhZ29wYS5pdCIsInBheW1lbnRUb2tlbiI6IjRkNTAwZTk5MDg3MTQyMDJiNTU3NTFlZDZiMWRmZGYzIiwianRpIjoiODUxNjQ2NDQzMjUxMTQxIn0.Fl3PoDBgtEhDSMFR3unkAow8JAe2ztYDoxlu7h-q_ygmmGvO7zP5dlztELUQCofcmYwhB4L9EgSLNT-HbiJgKA",
@@ -20,6 +21,7 @@ export const createSuccessGetTransactionEntity = (
   errorCode,
   feeTotal: 99999999,
   gateway,
+  gatewayAuthorizationStatus,
   payments: [
     {
       amount: 1000 as AmountEuroCents,
