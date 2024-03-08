@@ -20,7 +20,7 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
     },
     {
       asset: "https://assets.cdn.io.italia.it/logos/apps/paga-con-postepay.png",
-      description: "Paga con Poste Pay",
+      description: "Paga con Postepay",
       id: "1c12349f-8133-42f3-ad96-7e6527d27a41",
       methodManagement: PaymentMethodManagementTypeEnum.REDIRECT,
       name: "Paga con Poste Pay",
@@ -34,10 +34,10 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
       status: PaymentMethodStatusEnum.ENABLED
     },
     {
-      description: "Paga con BancoPosta",
+      description: "Conto BancoPosta",
       id: "1123429f-8133-42f3-ad96-7e6527d27a43",
       methodManagement: PaymentMethodManagementTypeEnum.REDIRECT,
-      name: "Paga con BancoPosta",
+      name: "Conto BancoPosta",
       paymentTypeCode: "RBPR",
       ranges: [
         {
@@ -48,10 +48,10 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
       status: PaymentMethodStatusEnum.ENABLED
     },
     {
-      description: "Paga con BancoPosta per le imprese",
+      description: "BancoPosta Impresa",
       id: "1c12349f-8133-42f3-ad96-7e6527d27a40",
       methodManagement: PaymentMethodManagementTypeEnum.REDIRECT,
-      name: "Paga con BancoPosta per le imprese",
+      name: "BancoPosta Impresa",
       paymentTypeCode: "RBPB",
       ranges: [
         {
@@ -62,10 +62,10 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
       status: PaymentMethodStatusEnum.ENABLED
     },
     {
-      description: "Paga in conto Intesa",
+      description: "Conto Intesa Sanpaolo",
       id: "1c21234f-8133-42f3-ad96-7e6527d27a45",
       methodManagement: PaymentMethodManagementTypeEnum.REDIRECT,
-      name: "Paga in conto Intesa",
+      name: "Conto Intesa Sanpaolo",
       paymentTypeCode: "RPIC",
       ranges: [
         {
@@ -77,10 +77,10 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
     },
     {
       asset: "https://assets.cdn.io.italia.it/logos/apps/satispay.png",
-      description: "Paga con Satispay",
+      description: "Satispay",
       id: "0021234f-12345-42f3-ad96-7e6527d27a44",
       methodManagement: PaymentMethodManagementTypeEnum.REDIRECT,
-      name: "Paga con Satispay",
+      name: "Satispay",
       paymentTypeCode: "SATY",
       ranges: [
         {
