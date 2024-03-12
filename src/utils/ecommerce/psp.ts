@@ -10,7 +10,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
     {
       abi: "AMREX",
       bundleDescription: "bundle 1",
-      bundleName: "BUNDLE1",
+      bundleName: "BUNDLE1 - OLD",
       idBrokerPsp: "12344",
       idBundle: "123",
       idChannel: "aasd",
@@ -26,7 +26,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
     {
       abi: "AMREX",
       bundleDescription: "bundle 2",
-      bundleName: "BUNDLE2 ONUS",
+      bundleName: "BUNDLE2 ONUS - OLD",
       idBrokerPsp: "3243",
       idBundle: "456",
       idChannel: "aasd",
@@ -51,7 +51,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = ()
     {
       abi: "AMREX",
       bundleDescription: "bundle 3 OnUs",
-      bundleName: "BUNDLE3 OnUs",
+      bundleName: "BUNDLE3 OnUs - OLD",
       idBrokerPsp: "123445",
       idBundle: "789",
       idChannel: "aasd",
@@ -66,7 +66,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = ()
     {
       abi: "AMREX",
       bundleDescription: "bundle 4",
-      bundleName: "BUNDLE4",
+      bundleName: "BUNDLE4 - OLD",
       idBrokerPsp: "3243",
       idBundle: "012",
       idChannel: "aasd",
