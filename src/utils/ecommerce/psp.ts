@@ -19,6 +19,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
       onUs: false,
       paymentMethod: "paymentMethod1",
       primaryCiIncurredFee: 0,
+      pspBusinessName: "BUNDLE1",
       taxPayerFee: 10,
       touchpoint: "FHGHF"
     },
@@ -34,6 +35,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
       onUs: true,
       paymentMethod: "paymentMethod2",
       primaryCiIncurredFee: 0,
+      pspBusinessName: "BUNDLE2 ONUS",
       taxPayerFee: 15,
       touchpoint: "FHXHF"
     }
@@ -57,6 +59,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = ()
       idPsp: "PTG3",
       onUs: true,
       primaryCiIncurredFee: 0,
+      pspBusinessName: "BUNDLE3 ONUS",
       taxPayerFee: 20,
       touchpoint: "FHGHF"
     },
@@ -72,6 +75,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = ()
       onUs: false,
       paymentMethod: "paymentMethod4",
       primaryCiIncurredFee: 0,
+      pspBusinessName: "BUNDLE4",
       taxPayerFee: 25,
       touchpoint: "FHXHF"
     }
