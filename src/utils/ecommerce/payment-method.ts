@@ -2,7 +2,15 @@ import { NonNegativeInteger } from "@pagopa/ts-commons/lib/numbers";
 import { PaymentMethodsResponse } from "../../generated/ecommerce/PaymentMethodsResponse";
 import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
 import { PaymentMethodManagementTypeEnum } from "../../generated/ecommerce/PaymentMethodManagementType";
-import { cardBrandAssets } from "./psp";
+
+export const cardBrandAssets = {
+  AMEX: "https://assets.cdn.platform.pagopa.it/creditcard/amex.png",
+  DINERS: "https://assets.cdn.platform.pagopa.it/creditcard/diners.png",
+  MAESTRO: "https://assets.cdn.platform.pagopa.it/creditcard/maestro.png",
+  MASTERCARD: "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
+  MC: "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
+  VISA: "https://assets.cdn.platform.pagopa.it/creditcard/visa.png"
+};
 
 export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
   paymentMethods: [

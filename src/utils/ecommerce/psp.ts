@@ -3,15 +3,7 @@ import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
 import { CalculateFeeResponse } from "../../generated/ecommerce/CalculateFeeResponse";
-
-export const cardBrandAssets = {
-  AMEX: "https://assets.cdn.platform.pagopa.it/creditcard/amex.png",
-  DINERS: "https://assets.cdn.platform.pagopa.it/creditcard/diners.png",
-  MAESTRO: "https://assets.cdn.platform.pagopa.it/creditcard/maestro.png",
-  MASTERCARD: "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
-  MC: "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
-  VISA: "https://assets.cdn.platform.pagopa.it/creditcard/visa.png"
-};
+import { cardBrandAssets } from "./payment-method";
 
 export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold = (): CalculateFeeResponse => ({
   asset: "https://assets.cdn.platform.pagopa.it/creditcard/generic.png",
