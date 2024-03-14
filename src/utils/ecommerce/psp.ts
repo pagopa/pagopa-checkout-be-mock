@@ -4,8 +4,19 @@ import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
 import { CalculateFeeResponse } from "../../generated/ecommerce/CalculateFeeResponse";
 
+export const cardBrandAssets = {
+  AMEX: "https://assets.cdn.platform.pagopa.it/creditcard/amex.png",
+  DINERS: "https://assets.cdn.platform.pagopa.it/creditcard/diners.png",
+  MAESTRO: "https://assets.cdn.platform.pagopa.it/creditcard/maestro.png",
+  MASTERCARD: "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
+  MC: "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
+  VISA: "https://assets.cdn.platform.pagopa.it/creditcard/visa.png"
+};
+
 export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold = (): CalculateFeeResponse => ({
+  asset: "https://assets.cdn.platform.pagopa.it/creditcard/generic.png",
   belowThreshold: true,
+  brandAssets: cardBrandAssets,
   bundles: [
     {
       abi: "AMREX",
@@ -44,7 +55,9 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
 });
 
 export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = (): CalculateFeeResponse => ({
+  asset: "https://assets.cdn.platform.pagopa.it/creditcard/generic.png",
   belowThreshold: false,
+  brandAssets: cardBrandAssets,
   bundles: [
     {
       abi: "AMREX",
