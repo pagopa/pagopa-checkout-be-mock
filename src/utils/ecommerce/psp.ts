@@ -3,9 +3,12 @@ import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
 import { CalculateFeeResponse } from "../../generated/ecommerce/CalculateFeeResponse";
+import { cardBrandAssets } from "./payment-method";
 
 export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold = (): CalculateFeeResponse => ({
+  asset: "https://assets.cdn.platform.pagopa.it/creditcard/generic.png",
   belowThreshold: true,
+  brandAssets: cardBrandAssets,
   bundles: [
     {
       abi: "AMREX",
@@ -46,7 +49,9 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
 });
 
 export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = (): CalculateFeeResponse => ({
+  asset: "https://assets.cdn.platform.pagopa.it/creditcard/generic.png",
   belowThreshold: false,
+  brandAssets: cardBrandAssets,
   bundles: [
     {
       abi: "AMREX",
