@@ -10,7 +10,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
     {
       abi: "AMREX",
       bundleDescription: "bundle 1",
-      bundleName: "BUNDLE1",
+      bundleName: "BUNDLE1 - OLD",
       idBrokerPsp: "12344",
       idBundle: "123",
       idChannel: "aasd",
@@ -19,13 +19,14 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
       onUs: false,
       paymentMethod: "paymentMethod1",
       primaryCiIncurredFee: 0,
+      pspBusinessName: "BUNDLE1",
       taxPayerFee: 10,
       touchpoint: "FHGHF"
     },
     {
       abi: "AMREX",
       bundleDescription: "bundle 2",
-      bundleName: "BUNDLE2 ONUS",
+      bundleName: "BUNDLE2 ONUS - OLD",
       idBrokerPsp: "3243",
       idBundle: "456",
       idChannel: "aasd",
@@ -34,6 +35,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
       onUs: true,
       paymentMethod: "paymentMethod2",
       primaryCiIncurredFee: 0,
+      pspBusinessName: "BUNDLE2 ONUS",
       taxPayerFee: 15,
       touchpoint: "FHXHF"
     }
@@ -49,7 +51,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = ()
     {
       abi: "AMREX",
       bundleDescription: "bundle 3 OnUs",
-      bundleName: "BUNDLE3 OnUs",
+      bundleName: "BUNDLE3 OnUs - OLD",
       idBrokerPsp: "123445",
       idBundle: "789",
       idChannel: "aasd",
@@ -57,13 +59,14 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = ()
       idPsp: "PTG3",
       onUs: true,
       primaryCiIncurredFee: 0,
+      pspBusinessName: "BUNDLE3 ONUS",
       taxPayerFee: 20,
       touchpoint: "FHGHF"
     },
     {
       abi: "AMREX",
       bundleDescription: "bundle 4",
-      bundleName: "BUNDLE4",
+      bundleName: "BUNDLE4 - OLD",
       idBrokerPsp: "3243",
       idBundle: "012",
       idChannel: "aasd",
@@ -72,6 +75,7 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = ()
       onUs: false,
       paymentMethod: "paymentMethod4",
       primaryCiIncurredFee: 0,
+      pspBusinessName: "BUNDLE4",
       taxPayerFee: 25,
       touchpoint: "FHXHF"
     }
