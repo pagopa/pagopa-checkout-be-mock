@@ -6,11 +6,13 @@ import * as O from "fp-ts/Option";
 import { logger } from "../../logger";
 import {
   createSuccessActivationResponseEntity,
-  error502SintassiXSD,
-  error504StazioneIntTimeout,
+  error400InvalidInput,
+  error404PagamentoSconosciuto,
+  error404StazioneIntPaSconosciuta,
   error409PagamentoInCorso,
-  error404DominioSconosciuto,
-  error404ResourceNotFound
+  error502GenericError,
+  error502PspSconosciuto,
+  error503StazioneIntPATimeout
 } from "../../utils/ecommerce/activation";
 import {
   FlowCase,
@@ -41,10 +43,14 @@ const transactionUserCancelCase = [
 ];
 
 const activationErrorCase = [
-  FlowCase.FAIL_ACTIVATE_502_PPT_SINTASSI_XSD,
-  FlowCase.FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT,
+  FlowCase.FAIL_ACTIVATE_400_INVALID_INPUT,
+  FlowCase.FAIL_ACTIVATE_404_PPT_STAZIONE_INT_PA_SCONOSCIUTA,
+  FlowCase.FAIL_ACTIVATE_404_PAA_PAGAMENTO_SCONOSCIUTO,
   FlowCase.FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO,
-  FlowCase.FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO,
+  FlowCase.FAIL_ACTIVATE_502_GENERIC_ERROR,
+  FlowCase.FAIL_ACTIVATE_502_PPT_PSP_SCONOSCIUTO,
+  FlowCase.FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_TIMEOUT,
+  FlowCase.FAIL_ACTIVATE_502_GENERIC_ERROR,
   FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_NOT_FOUND,
   FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS,
   FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS_2_RETRY,
@@ -96,45 +102,50 @@ const returnSuccessResponse = (
     );
 };
 
-const return502ErrorSintassiXSD = (res: any): void => {
-  logger.info(
-    "[Activation ecommerce] - Return 502 FAIL_VERIFY_502_PPT_SINTASSI_XSD"
-  );
-  res.status(502).send(error502SintassiXSD());
+const return400InvalidInputError = (res: any): void => {
+  logger.info("[Verify ecommerce] - Return 400 invalid input");
+  res.status(400).send(error400InvalidInput());
 };
 
-const return504ErrorStazioneIntPaTimeout = (res: any): void => {
+const return404ErrorStazioneIntPaSconosciuta = (res: any): void => {
   logger.info(
-    "[Activation ecommerce] - Return 504 FAIL_VERIFY_504_PPT_STAZIONE_INT_PA_TIMEOUT"
+    "[Activation ecommerce] - Return 404 PPT_STAZIONE_INT_PA_SCONOSCIUTA"
   );
-  res.status(504).send(error504StazioneIntTimeout());
+  res.status(404).send(error404StazioneIntPaSconosciuta());
 };
 
-const return409ErrorPagamentoInCorso = (res: any): void => {
+const return404PagamentoSconosciuto = (res: any): void => {
+  logger.info("[Activation ecommerce] - Return 404 PAA_PAGAMENTO_SCONOSCIUTO");
+  res.status(404).send(error404PagamentoSconosciuto());
+};
+
+const return409ErrorPamentoInCorso = (res: any): void => {
   logger.info("[Activation ecommerce] - Return 409 PPT_PAGAMENTO_IN_CORSO");
   res.status(409).send(error409PagamentoInCorso());
 };
 
-const return404ErrorDominioSconosciuto = (res: any): void => {
+const return502PspSconosciuto = (res: any): void => {
+  logger.info("[Activation ecommerce] - Return 502 PPT_PSP_SCONOSCIUTO");
+  res.status(502).send(error502PspSconosciuto());
+};
+
+const return502GenericError = (res: any): void => {
+  logger.info("[Activation ecommerce] - Return 502 GENERIC_ERROR category");
+  res.status(502).send(error502GenericError());
+};
+
+const return503StazioneIntPATimeout = (res: any): void => {
   logger.info(
-    "[Activation ecommerce] - Return 404 FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO"
+    "[Activation ecommerce] - Return 503 PPT_STAZIONE_INT_PA_Timeout"
   );
-  res.status(404).send(error404DominioSconosciuto());
+  res.status(503).send(error503StazioneIntPATimeout());
 };
 
-const return404ResourceNotFound = (res: any): void => {
-  logger.info("[Activation ecommerce] - Return 404 Resource not found");
-  res.status(404).send(error404ResourceNotFound());
-};
-
+// eslint-disable-next-line complexity
 export const ecommerceActivation: RequestHandler = async (req, res) => {
   const version = req.path.match(/\/ecommerce\/checkout\/(\w{2})/)?.slice(1);
   logger.info(`[Activation ecommerce] - version: ${version}`);
-  if (req.query.recaptchaResponse == null) {
-    logger.error("Missing recaptchaResponse query param!");
-    return404ResourceNotFound(res);
-    return;
-  }
+
   const sendPaymentResultOutcome = pipe(
     req.body.paymentNotices[0].rptId,
     getSendPaymentResultOutcomeFromRptId,
@@ -164,17 +175,26 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
     O.getOrElse(() => FlowCase.OK)
   );
   switch (flowId) {
-    case FlowCase.FAIL_ACTIVATE_502_PPT_SINTASSI_XSD:
-      return502ErrorSintassiXSD(res);
+    case FlowCase.FAIL_ACTIVATE_400_INVALID_INPUT:
+      return400InvalidInputError(res);
       break;
-    case FlowCase.FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT:
-      return504ErrorStazioneIntPaTimeout(res);
+    case FlowCase.FAIL_ACTIVATE_404_PPT_STAZIONE_INT_PA_SCONOSCIUTA:
+      return404ErrorStazioneIntPaSconosciuta(res);
+      break;
+    case FlowCase.FAIL_ACTIVATE_404_PAA_PAGAMENTO_SCONOSCIUTO:
+      return404PagamentoSconosciuto(res);
       break;
     case FlowCase.FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO:
-      return409ErrorPagamentoInCorso(res);
+      return409ErrorPamentoInCorso(res);
       break;
-    case FlowCase.FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO:
-      return404ErrorDominioSconosciuto(res);
+    case FlowCase.FAIL_ACTIVATE_502_GENERIC_ERROR:
+      return502GenericError(res);
+      break;
+    case FlowCase.FAIL_ACTIVATE_502_PPT_PSP_SCONOSCIUTO:
+      return502PspSconosciuto(res);
+      break;
+    case FlowCase.FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_TIMEOUT:
+      return503StazioneIntPATimeout(res);
       break;
     case FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_NOT_FOUND:
       returnSuccessResponse(req, res);
