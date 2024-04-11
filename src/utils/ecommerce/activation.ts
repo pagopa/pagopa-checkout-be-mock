@@ -6,19 +6,38 @@ import {
   NewTransactionResponse
 } from "../../generated/ecommerce/NewTransactionResponse";
 import { TransactionStatusEnum } from "../../generated/ecommerce/TransactionStatus";
-import { PartyConfigurationFaultPaymentProblemJson } from "../../generated/ecommerce/PartyConfigurationFaultPaymentProblemJson";
-import { PartyConfigurationFaultEnum } from "../../generated/ecommerce/PartyConfigurationFault";
-import { FaultCategoryEnum } from "../../generated/ecommerce/FaultCategory";
 import { PaymentInfo } from "../../generated/ecommerce/PaymentInfo";
-import { PartyTimeoutFaultPaymentProblemJson } from "../../generated/ecommerce/PartyTimeoutFaultPaymentProblemJson";
-import { PartyTimeoutFaultEnum } from "../../generated/ecommerce/PartyTimeoutFault";
-import { PaymentStatusFaultPaymentProblemJson } from "../../generated/ecommerce/PaymentStatusFaultPaymentProblemJson";
-import { PaymentStatusFaultEnum } from "../../generated/ecommerce/PaymentStatusFault";
-import { ValidationFaultPaymentProblemJson } from "../../generated/ecommerce/ValidationFaultPaymentProblemJson";
-import { ValidationFaultEnum } from "../../generated/ecommerce/ValidationFault";
 import { AmountEuroCents } from "../../generated/ecommerce/AmountEuroCents";
-import { GatewayFaultPaymentProblemJson } from "../../generated/ecommerce/GatewayFaultPaymentProblemJson";
-import { GatewayFaultEnum } from "../../generated/ecommerce/GatewayFault";
+import { PaymentOngoingStatusFaultEnum } from "../../generated/ecommerce/PaymentOngoingStatusFault";
+import {
+  PaymentOngoingStatusFaultPaymentProblemJson,
+  FaultCodeCategoryEnum as PaymentOngoingFaultCodeCategoryEnum
+} from "../../generated/ecommerce/PaymentOngoingStatusFaultPaymentProblemJson";
+import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
+import { ValidationFaultPaymentDataErrorEnum } from "../../generated/ecommerce/ValidationFaultPaymentDataError";
+import {
+  FaultCodeCategoryEnum as PaymentDataErrorFaultCategoryEnum,
+  ValidationFaultPaymentDataErrorProblemJson
+} from "../../generated/ecommerce/ValidationFaultPaymentDataErrorProblemJson";
+import { ValidationFaultPaymentUnavailableEnum } from "../../generated/ecommerce/ValidationFaultPaymentUnavailable";
+import {
+  FaultCodeCategoryEnum as PaymentUnavailableFaultCategoryEnum,
+  ValidationFaultPaymentUnavailableProblemJson
+} from "../../generated/ecommerce/ValidationFaultPaymentUnavailableProblemJson";
+import { PartyConfigurationFaultEnum } from "../../generated/ecommerce/PartyConfigurationFault";
+import {
+  PartyConfigurationFaultPaymentProblemJson,
+  FaultCodeCategoryEnum as PartyConfigurationFaultCategoryEnum
+} from "../../generated/ecommerce/PartyConfigurationFaultPaymentProblemJson";
+import {
+  ValidationFaultPaymentUnknownProblemJson,
+  FaultCodeCategoryEnum as ValidationFaultPaymentUnknownFaultCategoryEnum
+} from "../../generated/ecommerce/ValidationFaultPaymentUnknownProblemJson";
+import { ValidationFaultPaymentUnknownEnum } from "../../generated/ecommerce/ValidationFaultPaymentUnknown";
+import {
+  GatewayFaultPaymentProblemJson,
+  FaultCodeCategoryEnum as GatewayFaultCategoryEnum
+} from "../../generated/ecommerce/GatewayFaultPaymentProblemJson";
 
 export const fillRequestPaymentInfoWithMockData = (
   paymentsInfo?: ReadonlyArray<PaymentInfo>
@@ -65,32 +84,44 @@ export const createSuccessActivationResponseEntity = (
   transactionId
 });
 
-export const error502SintassiXSD = (): PartyConfigurationFaultPaymentProblemJson => ({
-  faultCodeCategory: FaultCategoryEnum.PAYMENT_UNAVAILABLE,
-  faultCodeDetail: PartyConfigurationFaultEnum.PAA_SINTASSI_XSD,
-  title: "EC error"
+export const error400InvalidInput = (): ProblemJson => ({
+  title: "Invalid input"
 });
 
-export const error504StazioneIntTimeout = (): PartyTimeoutFaultPaymentProblemJson => ({
-  faultCodeCategory: FaultCategoryEnum.PAYMENT_UNAVAILABLE,
-  faultCodeDetail: PartyTimeoutFaultEnum.PPT_STAZIONE_INT_PA_TIMEOUT,
-  title: "EC error"
+export const error404StazioneIntPaSconosciuta = (): ValidationFaultPaymentDataErrorProblemJson => ({
+  faultCodeCategory: PaymentDataErrorFaultCategoryEnum.PAYMENT_DATA_ERROR,
+  faultCodeDetail:
+    ValidationFaultPaymentDataErrorEnum.PPT_STAZIONE_INT_PA_SCONOSCIUTA,
+  title: "Validation Fault"
 });
 
-export const error409PagamentoInCorso = (): PaymentStatusFaultPaymentProblemJson => ({
-  faultCodeCategory: FaultCategoryEnum.PAYMENT_UNAVAILABLE,
-  faultCodeDetail: PaymentStatusFaultEnum.PPT_PAGAMENTO_IN_CORSO,
-  title: "EC error"
+export const error404PagamentoSconosciuto = (): ValidationFaultPaymentUnknownProblemJson => ({
+  faultCodeCategory:
+    ValidationFaultPaymentUnknownFaultCategoryEnum.PAYMENT_UNKNOWN,
+  faultCodeDetail: ValidationFaultPaymentUnknownEnum.PAA_PAGAMENTO_SCONOSCIUTO,
+  title: "Payment Unknown Fault"
 });
 
-export const error404DominioSconosciuto = (): ValidationFaultPaymentProblemJson => ({
-  faultCodeCategory: FaultCategoryEnum.PAYMENT_UNAVAILABLE,
-  faultCodeDetail: ValidationFaultEnum.PPT_DOMINIO_SCONOSCIUTO,
-  title: "EC error"
+export const error409PagamentoInCorso = (): PaymentOngoingStatusFaultPaymentProblemJson => ({
+  faultCodeCategory: PaymentOngoingFaultCodeCategoryEnum.PAYMENT_ONGOING,
+  faultCodeDetail: PaymentOngoingStatusFaultEnum.PAA_PAGAMENTO_IN_CORSO,
+  title: "Validation Fault"
 });
 
-export const error404ResourceNotFound = (): GatewayFaultPaymentProblemJson => ({
-  faultCodeCategory: FaultCategoryEnum.GENERIC_ERROR,
-  faultCodeDetail: GatewayFaultEnum.GENERIC_ERROR,
-  title: "Resource Not Found"
+export const error502PspSconosciuto = (): ValidationFaultPaymentUnavailableProblemJson => ({
+  faultCodeCategory: PaymentUnavailableFaultCategoryEnum.PAYMENT_UNAVAILABLE,
+  faultCodeDetail: ValidationFaultPaymentUnavailableEnum.PPT_PSP_SCONOSCIUTO,
+  title: "Payment Unavailable Fault"
+});
+
+export const error503StazioneIntPATimeout = (): PartyConfigurationFaultPaymentProblemJson => ({
+  faultCodeCategory: PartyConfigurationFaultCategoryEnum.DOMAIN_UNKNOWN,
+  faultCodeDetail: PartyConfigurationFaultEnum.PPT_STAZIONE_INT_PA_TIMEOUT,
+  title: "Party configuration Fault"
+});
+
+export const error502GenericError = (): GatewayFaultPaymentProblemJson => ({
+  faultCodeCategory: GatewayFaultCategoryEnum.GENERIC_ERROR,
+  faultCodeDetail: "NODE_ERROR_NOT_HANDLED",
+  title: "Generic Error Fault"
 });

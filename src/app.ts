@@ -1,17 +1,17 @@
+/* eslint-disable extra-rules/no-commented-out-code */
 /* eslint-disable sort-keys */
 import * as express from "express";
 import { toExpressHandler } from "@pagopa/ts-commons/lib/express";
 import * as cookieParser from "cookie-parser";
 // import { createProxyMiddleware } from "http-proxy-middleware";
-import { ResponseErrorInternal } from "@pagopa/ts-commons/lib/responses";
-import {
-  activatePaymentHandler,
-  cancelPayment,
-  checkPaymentStatusHandler,
-  getPaymentInfoHandler,
-  pay3ds2Handler,
-  paymentCheckHandler
-} from "./handlers/payments";
+// import {
+//   activatePaymentHandler,
+//   cancelPayment,
+//   checkPaymentStatusHandler,
+//   getPaymentInfoHandler,
+//   pay3ds2Handler,
+//   paymentCheckHandler
+// } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
 import { addWalletHandler, updateWalletHandler } from "./handlers/wallet";
 import {
@@ -19,8 +19,8 @@ import {
   resume3ds2Handler
 } from "./handlers/transactions";
 import { getPspListHandler } from "./handlers/psps";
-import { ID_PAYMENT, SESSION_USER, USER_DATA } from "./constants";
-import { logger } from "./logger";
+import { ID_PAYMENT, SESSION_USER } from "./constants";
+// import { logger } from "./logger";
 import { authRequestVpos, authRequestXpay } from "./handlers/pgs";
 import { ecommerceActivation } from "./handlers/ecommerce/activation";
 import {
@@ -108,10 +108,11 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   app.use(router);
 
-  router.get(
-    "/pp-restapi/v4/payments/:id/actions/check",
-    paymentCheckHandler(ID_PAYMENT, USER_DATA)
-  );
+  // router.get(
+  //   "/pp-restapi/v4/payments/:id/actions/check",
+  // eslint-disable-next-line extra-rules/no-commented-out-code
+  //   paymentCheckHandler(ID_PAYMENT, USER_DATA)
+  // );
 
   router.post(
     "/pp-restapi/v4/users/actions/start-session",
@@ -125,17 +126,18 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.post("/pp-restapi/v4/wallet", toExpressHandler(addWalletHandler()));
 
-  router.post(
-    "/pp-restapi/v4/payments/:id/actions/pay3ds2",
-    toExpressHandler(pay3ds2Handler(USER_DATA))
-  );
+  // router.post(
+  //   "/pp-restapi/v4/payments/:id/actions/pay3ds2",
+  // eslint-disable-next-line extra-rules/no-commented-out-code
+  //   toExpressHandler(pay3ds2Handler(USER_DATA))
+  // );
 
   router.get(
     "/pp-restapi/v4/transactions/:id/actions/check",
     toExpressHandler(checkTransactionHandler(ID_PAYMENT))
   );
 
-  router.delete("/pp-restapi/v4/payments/:id/actions/delete", cancelPayment);
+  // router.delete("/pp-restapi/v4/payments/:id/actions/delete", cancelPayment);
 
   router.post(
     "/pp-restapi/v4/transactions/:transactionData/actions/resume3ds2",
@@ -146,28 +148,28 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.put("/pp-restapi/v4/wallet/:id", updateWalletHandler);
 
-  app.get(
-    "/checkout/payments/v1/payment-requests/:rptId",
-    async (req, res, _next) => {
-      try {
-        return await getPaymentInfoHandler(ID_PAYMENT)(req, res);
-      } catch (e) {
-        logger.error("Got error while executing request handler:");
-        logger.error(e);
-        return ResponseErrorInternal("").apply(res);
-      }
-    }
-  );
+  // app.get(
+  //   "/checkout/payments/v1/payment-requests/:rptId",
+  //   async (req, res, _next) => {
+  //     try {
+  //       return await getPaymentInfoHandler(ID_PAYMENT)(req, res);
+  //     } catch (e) {
+  //       logger.error("Got error while executing request handler:");
+  //       logger.error(e);
+  //       return ResponseErrorInternal("").apply(res);
+  //     }
+  //   }
+  // );
 
-  app.post(
-    "/checkout/payments/v1/payment-activations",
-    toExpressHandler(activatePaymentHandler())
-  );
+  // app.post(
+  //   "/checkout/payments/v1/payment-activations",
+  //   toExpressHandler(activatePaymentHandler())
+  // );
 
-  app.get(
-    "/checkout/payments/v1/payment-activations/:codiceContestoPagamento",
-    toExpressHandler(checkPaymentStatusHandler(ID_PAYMENT))
-  );
+  // app.get(
+  //   "/checkout/payments/v1/payment-activations/:codiceContestoPagamento",
+  //   toExpressHandler(checkPaymentStatusHandler(ID_PAYMENT))
+  // );
 
   // app.use(
   //   createProxyMiddleware("/checkout/payment-transactions", {
