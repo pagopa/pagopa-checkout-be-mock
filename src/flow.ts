@@ -173,6 +173,7 @@ export enum FlowCase {
   UNAUTHORIZED,
   /* pagopa-ecommerce: waiting sendPaymentResult */
   CLOSED,
+  FAIL_AUTH_REQUEST_5XX,
   /** start pagopa-ecommerce: handle final outcome page for NPG status */
   /** Please note these tests are not used as a suffix of the rptId they only serve to reroute the flow for testing on the states of the CR pipeline of the checkout fe */
   // Status AUTHORIZATION_REQUESTED tests
@@ -457,7 +458,6 @@ export enum FlowCase {
   REFUND_REQUESTED_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED,
   REFUND_ERROR_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED,
   REFUNDED_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED
-
   /** end pagopa-ecommerce: handle final outcome page for NPG status */
 }
 

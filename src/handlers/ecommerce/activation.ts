@@ -67,7 +67,8 @@ const activationErrorCase = [
 
 const authErrorCase = [
   FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED,
-  FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND
+  FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND,
+  FlowCase.FAIL_AUTH_REQUEST_5XX
 ];
 
 const pgsEsitoMappingCase = [

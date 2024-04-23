@@ -187,6 +187,7 @@ The list of possible flow cases:
 | ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_CHALLENGE_DENY        | XXXXXXXXXXXXXXXXXXXXXXXXXXX52 | (not set)                                          | 06XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX |
 | ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_DENY | XXXXXXXXXXXXXXXXXXXXXXXXXXX53 | (not set)                                          | 07XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX |
 | ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_PAYMENT_NOT_FOUND     | XXXXXXXXXXXXXXXXXXXXXXXXXXX54 | (not set)                                          | 08XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX |
+| FAIL_AUTH_REQUEST_5XX                                         | XXXXXXXXXXXXXXXXXXXXXXXXXXX55 | FAIL_AUTH_REQUEST_5XX                              | (generic UUID)                       |
 
 ## Ecommerce calculate fees Flow
 The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` also drive the calculate fee result, since that api is empty of any information about `transactionId` or `rptId`. So using specific suffix for rptId in the activation post, it will success and we will sure to obtain specific result from calculate fee. The calculate fee api returns the `BundleOption` object. By its boolean field `belowThreshold` the checkout frontend will show different disclaimer. The suffix of the RPTID must be one of these [`55`,`56`,`57`]. `55` will drive for a response with `belowThreshold` in `BundleOption` as false. `56` will drive for a response with `belowThreshold` in `BundleOption` as true. To make the call fail use suffix `57`. The default behaviour (all other rptId) is the `belowThreshold` in `BundleOption` as true. Everyone of this suffix put a specific cookie value in the browser.
@@ -216,6 +217,7 @@ The ecommerce transaction auth-requests endpoint `/checkout/ecommerce/v1/transac
 | OK                                                 | 200 success case                      |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         | 404 transactionId not fuond           |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED | 409 transaction already processed     |   
+| FAIL_AUTH_REQUEST_5XX                              | 502 bad gateway                       |   
 
 ## Ecommerce final state flow
 The ecommerce transaction get transaction endpoint `/checkout/ecommerce/v1/transactions/:transactionId` is driven by the following cookie mockFlow values:
