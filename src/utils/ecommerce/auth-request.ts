@@ -22,6 +22,13 @@ export const createSuccessAuthRequestResponseEntityFromNPG = (_value: {
     encode(_value.jsonResponse.fieldSet.fields[0].src)
 });
 
+export const error5XX = (): ProblemJson => ({
+  detail: "Bad gateway auth request error",
+  instance: "Bad gateway example instance",
+  status: 500 as HttpStatusCode,
+  title: "Bad Gateway"
+});
+
 export const error404TransactionIdNotFound = (
   transactionId: string
 ): ProblemJson => ({
