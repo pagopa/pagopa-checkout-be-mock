@@ -18,6 +18,8 @@ import { SendPaymentResultOutcomeEnum } from "../../generated/ecommerce/NewTrans
 
 export const NPG_GATEWAY = "NPG";
 
+export const REDIRECT_GATEWAY = "REDIRECT";
+
 export enum NpgErrorCode {
   ERROR_CODE_100 = "100",
   ERROR_CODE_101 = "101",
@@ -891,6 +893,14 @@ export enum NpgAuthorizationStatus {
   VOIDED = "VOIDED",
   REFUNDED = "REFUNDED",
   FAILED = "FAILED"
+}
+
+export enum RedirectAuthorizationStatus {
+  OK = "OK",
+  KO = "KO",
+  CANCELED = "CANCELED",
+  ERROR = "ERROR",
+  EXPIRED = "EXPIRED"
 }
 
 // eslint-disable-next-line max-lines-per-function, complexity
@@ -2129,6 +2139,490 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             undefined,
             undefined,
             NpgAuthorizationStatus.EXECUTED
+          )
+        );
+    case FlowCase.AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_KO:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.KO
+          )
+        );
+    case FlowCase.AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_CANCELED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.CANCELED
+          )
+        );
+    case FlowCase.AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_ERROR:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.ERROR
+          )
+        );
+    case FlowCase.AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_EXPIRED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.EXPIRED
+          )
+        );
+    case FlowCase.CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.CLOSURE_REQUESTED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_KO:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.CLOSURE_REQUESTED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.KO
+          )
+        );
+    case FlowCase.CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_CANCELED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.CLOSURE_REQUESTED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.CANCELED
+          )
+        );
+    case FlowCase.CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_ERROR:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.CLOSURE_REQUESTED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.ERROR
+          )
+        );
+    case FlowCase.CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_EXPIRED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.CLOSURE_REQUESTED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.EXPIRED
+          )
+        );
+    case FlowCase.CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.CLOSURE_ERROR,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_KO:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.CLOSURE_ERROR,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.KO
+          )
+        );
+    case FlowCase.CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_CANCELED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.CLOSURE_ERROR,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.CANCELED
+          )
+        );
+    case FlowCase.CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_ERROR:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.CLOSURE_ERROR,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.ERROR
+          )
+        );
+    case FlowCase.CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_EXPIRED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.CLOSURE_ERROR,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.EXPIRED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_KO:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.KO
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_CANCELED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.CANCELED
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_ERROR:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.ERROR
+          )
+        );
+    case FlowCase.UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_EXPIRED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.EXPIRED
+          )
+        );
+    case FlowCase.NOTIFICATION_REQUESTED_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.NOTIFICATION_REQUESTED,
+            REDIRECT_GATEWAY,
+            undefined,
+            SendPaymentResultOutcomeEnum.OK,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.NOTIFICATION_REQUESTED_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.UNAUTHORIZED,
+            REDIRECT_GATEWAY,
+            undefined,
+            SendPaymentResultOutcomeEnum.KO,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.NOTIFICATION_ERROR_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.NOTIFICATION_ERROR,
+            REDIRECT_GATEWAY,
+            undefined,
+            SendPaymentResultOutcomeEnum.OK,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.NOTIFICATION_ERROR_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.NOTIFICATION_ERROR,
+            REDIRECT_GATEWAY,
+            undefined,
+            SendPaymentResultOutcomeEnum.KO,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.NOTIFIED_OK_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.NOTIFIED_OK,
+            REDIRECT_GATEWAY,
+            undefined,
+            SendPaymentResultOutcomeEnum.OK,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.NOTIFIED_KO_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.NOTIFIED_KO,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_KO:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.KO
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_CANCELED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.CANCELED
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_EXPIRED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.EXPIRED
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_ERROR:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.ERROR
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_CLOSURE_REQUESTED_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_NOT_RECEIVED:
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_CLOSURE_ERROR_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_NOT_RECEIVED:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            REDIRECT_GATEWAY,
+            undefined,
+            SendPaymentResultOutcomeEnum.NOT_RECEIVED,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK:
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_ERROR_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            REDIRECT_GATEWAY,
+            undefined,
+            SendPaymentResultOutcomeEnum.OK,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.EXPIRED,
+            REDIRECT_GATEWAY,
+            undefined,
+            SendPaymentResultOutcomeEnum.KO,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_ERROR_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO:
+    case FlowCase.REFUND_REQUESTED_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.REFUND_REQUESTED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.REFUND_ERROR_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.REFUND_ERROR,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.OK
+          )
+        );
+    case FlowCase.REFUNDED_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res
+        .status(200)
+        .send(
+          createSuccessGetTransactionEntity(
+            req.params.transactionId,
+            TransactionStatusEnum.REFUNDED,
+            REDIRECT_GATEWAY,
+            undefined,
+            undefined,
+            RedirectAuthorizationStatus.OK
           )
         );
     default:
