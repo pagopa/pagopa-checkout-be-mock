@@ -205,9 +205,15 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   // TODO refactoring to handle errors scenario
   app.get("/ecommerce/checkout/v1/payment-methods", ecommerceGetPaymentMethods);
 
-  // payment-methods-service get psp by payment methods requests mock
+  // payment-methods-service get psp by payment methods V1 requests mock
   app.post(
     "/ecommerce/checkout/v1/payment-methods/:id/fees",
+    ecommerceGetPspByPaymentMethods
+  );
+
+  // payment-methods-service get psp by payment methods V2 requests mock
+  app.post(
+    "/ecommerce/checkout/v2/payment-methods/:id/fees",
     ecommerceGetPspByPaymentMethods
   );
 
