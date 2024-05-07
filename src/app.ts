@@ -28,7 +28,10 @@ import {
   ecommerceGetTransaction
 } from "./handlers/ecommerce/transaction";
 import { ecommerceVerify } from "./handlers/ecommerce/verify";
-import { ecommerceGetPspByPaymentMethods } from "./handlers/ecommerce/psp";
+import {
+  ecommerceGetPspByPaymentMethodsV1,
+  ecommerceGetPspByPaymentMethodsV2
+} from "./handlers/ecommerce/psp";
 import { ecommerceGetCart } from "./handlers/ecommerce/cart";
 import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import {
@@ -205,10 +208,16 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   // TODO refactoring to handle errors scenario
   app.get("/ecommerce/checkout/v1/payment-methods", ecommerceGetPaymentMethods);
 
-  // payment-methods-service get psp by payment methods requests mock
+  // payment-methods-service get psp by payment methods V1 requests mock
   app.post(
     "/ecommerce/checkout/v1/payment-methods/:id/fees",
-    ecommerceGetPspByPaymentMethods
+    ecommerceGetPspByPaymentMethodsV1
+  );
+
+  // payment-methods-service get psp by payment methods V2 requests mock
+  app.post(
+    "/ecommerce/checkout/v2/payment-methods/:id/fees",
+    ecommerceGetPspByPaymentMethodsV2
   );
 
   // payment-methods-service preauthorizations npg proxy
