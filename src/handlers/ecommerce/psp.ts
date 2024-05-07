@@ -5,6 +5,7 @@ import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { logger } from "../../logger";
 import {
+  Version,
   createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold,
   createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold,
   error400BadRequest
@@ -15,8 +16,10 @@ import { CalculateFeeRequest as CalculateFeeRequestV2 } from "../../generated/ec
 
 const handleCalculateFeeResponseBody = (
   req: Request,
-  res: Response
+  res: Response,
+  version: Version
 ): Response => {
+  logger.info(`[Calculate fees response] - handling ${version} request`);
   switch (getFlowCookie(req)) {
     case FlowCase.FAIL_CALCULATE_FEE:
       return res.status(400).send(error400BadRequest());
@@ -24,22 +27,30 @@ const handleCalculateFeeResponseBody = (
       return res
         .status(200)
         .send(
-          createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold()
+          createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold(
+            version
+          )
         );
     case FlowCase.OK_ABOVETHRESHOLD_CALUCLATE_FEE:
       return res
         .status(200)
-        .send(createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold());
+        .send(
+          createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold(
+            version
+          )
+        );
     default:
       return res
         .status(200)
         .send(
-          createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold()
+          createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold(
+            version
+          )
         );
   }
 };
 
-export const ecommerceGetPspByPaymentMethods: RequestHandler = async (
+export const ecommerceGetPspByPaymentMethodsV1: RequestHandler = async (
   req,
   res
 ) => {
@@ -57,7 +68,7 @@ export const ecommerceGetPspByPaymentMethods: RequestHandler = async (
     CalculateFeeRequest.decode,
     E.fold(
       () => res.status(400).send(error400BadRequest()),
-      () => handleCalculateFeeResponseBody(req, res)
+      () => handleCalculateFeeResponseBody(req, res, Version.V1)
     )
   );
 };
@@ -80,7 +91,7 @@ export const ecommerceGetPspByPaymentMethodsV2: RequestHandler = async (
     CalculateFeeRequestV2.decode,
     E.fold(
       () => res.status(400).send(error400BadRequest()),
-      () => handleCalculateFeeResponseBody(req, res)
+      () => handleCalculateFeeResponseBody(req, res, Version.V2)
     )
   );
 };

@@ -29,7 +29,7 @@ import {
 } from "./handlers/ecommerce/transaction";
 import { ecommerceVerify } from "./handlers/ecommerce/verify";
 import {
-  ecommerceGetPspByPaymentMethods,
+  ecommerceGetPspByPaymentMethodsV1,
   ecommerceGetPspByPaymentMethodsV2
 } from "./handlers/ecommerce/psp";
 import { ecommerceGetCart } from "./handlers/ecommerce/cart";
@@ -211,7 +211,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   // payment-methods-service get psp by payment methods V1 requests mock
   app.post(
     "/ecommerce/checkout/v1/payment-methods/:id/fees",
-    ecommerceGetPspByPaymentMethods
+    ecommerceGetPspByPaymentMethodsV1
   );
 
   // payment-methods-service get psp by payment methods V2 requests mock
