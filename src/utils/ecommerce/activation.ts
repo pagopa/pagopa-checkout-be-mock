@@ -120,6 +120,13 @@ export const error503StazioneIntPATimeout = (): PartyConfigurationFaultPaymentPr
   title: "Party configuration Fault"
 });
 
+export const error503StazioneIntPAErrorResponse = (): PartyConfigurationFaultPaymentProblemJson => ({
+  faultCodeCategory: PartyConfigurationFaultCategoryEnum.DOMAIN_UNKNOWN,
+  faultCodeDetail:
+    PartyConfigurationFaultEnum.PPT_STAZIONE_INT_PA_ERRORE_RESPONSE,
+  title: "EC error"
+});
+
 export const error502GenericError = (): GatewayFaultPaymentProblemJson => ({
   faultCodeCategory: GatewayFaultCategoryEnum.GENERIC_ERROR,
   faultCodeDetail: "NODE_ERROR_NOT_HANDLED",

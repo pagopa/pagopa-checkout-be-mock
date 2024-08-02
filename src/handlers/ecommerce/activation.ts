@@ -12,6 +12,7 @@ import {
   error409PagamentoInCorso,
   error502GenericError,
   error502PspSconosciuto,
+  error503StazioneIntPAErrorResponse,
   error503StazioneIntPATimeout
 } from "../../utils/ecommerce/activation";
 import {
@@ -51,6 +52,7 @@ const activationErrorCase = [
   FlowCase.FAIL_ACTIVATE_502_PPT_PSP_SCONOSCIUTO,
   FlowCase.FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_TIMEOUT,
   FlowCase.FAIL_ACTIVATE_502_GENERIC_ERROR,
+  FlowCase.FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE,
   FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_NOT_FOUND,
   FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS,
   FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS_2_RETRY,
@@ -142,6 +144,13 @@ const return503StazioneIntPATimeout = (res: any): void => {
   res.status(503).send(error503StazioneIntPATimeout());
 };
 
+const return503StazioneIntPAErrorResponse = (res: any): void => {
+  logger.info(
+    "[Activation ecommerce] - Return 503 PPT_STAZIONE_INT_PA_ERROR_RESPOONSE"
+  );
+  res.status(503).send(error503StazioneIntPAErrorResponse());
+};
+
 // eslint-disable-next-line complexity
 export const ecommerceActivation: RequestHandler = async (req, res) => {
   const version = req.path.match(/\/ecommerce\/checkout\/(\w{2})/)?.slice(1);
@@ -196,6 +205,9 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
       break;
     case FlowCase.FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_TIMEOUT:
       return503StazioneIntPATimeout(res);
+      break;
+    case FlowCase.FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE:
+      return503StazioneIntPAErrorResponse(res);
       break;
     case FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_NOT_FOUND:
       returnSuccessResponse(req, res);
