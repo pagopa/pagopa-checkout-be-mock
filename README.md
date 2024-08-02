@@ -118,6 +118,8 @@ This is currently implemented via a `mockFlow` cookie which is returned from the
 | NODO_TAKEN_IN_CHARGE                                  | 40        |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND            | 41        |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED    | 42        |
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED    | 74        |
+| FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE | 75        |
 
 ## XPAY Authorization Error Flow
 The XPAY authorization polling endpoint `/xpay/authorizations/:paymentAuthorizationId` require a paymentAuthorizationId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`. It will returns an error otherwise (404 - Not Found).
@@ -161,7 +163,7 @@ Here a brief explanation of the simulated flows:
 
 
 ## Ecommerce activation Error Flow
-The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a list of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`]. Also, if the rptId ends in `41` or `42` the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND or FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED in the mockFlow cookies to simulate the error in auth request.
+The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a list of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`,`75`]. Also, if the rptId ends in `41` or `42` the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND or FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED in the mockFlow cookies to simulate the error in auth request. if the rptId ends in `74`the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_5XX.
 In the remaining success cases, the cookie will be valued with OK to simulate a positive auth-request case.
 To generate transaction ids with prefixes useful for xpay and vpos calls, the suffix of the RPTID must be one of these [`43`,`44`,`45`,`46`,`47`,`48`,`49`,`50`,`51`,`52`,`53`,`54`]
 The list of possible flow cases:
@@ -187,7 +189,7 @@ The list of possible flow cases:
 | ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_CHALLENGE_DENY        | XXXXXXXXXXXXXXXXXXXXXXXXXXX52 | (not set)                                          | 06XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX |
 | ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_DENY | XXXXXXXXXXXXXXXXXXXXXXXXXXX53 | (not set)                                          | 07XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX |
 | ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_PAYMENT_NOT_FOUND     | XXXXXXXXXXXXXXXXXXXXXXXXXXX54 | (not set)                                          | 08XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX |
-| FAIL_AUTH_REQUEST_5XX                                         | XXXXXXXXXXXXXXXXXXXXXXXXXXX55 | FAIL_AUTH_REQUEST_5XX                              | (generic UUID)                       |
+| FAIL_AUTH_REQUEST_5XX                                         | XXXXXXXXXXXXXXXXXXXXXXXXXXX74 | FAIL_AUTH_REQUEST_5XX                              | (generic UUID)                       |
 
 ## Ecommerce calculate fees Flow
 The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` also drive the calculate fee result, since that api is empty of any information about `transactionId` or `rptId`. So using specific suffix for rptId in the activation post, it will success and we will sure to obtain specific result from calculate fee. The calculate fee api returns the `BundleOption` object. By its boolean field `belowThreshold` the checkout frontend will show different disclaimer. The suffix of the RPTID must be one of these [`55`,`56`,`57`]. `55` will drive for a response with `belowThreshold` in `BundleOption` as false. `56` will drive for a response with `belowThreshold` in `BundleOption` as true. To make the call fail use suffix `57`. The default behaviour (all other rptId) is the `belowThreshold` in `BundleOption` as true. Everyone of this suffix put a specific cookie value in the browser.

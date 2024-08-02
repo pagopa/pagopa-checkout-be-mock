@@ -102,7 +102,6 @@ export enum FlowCase {
   FAIL_ACTIVATE_404_PAA_PAGAMENTO_SCONOSCIUTO,
   FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_TIMEOUT,
   FAIL_ACTIVATE_502_GENERIC_ERROR,
-  FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE,
   /* pagopa-proxy: getActivationStatus */
   FAIL_PAYMENT_STATUS_400,
   FAIL_PAYMENT_STATUS_404,
@@ -175,6 +174,7 @@ export enum FlowCase {
   /* pagopa-ecommerce: waiting sendPaymentResult */
   CLOSED,
   FAIL_AUTH_REQUEST_5XX,
+  FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE,
   /** start pagopa-ecommerce: handle final outcome page for NPG status */
   /** Please note these tests are not used as a suffix of the rptId they only serve to reroute the flow for testing on the states of the CR pipeline of the checkout fe */
   // Status AUTHORIZATION_REQUESTED tests
