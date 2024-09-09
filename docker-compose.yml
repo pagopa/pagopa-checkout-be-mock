@@ -13,11 +13,5 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
-    networks:
-      - io-mock_io-fn
     volumes:
       - .:/usr/src/app
-
-networks:
-  io-mock_io-fn:
-    external: true
