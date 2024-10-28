@@ -206,3 +206,10 @@ export const error400BadRequest = (): ProblemJson => ({
   status: 400 as HttpStatusCode,
   title: "Invalid body request"
 });
+
+export const error404NotFound = (): ProblemJson => ({
+  // detail: `No bundle found for payment method with id: [${paymentMethodId}] and transaction amount: [${importo}] for touch point: [${clientId}]`,
+  detail: `No bundle found for payment method with id: [paymentMethodId] and transaction amount: [importo] for touch point: [clientId]`,
+  status: 404 as HttpStatusCode,
+  title: "Not found"
+});

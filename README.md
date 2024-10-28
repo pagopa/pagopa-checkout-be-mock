@@ -200,6 +200,7 @@ The ecommerce transaction fee/calculate endpoint `/ecommerce/checkout/v1/fee/cal
 | OK_ABOVETHRESHOLD_CALUCLATE_FEE                    | 200 success case belowThreshold false | 55           |
 | OK_BELOWTHRESHOLD_CALUCLATE_FEE                    | 200 success case belowThreshold true  | 56           |
 | FAIL_CALCULATE_FEE                                 | 400 bad request                       | 57           |  
+| NOT_FOUND_CALCULATE_FEE                            | 404 not fount                         | 76           |  
 
 ## Ecommerce transaction user cancel Flow
 The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` also drive the transaction cancel user result. So using specific suffix for rptId in the activation post, it will success and we will sure to obtain specific result from transaction user cancel api. The suffix of the RPTID must be one of these [`58`,`59`,`60`]. `58` will drive delete transaction response with success result and set flow cookie OK_TRANSACTION_USER_CANCEL. `59` will drive for a delete transaction error with 404 httpStatus and set cookie flow ID_NOT_FOUND_TRANSACTION_USER_CANCEL. `60` will drive for a delete transaction error with 500 httpStatus and set cookie flow INTERNAL_SERVER_ERROR_TRANSACTION_USER_CANCEL.
