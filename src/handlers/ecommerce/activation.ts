@@ -34,7 +34,8 @@ import {
 const caluclateFeeCase = [
   FlowCase.OK_ABOVETHRESHOLD_CALUCLATE_FEE,
   FlowCase.OK_BELOWTHRESHOLD_CALUCLATE_FEE,
-  FlowCase.FAIL_CALCULATE_FEE
+  FlowCase.FAIL_CALCULATE_FEE,
+  FlowCase.NOT_FOUND_CALCULATE_FEE
 ];
 
 const transactionUserCancelCase = [

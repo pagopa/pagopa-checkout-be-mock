@@ -206,3 +206,9 @@ export const error400BadRequest = (): ProblemJson => ({
   status: 400 as HttpStatusCode,
   title: "Invalid body request"
 });
+
+export const error404NotFound = (): ProblemJson => ({
+  detail: `No bundle found`,
+  status: 404 as HttpStatusCode,
+  title: "Not found"
+});
