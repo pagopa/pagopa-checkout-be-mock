@@ -1,4 +1,4 @@
-// eslint-disable-next-line sort-keys
+/* eslint-disable */
 import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
@@ -8,7 +8,7 @@ import { cardBrandAssets } from "./payment-method";
 
 export const enum Version {
   V1 = "V1",
-  V2 = "V2"
+  V2 = "V2",
 }
 
 const assetUrl = "https://assets.cdn.platform.pagopa.it/creditcard/generic.png";
@@ -32,7 +32,7 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV1 = (): 
       primaryCiIncurredFee: 0,
       pspBusinessName: "BUNDLE1",
       taxPayerFee: 10,
-      touchpoint: "FHGHF"
+      touchpoint: "FHGHF",
     },
     {
       abi: "AMREX",
@@ -48,12 +48,12 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV1 = (): 
       primaryCiIncurredFee: 0,
       pspBusinessName: "BUNDLE2 ONUS",
       taxPayerFee: 15,
-      touchpoint: "FHXHF"
-    }
+      touchpoint: "FHXHF",
+    },
   ],
   paymentMethodDescription: "payment method description (v1)",
   paymentMethodName: "test",
-  paymentMethodStatus: PaymentMethodStatusEnum.ENABLED
+  paymentMethodStatus: PaymentMethodStatusEnum.ENABLED,
 });
 
 const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThresholdV1 = (): CalculateFeeResponseV1 => ({
@@ -74,7 +74,7 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThresholdV1 = (): Cal
       primaryCiIncurredFee: 0,
       pspBusinessName: "BUNDLE3 ONUS",
       taxPayerFee: 20,
-      touchpoint: "FHGHF"
+      touchpoint: "FHGHF",
     },
     {
       abi: "AMREX",
@@ -90,12 +90,12 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThresholdV1 = (): Cal
       primaryCiIncurredFee: 0,
       pspBusinessName: "BUNDLE4",
       taxPayerFee: 25,
-      touchpoint: "FHXHF"
-    }
+      touchpoint: "FHXHF",
+    },
   ],
   paymentMethodDescription: "payment method description (v1)",
   paymentMethodName: "test",
-  paymentMethodStatus: PaymentMethodStatusEnum.ENABLED
+  paymentMethodStatus: PaymentMethodStatusEnum.ENABLED,
 });
 
 const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV2 = (): CalculateFeeResponseV2 => ({
@@ -115,7 +115,7 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV2 = (): 
       paymentMethod: "paymentMethod1",
       pspBusinessName: "BUNDLE1",
       taxPayerFee: 10,
-      touchpoint: "FHGHF"
+      touchpoint: "FHGHF",
     },
     {
       abi: "AMREX",
@@ -129,12 +129,12 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV2 = (): 
       paymentMethod: "paymentMethod2",
       pspBusinessName: "BUNDLE2 ONUS",
       taxPayerFee: 15,
-      touchpoint: "FHXHF"
-    }
+      touchpoint: "FHXHF",
+    },
   ],
   paymentMethodDescription: "payment method description (v2)",
   paymentMethodName: "test",
-  paymentMethodStatus: PaymentMethodStatusEnum.ENABLED
+  paymentMethodStatus: PaymentMethodStatusEnum.ENABLED,
 });
 
 const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThresholdV2 = (): CalculateFeeResponseV2 => ({
@@ -153,7 +153,7 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThresholdV2 = (): Cal
       onUs: true,
       pspBusinessName: "BUNDLE3 ONUS",
       taxPayerFee: 20,
-      touchpoint: "FHGHF"
+      touchpoint: "FHGHF",
     },
     {
       abi: "AMREX",
@@ -167,12 +167,12 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThresholdV2 = (): Cal
       paymentMethod: "paymentMethod4",
       pspBusinessName: "BUNDLE4",
       taxPayerFee: 25,
-      touchpoint: "FHXHF"
-    }
+      touchpoint: "FHXHF",
+    },
   ],
   paymentMethodDescription: "payment method description (v2)",
   paymentMethodName: "test",
-  paymentMethodStatus: PaymentMethodStatusEnum.ENABLED
+  paymentMethodStatus: PaymentMethodStatusEnum.ENABLED,
 });
 
 export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold = (
@@ -204,5 +204,5 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = (
 export const error400BadRequest = (): ProblemJson => ({
   detail: "Bad Reqeust",
   status: 400 as HttpStatusCode,
-  title: "Invalid body request"
+  title: "Invalid body request",
 });
