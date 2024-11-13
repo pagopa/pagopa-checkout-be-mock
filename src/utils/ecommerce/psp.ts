@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 // eslint-disable-next-line sort-keys
 import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
@@ -135,14 +136,14 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV2 = (): 
       abi: "03069",
       bundleDescription:
         "Clienti e non delle Banche del Gruppo Intesa Sanpaolo possono disporre pagamenti con carte di pagamento VISA-MASTERCARD",
-      bundleName: "Intesa Sanpaolo S.p.A",
+      bundleName: "Intesa Sanpaolo S.p.A.",
       idBrokerPsp: "00799960158",
       idBundle: "fbde6612-aa57-4985-9557-8a1c9284add4",
       idChannel: "00799960158_07",
       idPsp: "BCITITMM",
       onUs: false,
       paymentMethod: "CP",
-      pspBusinessName: "Intesa Sanpaolo S.p.A",
+      pspBusinessName: "Intesa Sanpaolo S.p.A.",
       taxPayerFee: 100,
       touchpoint: "CHECKOUT"
     }
@@ -189,14 +190,14 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThresholdV2 = (): Cal
       abi: "03069",
       bundleDescription:
         "Clienti e non delle Banche del Gruppo Intesa Sanpaolo possono disporre pagamenti con carte di pagamento VISA-MASTERCARD",
-      bundleName: "Intesa Sanpaolo S.p.A",
+      bundleName: "Intesa Sanpaolo S.p.A.",
       idBrokerPsp: "00799960158",
       idBundle: "fbde6612-aa57-4985-9557-8a1c9284add4",
       idChannel: "00799960158_07",
       idPsp: "BCITITMM",
       onUs: false,
       paymentMethod: "CP",
-      pspBusinessName: "Intesa Sanpaolo S.p.A",
+      pspBusinessName: "Intesa Sanpaolo S.p.A.",
       taxPayerFee: 100,
       touchpoint: "CHECKOUT"
     }
