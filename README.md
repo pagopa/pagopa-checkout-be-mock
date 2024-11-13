@@ -120,6 +120,7 @@ This is currently implemented via a `mockFlow` cookie which is returned from the
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED    | 42        |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED    | 74        |
 | FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE | 75        |
+| FAIL_ACTIVATE_502_PPT_WISP_SESSIONE_SCONOSCIUTA       | 76        |
 
 ## XPAY Authorization Error Flow
 The XPAY authorization polling endpoint `/xpay/authorizations/:paymentAuthorizationId` require a paymentAuthorizationId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`. It will returns an error otherwise (404 - Not Found).
@@ -163,7 +164,7 @@ Here a brief explanation of the simulated flows:
 
 
 ## Ecommerce activation Error Flow
-The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a list of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`,`75`]. Also, if the rptId ends in `41` or `42` the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND or FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED in the mockFlow cookies to simulate the error in auth request. if the rptId ends in `74`the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_5XX.
+The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a list of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`,`75`,`76`]. Also, if the rptId ends in `41` or `42` the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND or FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED in the mockFlow cookies to simulate the error in auth request. if the rptId ends in `74`the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_5XX.
 In the remaining success cases, the cookie will be valued with OK to simulate a positive auth-request case.
 To generate transaction ids with prefixes useful for xpay and vpos calls, the suffix of the RPTID must be one of these [`43`,`44`,`45`,`46`,`47`,`48`,`49`,`50`,`51`,`52`,`53`,`54`]
 The list of possible flow cases:
@@ -174,6 +175,7 @@ The list of possible flow cases:
 | FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT                 | XXXXXXXXXXXXXXXXXXXXXXXXXXX15 | (not set)                                          | (no)                                 |
 | FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO                      | XXXXXXXXXXXXXXXXXXXXXXXXXXX12 | (not set)                                          | (no)                                 |
 | FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO                     | XXXXXXXXXXXXXXXXXXXXXXXXXXX11 | (not set)                                          | (no)                                 |
+| FAIL_ACTIVATE_502_PPT_WISP_SESSIONE_SCONOSCIUTA               | XXXXXXXXXXXXXXXXXXXXXXXXXXX76 | (not set)                                          | (no)                                 |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND                    | XXXXXXXXXXXXXXXXXXXXXXXXXXX41 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         | (generic UUID)                       |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED            | XXXXXXXXXXXXXXXXXXXXXXXXXXX42 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED | (generic UUID)                       |
 | OK                                                            | XXXXXXXXXXXXXXXXXXXXXXXXXXXXX | OK                                                 | (generic UUID)                       |

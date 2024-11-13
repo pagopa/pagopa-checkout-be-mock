@@ -132,3 +132,9 @@ export const error502GenericError = (): GatewayFaultPaymentProblemJson => ({
   faultCodeDetail: "NODE_ERROR_NOT_HANDLED",
   title: "Generic Error Fault"
 });
+
+export const error502WispSessioneSconosciuta = (): GatewayFaultPaymentProblemJson => ({
+  faultCodeCategory: GatewayFaultCategoryEnum.GENERIC_ERROR,
+  faultCodeDetail: "PPT_WISP_SESSIONE_SCONOSCIUTA",
+  title: "Generic Error Fault"
+});

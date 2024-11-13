@@ -12,6 +12,7 @@ import {
   error409PagamentoInCorso,
   error502GenericError,
   error502PspSconosciuto,
+  error502WispSessioneSconosciuta,
   error503StazioneIntPAErrorResponse,
   error503StazioneIntPATimeout
 } from "../../utils/ecommerce/activation";
@@ -53,6 +54,7 @@ const activationErrorCase = [
   FlowCase.FAIL_ACTIVATE_502_PPT_PSP_SCONOSCIUTO,
   FlowCase.FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_TIMEOUT,
   FlowCase.FAIL_ACTIVATE_502_GENERIC_ERROR,
+  FlowCase.FAIL_ACTIVATE_502_PPT_WISP_SESSIONE_SCONOSCIUTA,
   FlowCase.FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE,
   FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_NOT_FOUND,
   FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_SUCCESS,
@@ -138,6 +140,13 @@ const return502GenericError = (res: any): void => {
   res.status(502).send(error502GenericError());
 };
 
+const return502WispSessioneSconoscoita = (res: any): void => {
+  logger.info(
+    "[Activation ecommerce] - Return 502 PPT_WISP_SESSIONE_SCONOSCIUTA"
+  );
+  res.status(502).send(error502WispSessioneSconosciuta());
+};
+
 const return503StazioneIntPATimeout = (res: any): void => {
   logger.info(
     "[Activation ecommerce] - Return 503 PPT_STAZIONE_INT_PA_Timeout"
@@ -209,6 +218,9 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
       break;
     case FlowCase.FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE:
       return503StazioneIntPAErrorResponse(res);
+      break;
+    case FlowCase.FAIL_ACTIVATE_502_PPT_WISP_SESSIONE_SCONOSCIUTA:
+      return502WispSessioneSconoscoita(res);
       break;
     case FlowCase.ACTIVATE_XPAY_TRANSACTION_ID_WITH_PREFIX_NOT_FOUND:
       returnSuccessResponse(req, res);
