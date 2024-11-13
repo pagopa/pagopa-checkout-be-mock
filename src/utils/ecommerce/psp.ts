@@ -106,7 +106,7 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV2 = (): 
     {
       abi: "33111",
       bundleDescription: "Pagamenti con carte",
-      bundleName: "Worldline Merchant Services Italia S.p.A.",
+      bundleName: "Worldline Merchant Services Italia",
       idBrokerPsp: "05963231005",
       idBundle: "98d24e9a-ab8b-48e3-ae84-f0c16c64db3b",
       idChannel: "05963231005_01",
@@ -135,7 +135,7 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV2 = (): 
       abi: "03069",
       bundleDescription:
         "Clienti e non delle Banche del Gruppo Intesa Sanpaolo possono disporre pagamenti con carte di pagamento VISA-MASTERCARD",
-      bundleName: "Intesa Sanpaolo S.p.A",
+      bundleName: "Intesa Sanpaolo",
       idBrokerPsp: "00799960158",
       idBundle: "fbde6612-aa57-4985-9557-8a1c9284add4",
       idChannel: "00799960158_07",
@@ -160,14 +160,14 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThresholdV2 = (): Cal
     {
       abi: "33111",
       bundleDescription: "Pagamenti con carte",
-      bundleName: "Worldline Merchant Services Italia S.p.A.",
+      bundleName: "Worldline Merchant Services Italia 2",
       idBrokerPsp: "05963231005",
       idBundle: "98d24e9a-ab8b-48e3-ae84-f0c16c64db3b",
       idChannel: "05963231005_01",
       idPsp: "BNLIITRR",
       onUs: true,
       paymentMethod: "CP",
-      pspBusinessName: "Worldline Merchant Services Italia S.p.A.",
+      pspBusinessName: "Worldline Merchant Services Italia S.p.A.2",
       taxPayerFee: 15,
       touchpoint: "CHECKOUT"
     },
@@ -189,14 +189,14 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThresholdV2 = (): Cal
       abi: "03069",
       bundleDescription:
         "Clienti e non delle Banche del Gruppo Intesa Sanpaolo possono disporre pagamenti con carte di pagamento VISA-MASTERCARD",
-      bundleName: "Intesa Sanpaolo S.p.A",
+      bundleName: "Intesa Sanpaolo 2",
       idBrokerPsp: "00799960158",
       idBundle: "fbde6612-aa57-4985-9557-8a1c9284add4",
       idChannel: "00799960158_07",
       idPsp: "BCITITMM",
       onUs: false,
       paymentMethod: "CP",
-      pspBusinessName: "Intesa Sanpaolo S.p.A",
+      pspBusinessName: "Intesa Sanpaolo S.p.A2",
       taxPayerFee: 100,
       touchpoint: "CHECKOUT"
     }
