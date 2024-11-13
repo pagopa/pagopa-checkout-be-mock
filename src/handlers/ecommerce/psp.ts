@@ -9,6 +9,7 @@ import {
   createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold,
   createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold,
   error400BadRequest,
+  error404NotFound
 } from "../../utils/ecommerce/psp";
 import { FlowCase, getFlowCookie } from "../../flow";
 import { CalculateFeeRequest } from "../../generated/ecommerce/CalculateFeeRequest";
@@ -29,6 +30,8 @@ const handleCalculateFeeResponseBody = (
   switch (getFlowCookie(req)) {
     case FlowCase.FAIL_CALCULATE_FEE:
       return res.status(400).send(error400BadRequest());
+    case FlowCase.NOT_FOUND_CALCULATE_FEE:
+      return res.status(404).send(error404NotFound());
     case FlowCase.OK_BELOWTHRESHOLD_CALUCLATE_FEE:
       return res
         .status(200)
@@ -103,5 +106,14 @@ export const ecommerceGetPspByPaymentMethodsError: RequestHandler = async (
     req.body,
     CalculateFeeRequest.decode,
     E.map(() => res.status(400).send(error400BadRequest()))
+  );
+};
+
+export const ecommerceGetPspNotFound: RequestHandler = async (req, res) => {
+  logger.info("[Get psps by payment method id ecommerce] - Return error case");
+  return pipe(
+    req.body,
+    CalculateFeeRequest.decode,
+    E.map(() => res.status(404).send(error404NotFound()))
   );
 };

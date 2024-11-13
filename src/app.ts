@@ -20,8 +20,6 @@ import {
 } from "./handlers/transactions";
 import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER } from "./constants";
-// import { logger } from "./logger";
-import { authRequestVpos, authRequestXpay } from "./handlers/pgs";
 import { ecommerceActivation } from "./handlers/ecommerce/activation";
 import {
   ecommerceDeleteTransaction,
@@ -254,18 +252,6 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.post(
     "/ecommerce/checkout/v1/transactions/:transactionId/auth-requests",
     ecommerceAuthRequest
-  );
-
-  // payment-transaction-gateway xpay authorization requests mock
-  app.get(
-    "/payment-transactions-gateway/web/v1/xpay/authorizations/:paymentAuthorizationId",
-    authRequestXpay
-  );
-
-  // payment-transaction-gateway vpos authorization requests mock
-  app.get(
-    "/payment-transactions-gateway/web/v1/vpos/authorizations/:paymentAuthorizationId",
-    authRequestVpos
   );
 
   return app;
