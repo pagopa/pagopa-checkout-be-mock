@@ -8,11 +8,17 @@ import {
   Version,
   createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold,
   createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold,
-  error400BadRequest
+  error400BadRequest,
 } from "../../utils/ecommerce/psp";
 import { FlowCase, getFlowCookie } from "../../flow";
 import { CalculateFeeRequest } from "../../generated/ecommerce/CalculateFeeRequest";
 import { CalculateFeeRequest as CalculateFeeRequestV2 } from "../../generated/ecommerce-v2/CalculateFeeRequest";
+
+// Define constants for repeated strings
+const ERROR_INVALID_TRANSACTION_ID =
+  "[Get psps by payment method id ecommerce] - Return error case invalid x-transaction-id";
+const SUCCESS_CASE_LOG =
+  "[Get psps by payment method id ecommerce] - Return success case";
 
 const handleCalculateFeeResponseBody = (
   req: Request,
@@ -55,14 +61,10 @@ export const ecommerceGetPspByPaymentMethodsV1: RequestHandler = async (
   res
 ) => {
   if (req.headers["x-transaction-id-from-client"] == null) {
-    logger.info(
-      "[Get psps by payment method id ecommerce] - Return error case invalid x-transaction-id"
-    );
+    logger.info(ERROR_INVALID_TRANSACTION_ID);
     return res.status(401).send();
   }
-  logger.info(
-    "[Get psps by payment method id ecommerce] - Return success case"
-  );
+  logger.info(SUCCESS_CASE_LOG);
   return pipe(
     req.body,
     CalculateFeeRequest.decode,
@@ -78,14 +80,10 @@ export const ecommerceGetPspByPaymentMethodsV2: RequestHandler = async (
   res
 ) => {
   if (req.headers["x-transaction-id-from-client"] == null) {
-    logger.info(
-      "[Get psps by payment method id ecommerce] - Return error case invalid x-transaction-id"
-    );
+    logger.info(ERROR_INVALID_TRANSACTION_ID);
     return res.status(401).send();
   }
-  logger.info(
-    "[Get psps by payment method id ecommerce] - Return success case"
-  );
+  logger.info(SUCCESS_CASE_LOG);
   return pipe(
     req.body,
     CalculateFeeRequestV2.decode,
