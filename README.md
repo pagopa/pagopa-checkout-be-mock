@@ -120,7 +120,8 @@ This is currently implemented via a `mockFlow` cookie which is returned from the
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED    | 42        |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED    | 74        |
 | FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE | 75        |
-| FAIL_ACTIVATE_502_PPT_WISP_SESSIONE_SCONOSCIUTA       | 76        |
+| NOT_FOUND_CALCULATE_FEE                               | 76        |
+| FAIL_ACTIVATE_502_PPT_WISP_SESSIONE_SCONOSCIUTA       | 77        |
 
 ## XPAY Authorization Error Flow
 The XPAY authorization polling endpoint `/xpay/authorizations/:paymentAuthorizationId` require a paymentAuthorizationId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`. It will returns an error otherwise (404 - Not Found).
