@@ -1,9 +1,10 @@
 /* eslint-disable max-params */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpStatusCode, ProblemJson } from "@pagopa/ts-commons/lib/responses";
 import { AmountEuroCents } from "../../generated/ecommerce/AmountEuroCents";
 import { ClientIdEnum } from "../../generated/ecommerce/NewTransactionResponse";
 import { RptId } from "../../generated/ecommerce/RptId";
-import { TransactionInfo } from "../../generated/ecommerce/TransactionInfo";
+import { TransactionInfo, TransactionInfo2ClosePaymentResultError } from "../../generated/ecommerce/TransactionInfo";
 import { TransactionStatusEnum } from "../../generated/ecommerce/TransactionStatus";
 import { SendPaymentResultOutcomeEnum } from "../../generated/ecommerce/NewTransactionResponse";
 
@@ -12,6 +13,7 @@ export const createSuccessGetTransactionEntity = (
   status: TransactionStatusEnum,
   gateway?: string,
   errorCode?: string,
+  closePaymentResultError?: TransactionInfo2ClosePaymentResultError,
   sendPaymentResultOutcome?: SendPaymentResultOutcomeEnum,
   gatewayAuthorizationStatus?: string
 ): TransactionInfo => ({
@@ -45,6 +47,7 @@ export const createSuccessGetTransactionEntity = (
       ]
     }
   ],
+  closePaymentResultError,
   sendPaymentResultOutcome,
   status,
   transactionId

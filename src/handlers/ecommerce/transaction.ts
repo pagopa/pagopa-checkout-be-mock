@@ -1090,6 +1090,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.EXECUTED
           )
         );
@@ -1101,6 +1102,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.AUTHORIZATION_COMPLETED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.AUTHORIZED
@@ -1116,6 +1118,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.PENDING
           )
         );
@@ -1127,6 +1130,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.AUTHORIZATION_COMPLETED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.VOIDED
@@ -1142,6 +1146,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.REFUNDED
           )
         );
@@ -1153,6 +1158,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.AUTHORIZATION_COMPLETED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.FAILED
@@ -1168,6 +1174,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.CANCELED
           )
         );
@@ -1179,6 +1186,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.AUTHORIZATION_COMPLETED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.DENIED_BY_RISK
@@ -1194,6 +1202,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.THREEDS_VALIDATED
           )
         );
@@ -1205,6 +1214,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.AUTHORIZATION_COMPLETED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.THREEDS_FAILED
@@ -1259,6 +1269,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             authCompletedNpgErrorCode.get(getFlowCookie(req)),
             undefined,
+            undefined,
             NpgAuthorizationStatus.DECLINED
           )
         );
@@ -1270,6 +1281,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_REQUESTED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.EXECUTED
@@ -1285,6 +1297,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.AUTHORIZED
           )
         );
@@ -1296,6 +1309,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_REQUESTED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.PENDING
@@ -1311,6 +1325,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.VOIDED
           )
         );
@@ -1322,6 +1337,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_REQUESTED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.REFUNDED
@@ -1337,6 +1353,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.FAILED
           )
         );
@@ -1348,6 +1365,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_REQUESTED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.CANCELED
@@ -1363,6 +1381,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.DENIED_BY_RISK
           )
         );
@@ -1376,6 +1395,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.THREEDS_VALIDATED
           )
         );
@@ -1387,6 +1407,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_REQUESTED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.THREEDS_FAILED
@@ -1441,6 +1462,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             closureRequestedNpgErrorCode.get(getFlowCookie(req)),
             undefined,
+            undefined,
             NpgAuthorizationStatus.DECLINED
           )
         );
@@ -1452,6 +1474,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_ERROR,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.EXECUTED
@@ -1467,6 +1490,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.AUTHORIZED
           )
         );
@@ -1478,6 +1502,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_ERROR,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.PENDING
@@ -1493,6 +1518,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.VOIDED
           )
         );
@@ -1504,6 +1530,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_ERROR,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.REFUNDED
@@ -1519,6 +1546,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.FAILED
           )
         );
@@ -1530,6 +1558,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_ERROR,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.CANCELED
@@ -1545,6 +1574,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.DENIED_BY_RISK
           )
         );
@@ -1558,6 +1588,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.THREEDS_VALIDATED
           )
         );
@@ -1569,6 +1600,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_ERROR,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.THREEDS_FAILED
@@ -1623,6 +1655,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             closureErrorNpgErrorCode.get(getFlowCookie(req)),
             undefined,
+            undefined,
             NpgAuthorizationStatus.DECLINED
           )
         );
@@ -1634,6 +1667,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             SendPaymentResultOutcomeEnum.NOT_RECEIVED,
             NpgAuthorizationStatus.EXECUTED
@@ -1649,6 +1683,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             TransactionStatusEnum.NOTIFICATION_REQUESTED,
             NPG_GATEWAY,
             undefined,
+            undefined,
             SendPaymentResultOutcomeEnum.OK,
             NpgAuthorizationStatus.EXECUTED
           )
@@ -1662,6 +1697,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.NOTIFICATION_REQUESTED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             SendPaymentResultOutcomeEnum.KO,
             NpgAuthorizationStatus.EXECUTED
@@ -1677,6 +1713,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             TransactionStatusEnum.NOTIFICATION_ERROR,
             NPG_GATEWAY,
             undefined,
+            undefined,
             SendPaymentResultOutcomeEnum.OK,
             NpgAuthorizationStatus.EXECUTED
           )
@@ -1691,6 +1728,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             TransactionStatusEnum.NOTIFICATION_ERROR,
             NPG_GATEWAY,
             undefined,
+            undefined,
             SendPaymentResultOutcomeEnum.KO,
             NpgAuthorizationStatus.EXECUTED
           )
@@ -1704,6 +1742,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             TransactionStatusEnum.NOTIFIED_OK,
             NPG_GATEWAY,
             undefined,
+            undefined,
             SendPaymentResultOutcomeEnum.OK,
             NpgAuthorizationStatus.EXECUTED
           )
@@ -1716,6 +1755,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.NOTIFIED_KO,
             NPG_GATEWAY,
+            undefined,
             undefined,
             SendPaymentResultOutcomeEnum.KO,
             NpgAuthorizationStatus.EXECUTED
@@ -1731,6 +1771,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             undefined
           )
         );
@@ -1742,6 +1783,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.EXPIRED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.EXECUTED
@@ -1758,6 +1800,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.AUTHORIZED
           )
         );
@@ -1769,6 +1812,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.EXPIRED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.PENDING
@@ -1784,6 +1828,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.VOIDED
           )
         );
@@ -1795,6 +1840,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.EXPIRED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.REFUNDED
@@ -1810,6 +1856,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.FAILED
           )
         );
@@ -1821,6 +1868,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.EXPIRED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.CANCELED
@@ -1836,6 +1884,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.DENIED_BY_RISK
           )
         );
@@ -1849,6 +1898,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.THREEDS_VALIDATED
           )
         );
@@ -1860,6 +1910,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.EXPIRED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.THREEDS_FAILED
@@ -1916,6 +1967,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
               getFlowCookie(req)
             ),
             undefined,
+            undefined,
             NpgAuthorizationStatus.DECLINED
           )
         );
@@ -1928,6 +1980,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.EXPIRED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             SendPaymentResultOutcomeEnum.NOT_RECEIVED,
             NpgAuthorizationStatus.EXECUTED
@@ -1943,6 +1996,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.AUTHORIZED
           )
         );
@@ -1954,6 +2008,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.UNAUTHORIZED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.PENDING
@@ -1969,6 +2024,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.VOIDED
           )
         );
@@ -1980,6 +2036,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.UNAUTHORIZED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.REFUNDED
@@ -1995,6 +2052,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.FAILED
           )
         );
@@ -2006,6 +2064,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.UNAUTHORIZED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.CANCELED
@@ -2021,6 +2080,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.DENIED_BY_RISK
           )
         );
@@ -2034,6 +2094,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.THREEDS_VALIDATED
           )
         );
@@ -2045,6 +2106,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.UNAUTHORIZED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.THREEDS_FAILED
@@ -2099,6 +2161,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             unauthorizedNpgErrorCode.get(getFlowCookie(req)),
             undefined,
+            undefined,
             NpgAuthorizationStatus.DECLINED
           )
         );
@@ -2110,6 +2173,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.REFUND_REQUESTED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.EXECUTED
@@ -2125,6 +2189,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             NPG_GATEWAY,
             undefined,
             undefined,
+            undefined,
             NpgAuthorizationStatus.EXECUTED
           )
         );
@@ -2136,6 +2201,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.REFUNDED,
             NPG_GATEWAY,
+            undefined,
             undefined,
             undefined,
             NpgAuthorizationStatus.EXECUTED
@@ -2151,6 +2217,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.OK
           )
         );
@@ -2162,6 +2229,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.AUTHORIZATION_COMPLETED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.KO
@@ -2177,6 +2245,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.CANCELED
           )
         );
@@ -2188,6 +2257,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.AUTHORIZATION_COMPLETED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.ERROR
@@ -2203,6 +2273,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.EXPIRED
           )
         );
@@ -2214,6 +2285,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_REQUESTED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.OK
@@ -2229,6 +2301,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.KO
           )
         );
@@ -2240,6 +2313,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_REQUESTED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.CANCELED
@@ -2255,6 +2329,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.ERROR
           )
         );
@@ -2266,6 +2341,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_REQUESTED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.EXPIRED
@@ -2281,6 +2357,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.OK
           )
         );
@@ -2292,6 +2369,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_ERROR,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.KO
@@ -2307,6 +2385,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.CANCELED
           )
         );
@@ -2318,6 +2397,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.CLOSURE_ERROR,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.ERROR
@@ -2333,6 +2413,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.EXPIRED
           )
         );
@@ -2344,6 +2425,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.UNAUTHORIZED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.OK
@@ -2359,6 +2441,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.KO
           )
         );
@@ -2370,6 +2453,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.UNAUTHORIZED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.CANCELED
@@ -2385,6 +2469,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.ERROR
           )
         );
@@ -2396,6 +2481,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.UNAUTHORIZED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.EXPIRED
@@ -2410,6 +2496,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             TransactionStatusEnum.NOTIFICATION_REQUESTED,
             REDIRECT_GATEWAY,
             undefined,
+            undefined,
             SendPaymentResultOutcomeEnum.OK,
             RedirectAuthorizationStatus.OK
           )
@@ -2422,6 +2509,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.UNAUTHORIZED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             SendPaymentResultOutcomeEnum.KO,
             RedirectAuthorizationStatus.OK
@@ -2436,6 +2524,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             TransactionStatusEnum.NOTIFICATION_ERROR,
             REDIRECT_GATEWAY,
             undefined,
+            undefined,
             SendPaymentResultOutcomeEnum.OK,
             RedirectAuthorizationStatus.OK
           )
@@ -2449,6 +2538,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             TransactionStatusEnum.NOTIFICATION_ERROR,
             REDIRECT_GATEWAY,
             undefined,
+            undefined,
             SendPaymentResultOutcomeEnum.KO,
             RedirectAuthorizationStatus.OK
           )
@@ -2461,6 +2551,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.NOTIFIED_OK,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             SendPaymentResultOutcomeEnum.OK,
             RedirectAuthorizationStatus.OK
@@ -2476,6 +2567,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.OK
           )
         );
@@ -2487,6 +2579,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.EXPIRED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.OK
@@ -2502,6 +2595,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.KO
           )
         );
@@ -2513,6 +2607,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.EXPIRED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.CANCELED
@@ -2528,6 +2623,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.EXPIRED
           )
         );
@@ -2539,6 +2635,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.EXPIRED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.ERROR
@@ -2554,6 +2651,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             TransactionStatusEnum.EXPIRED,
             REDIRECT_GATEWAY,
             undefined,
+            undefined,
             SendPaymentResultOutcomeEnum.NOT_RECEIVED,
             RedirectAuthorizationStatus.OK
           )
@@ -2568,6 +2666,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             TransactionStatusEnum.EXPIRED,
             REDIRECT_GATEWAY,
             undefined,
+            undefined,
             SendPaymentResultOutcomeEnum.OK,
             RedirectAuthorizationStatus.OK
           )
@@ -2580,6 +2679,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.EXPIRED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             SendPaymentResultOutcomeEnum.KO,
             RedirectAuthorizationStatus.OK
@@ -2596,6 +2696,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.OK
           )
         );
@@ -2609,6 +2710,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             REDIRECT_GATEWAY,
             undefined,
             undefined,
+            undefined,
             RedirectAuthorizationStatus.OK
           )
         );
@@ -2620,6 +2722,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             req.params.transactionId,
             TransactionStatusEnum.REFUNDED,
             REDIRECT_GATEWAY,
+            undefined,
             undefined,
             undefined,
             RedirectAuthorizationStatus.OK
