@@ -912,167 +912,189 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
   // eslint-disable-next-line sonarjs/max-switch-cases, sonarjs/no-duplicated-branches
   switch (getFlowCookie(req)) {
     case FlowCase.NOTIFICATION_REQUESTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFICATION_REQUESTED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFICATION_REQUESTED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.NOTIFICATION_ERROR:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFICATION_ERROR,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFICATION_ERROR,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.NOTIFIED_KO:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFIED_KO,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFIED_KO,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.REFUNDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.REFUNDED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUNDED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.REFUND_REQUESTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.REFUND_REQUESTED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUND_REQUESTED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.REFUND_ERROR:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.REFUND_ERROR,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUND_ERROR,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.EXPIRED_NOT_AUTHORIZED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED_NOT_AUTHORIZED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED_NOT_AUTHORIZED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.CANCELED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CANCELED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CANCELED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.CANCELLATION_EXPIRED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CANCELLATION_EXPIRED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CANCELLATION_EXPIRED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.EXPIRED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.CLOSED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSED,
-            undefined,
-            undefined,
-            SendPaymentResultOutcomeEnum.NOT_RECEIVED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSED,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.NOT_RECEIVED
+          },
+          undefined
+        )
+      );
     case FlowCase.AUTHORIZATION_REQUESTED_NO_NPG_OUTCOME:
       return res.status(200).send(
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1087,7 +1109,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1102,7 +1123,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1117,7 +1137,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1132,7 +1151,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1147,7 +1165,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1162,7 +1179,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1177,7 +1193,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1192,7 +1207,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1207,7 +1221,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1222,7 +1235,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1276,11 +1288,11 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          authCompletedNpgErrorCode.get(getFlowCookie(req)),
           {
             sendPaymentResultOutcome: undefined
           },
           {
+            errorCode: authCompletedNpgErrorCode.get(getFlowCookie(req)),
             gateway: NPG_GATEWAY,
             gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
           }
@@ -1291,7 +1303,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1306,7 +1317,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1321,7 +1331,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1336,7 +1345,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1351,7 +1359,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1366,7 +1373,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1381,7 +1387,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1396,7 +1401,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1411,7 +1415,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1426,7 +1429,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1480,11 +1482,11 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          closureRequestedNpgErrorCode.get(getFlowCookie(req)),
           {
             sendPaymentResultOutcome: undefined
           },
           {
+            errorCode: closureRequestedNpgErrorCode.get(getFlowCookie(req)),
             gateway: NPG_GATEWAY,
             gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
           }
@@ -1495,7 +1497,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1510,7 +1511,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1525,7 +1525,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1540,7 +1539,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1555,7 +1553,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1570,7 +1567,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1585,7 +1581,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1600,7 +1595,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1615,7 +1609,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1630,7 +1623,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1684,11 +1676,11 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          closureErrorNpgErrorCode.get(getFlowCookie(req)),
           {
             sendPaymentResultOutcome: undefined
           },
           {
+            errorCode: closureErrorNpgErrorCode.get(getFlowCookie(req)),
             gateway: NPG_GATEWAY,
             gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
           }
@@ -1699,7 +1691,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSED,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.NOT_RECEIVED
           },
@@ -1715,7 +1706,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.NOTIFICATION_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
@@ -1731,7 +1721,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.NOTIFICATION_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
@@ -1747,7 +1736,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.NOTIFICATION_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
@@ -1763,7 +1751,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.NOTIFICATION_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
@@ -1778,7 +1765,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.NOTIFIED_OK,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
@@ -1793,7 +1779,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.NOTIFIED_KO,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
@@ -1808,7 +1793,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1823,7 +1807,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1839,7 +1822,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1854,7 +1836,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1869,7 +1850,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1884,7 +1864,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1899,7 +1878,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1914,7 +1892,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1929,7 +1906,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1944,7 +1920,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -1959,7 +1934,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2013,13 +1987,13 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          expiredTransactionForAuthCompletedNpgErrorCode.get(
-            getFlowCookie(req)
-          ),
           {
             sendPaymentResultOutcome: undefined
           },
           {
+            errorCode: expiredTransactionForAuthCompletedNpgErrorCode.get(
+              getFlowCookie(req)
+            ),
             gateway: NPG_GATEWAY,
             gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
           }
@@ -2031,7 +2005,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.NOT_RECEIVED
           },
@@ -2046,7 +2019,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2061,7 +2033,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2076,7 +2047,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2091,7 +2061,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2106,7 +2075,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2121,7 +2089,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2136,7 +2103,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2151,7 +2117,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2166,7 +2131,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2220,11 +2184,11 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          unauthorizedNpgErrorCode.get(getFlowCookie(req)),
           {
             sendPaymentResultOutcome: undefined
           },
           {
+            errorCode: unauthorizedNpgErrorCode.get(getFlowCookie(req)),
             gateway: NPG_GATEWAY,
             gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
           }
@@ -2235,7 +2199,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.REFUND_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2250,7 +2213,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.REFUND_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2265,7 +2227,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.REFUNDED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2280,7 +2241,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2295,7 +2255,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2310,7 +2269,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2325,7 +2283,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2340,7 +2297,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2355,7 +2311,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2370,7 +2325,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2385,7 +2339,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2400,7 +2353,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2415,7 +2367,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2430,7 +2381,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2445,7 +2395,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2460,7 +2409,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2475,7 +2423,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2490,7 +2437,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.CLOSURE_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2505,7 +2451,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2520,7 +2465,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2535,7 +2479,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2550,7 +2493,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2565,7 +2507,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2580,7 +2521,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.NOTIFICATION_REQUESTED,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
@@ -2595,7 +2535,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.UNAUTHORIZED,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
@@ -2610,7 +2549,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.NOTIFICATION_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
@@ -2625,7 +2563,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.NOTIFICATION_ERROR,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
@@ -2640,7 +2577,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.NOTIFIED_KO,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
@@ -2655,7 +2591,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.NOTIFIED_KO,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2670,7 +2605,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2685,7 +2619,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2700,7 +2633,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2715,7 +2647,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2730,7 +2661,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: undefined
           },
@@ -2746,7 +2676,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.NOT_RECEIVED
           },
@@ -2762,7 +2691,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
@@ -2777,7 +2705,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.EXPIRED,
-          undefined,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
@@ -2794,7 +2721,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           req.params.transactionId,
           TransactionStatusEnum.REFUND_REQUESTED,
           undefined,
-          undefined,
           {
             gateway: REDIRECT_GATEWAY,
             gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
@@ -2807,7 +2733,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           req.params.transactionId,
           TransactionStatusEnum.REFUND_ERROR,
           undefined,
-          undefined,
           {
             gateway: REDIRECT_GATEWAY,
             gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
@@ -2819,7 +2744,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
         createSuccessGetTransactionEntity(
           req.params.transactionId,
           TransactionStatusEnum.REFUNDED,
-          undefined,
           undefined,
           {
             gateway: REDIRECT_GATEWAY,
