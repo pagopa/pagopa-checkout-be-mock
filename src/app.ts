@@ -231,8 +231,15 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   );
 
   // transaction-service new transaction request mock
-  app.get(
+  // v1 is deprecated
+  /* app.get(
     "/ecommerce/checkout/v1/transactions/:transactionId",
+    ecommerceGetTransaction
+  ); */
+
+  // transaction-service new transaction request mock
+  app.get(
+    "/ecommerce/checkout/v2/transactions/:transactionId",
     ecommerceGetTransaction
   );
 
