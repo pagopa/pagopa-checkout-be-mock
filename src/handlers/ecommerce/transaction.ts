@@ -1686,24 +1686,6 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           }
         )
       );
-    case FlowCase.CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_422_OUTCOME_ALREADY_ACQUIRED:
-      return res.status(200).send(
-        createSuccessGetTransactionEntity(
-          req.params.transactionId,
-          TransactionStatusEnum.CLOSURE_ERROR,
-          {
-            closePaymentResultError: {
-              description: "Outcome already acquired",
-              statusCode: 422
-            },
-            sendPaymentResultOutcome: undefined
-          },
-          {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
-          }
-        )
-      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_100:
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_101:
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_102:
