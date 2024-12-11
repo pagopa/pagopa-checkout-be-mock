@@ -1632,6 +1632,78 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           }
         )
       );
+    case FlowCase.CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_422_DID_NOT_RECEIVE_RPT:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            closePaymentResultError: {
+              description: "Node did not receive RPT yet",
+              statusCode: 422
+            },
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            gateway: NPG_GATEWAY,
+            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_400_REFUND_CASES:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            closePaymentResultError: {
+              description: "Invalid idBrokerPSP",
+              statusCode: 400
+            },
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            gateway: NPG_GATEWAY,
+            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_404_REFUND_CASES:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            closePaymentResultError: {
+              description: "The indicated PSP does not exist",
+              statusCode: 404
+            },
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            gateway: NPG_GATEWAY,
+            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_422_OUTCOME_ALREADY_ACQUIRED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            closePaymentResultError: {
+              description: "Outcome already acquired",
+              statusCode: 422
+            },
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            gateway: NPG_GATEWAY,
+            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_100:
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_101:
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_102:
