@@ -1099,8 +1099,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: undefined
+            authorizationStatus: undefined,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1113,8 +1113,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1127,8 +1127,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.AUTHORIZED
+            authorizationStatus: NpgAuthorizationStatus.AUTHORIZED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1141,8 +1141,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.PENDING
+            authorizationStatus: NpgAuthorizationStatus.PENDING,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1155,8 +1155,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.VOIDED
+            authorizationStatus: NpgAuthorizationStatus.VOIDED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1169,8 +1169,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.REFUNDED
+            authorizationStatus: NpgAuthorizationStatus.REFUNDED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1183,8 +1183,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.FAILED
+            authorizationStatus: NpgAuthorizationStatus.FAILED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1197,8 +1197,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.CANCELED
+            authorizationStatus: NpgAuthorizationStatus.CANCELED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1211,8 +1211,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK
+            authorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1225,8 +1225,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1239,8 +1239,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1292,9 +1292,9 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
             errorCode: authCompletedNpgErrorCode.get(getFlowCookie(req)),
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1307,8 +1307,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1321,8 +1321,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.AUTHORIZED
+            authorizationStatus: NpgAuthorizationStatus.AUTHORIZED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1335,8 +1335,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.PENDING
+            authorizationStatus: NpgAuthorizationStatus.PENDING,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1349,8 +1349,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.VOIDED
+            authorizationStatus: NpgAuthorizationStatus.VOIDED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1363,8 +1363,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.REFUNDED
+            authorizationStatus: NpgAuthorizationStatus.REFUNDED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1377,8 +1377,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.FAILED
+            authorizationStatus: NpgAuthorizationStatus.FAILED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1391,8 +1391,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.CANCELED
+            authorizationStatus: NpgAuthorizationStatus.CANCELED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1405,8 +1405,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK
+            authorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1419,8 +1419,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1433,8 +1433,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1486,9 +1486,9 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
             errorCode: closureRequestedNpgErrorCode.get(getFlowCookie(req)),
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1501,8 +1501,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1515,8 +1515,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.AUTHORIZED
+            authorizationStatus: NpgAuthorizationStatus.AUTHORIZED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1529,8 +1529,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.PENDING
+            authorizationStatus: NpgAuthorizationStatus.PENDING,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1543,8 +1543,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.VOIDED
+            authorizationStatus: NpgAuthorizationStatus.VOIDED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1557,8 +1557,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.REFUNDED
+            authorizationStatus: NpgAuthorizationStatus.REFUNDED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1571,8 +1571,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.FAILED
+            authorizationStatus: NpgAuthorizationStatus.FAILED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1585,8 +1585,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.CANCELED
+            authorizationStatus: NpgAuthorizationStatus.CANCELED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1599,8 +1599,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK
+            authorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1613,8 +1613,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1627,8 +1627,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1645,8 +1645,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1663,8 +1663,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1681,8 +1681,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1699,8 +1699,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1752,9 +1752,9 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
             errorCode: closureErrorNpgErrorCode.get(getFlowCookie(req)),
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1767,8 +1767,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.NOT_RECEIVED
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1782,8 +1782,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1797,8 +1797,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1812,8 +1812,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1827,8 +1827,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1841,8 +1841,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1855,8 +1855,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1869,8 +1869,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: undefined
+            authorizationStatus: undefined,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1883,8 +1883,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1898,8 +1898,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.AUTHORIZED
+            authorizationStatus: NpgAuthorizationStatus.AUTHORIZED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1912,8 +1912,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.PENDING
+            authorizationStatus: NpgAuthorizationStatus.PENDING,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1926,8 +1926,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.VOIDED
+            authorizationStatus: NpgAuthorizationStatus.VOIDED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1940,8 +1940,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.REFUNDED
+            authorizationStatus: NpgAuthorizationStatus.REFUNDED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1954,8 +1954,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.FAILED
+            authorizationStatus: NpgAuthorizationStatus.FAILED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1968,8 +1968,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.CANCELED
+            authorizationStatus: NpgAuthorizationStatus.CANCELED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1982,8 +1982,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK
+            authorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -1996,8 +1996,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2010,8 +2010,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2063,11 +2063,11 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
             errorCode: expiredTransactionForAuthCompletedNpgErrorCode.get(
               getFlowCookie(req)
             ),
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2081,8 +2081,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.NOT_RECEIVED
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2095,8 +2095,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.AUTHORIZED
+            authorizationStatus: NpgAuthorizationStatus.AUTHORIZED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2109,8 +2109,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.PENDING
+            authorizationStatus: NpgAuthorizationStatus.PENDING,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2123,8 +2123,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.VOIDED
+            authorizationStatus: NpgAuthorizationStatus.VOIDED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2137,8 +2137,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.REFUNDED
+            authorizationStatus: NpgAuthorizationStatus.REFUNDED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2151,8 +2151,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.FAILED
+            authorizationStatus: NpgAuthorizationStatus.FAILED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2165,8 +2165,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.CANCELED
+            authorizationStatus: NpgAuthorizationStatus.CANCELED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2179,8 +2179,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK
+            authorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2193,8 +2193,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2207,8 +2207,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2260,9 +2260,10 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
             errorCode: unauthorizedNpgErrorCode.get(getFlowCookie(req)),
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.DECLINED
+
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2275,8 +2276,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2289,8 +2290,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2303,8 +2304,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: NPG_GATEWAY,
-            gatewayAuthorizationStatus: NpgAuthorizationStatus.EXECUTED
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
           }
         )
       );
@@ -2317,8 +2318,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2331,8 +2332,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.KO
+            authorizationStatus: RedirectAuthorizationStatus.KO,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2345,8 +2346,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.CANCELED
+            authorizationStatus: RedirectAuthorizationStatus.CANCELED,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2359,8 +2360,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.ERROR
+            authorizationStatus: RedirectAuthorizationStatus.ERROR,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2373,8 +2374,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.EXPIRED
+            authorizationStatus: RedirectAuthorizationStatus.EXPIRED,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2387,8 +2388,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2401,8 +2402,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.KO
+            authorizationStatus: RedirectAuthorizationStatus.KO,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2415,8 +2416,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.CANCELED
+            authorizationStatus: RedirectAuthorizationStatus.CANCELED,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2429,8 +2430,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.ERROR
+            authorizationStatus: RedirectAuthorizationStatus.ERROR,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2443,8 +2444,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.EXPIRED
+            authorizationStatus: RedirectAuthorizationStatus.EXPIRED,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2457,8 +2458,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2471,8 +2472,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.KO
+            authorizationStatus: RedirectAuthorizationStatus.KO,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2485,8 +2486,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.CANCELED
+            authorizationStatus: RedirectAuthorizationStatus.CANCELED,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2499,8 +2500,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.ERROR
+            authorizationStatus: RedirectAuthorizationStatus.ERROR,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2513,8 +2514,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.EXPIRED
+            authorizationStatus: RedirectAuthorizationStatus.EXPIRED,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2527,8 +2528,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2541,8 +2542,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.KO
+            authorizationStatus: RedirectAuthorizationStatus.KO,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2555,8 +2556,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.CANCELED
+            authorizationStatus: RedirectAuthorizationStatus.CANCELED,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2569,8 +2570,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.ERROR
+            authorizationStatus: RedirectAuthorizationStatus.ERROR,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2583,8 +2584,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.EXPIRED
+            authorizationStatus: RedirectAuthorizationStatus.EXPIRED,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2597,8 +2598,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2611,8 +2612,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2625,8 +2626,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2639,8 +2640,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2653,8 +2654,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2667,8 +2668,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2681,8 +2682,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2695,8 +2696,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.KO
+            authorizationStatus: RedirectAuthorizationStatus.KO,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2709,8 +2710,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.CANCELED
+            authorizationStatus: RedirectAuthorizationStatus.CANCELED,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2723,8 +2724,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.EXPIRED
+            authorizationStatus: RedirectAuthorizationStatus.EXPIRED,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2737,8 +2738,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.ERROR
+            authorizationStatus: RedirectAuthorizationStatus.ERROR,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2752,8 +2753,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.NOT_RECEIVED
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2767,8 +2768,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2781,8 +2782,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
           },
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2794,8 +2795,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           TransactionStatusEnum.REFUND_REQUESTED,
           undefined,
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2806,8 +2807,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           TransactionStatusEnum.REFUND_ERROR,
           undefined,
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
@@ -2818,8 +2819,8 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
           TransactionStatusEnum.REFUNDED,
           undefined,
           {
-            gateway: REDIRECT_GATEWAY,
-            gatewayAuthorizationStatus: RedirectAuthorizationStatus.OK
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
           }
         )
       );
