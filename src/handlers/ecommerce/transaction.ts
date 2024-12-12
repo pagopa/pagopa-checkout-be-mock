@@ -2649,7 +2649,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
       return res.status(200).send(
         createSuccessGetTransactionEntity(
           req.params.transactionId,
-          TransactionStatusEnum.NOTIFIED_KO,
+          TransactionStatusEnum.NOTIFIED_OK,
           {
             sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
           },
