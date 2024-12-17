@@ -1,27 +1,26 @@
 /* eslint-disable max-params */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpStatusCode, ProblemJson } from "@pagopa/ts-commons/lib/responses";
 import { AmountEuroCents } from "../../generated/ecommerce/AmountEuroCents";
 import { ClientIdEnum } from "../../generated/ecommerce/NewTransactionResponse";
 import { RptId } from "../../generated/ecommerce/RptId";
-import { TransactionInfo } from "../../generated/ecommerce/TransactionInfo";
 import { TransactionStatusEnum } from "../../generated/ecommerce/TransactionStatus";
-import { SendPaymentResultOutcomeEnum } from "../../generated/ecommerce/NewTransactionResponse";
+import {
+  TransactionInfo,
+  TransactionInfoGatewayInfo,
+  TransactionInfoNodeInfo
+} from "../../generated/ecommerce-v2/TransactionInfo";
 
 export const createSuccessGetTransactionEntity = (
   transactionId: string,
   status: TransactionStatusEnum,
-  gateway?: string,
-  errorCode?: string,
-  sendPaymentResultOutcome?: SendPaymentResultOutcomeEnum,
-  gatewayAuthorizationStatus?: string
+  nodeInfo?: TransactionInfoNodeInfo,
+  gatewayInfo?: TransactionInfoGatewayInfo
 ): TransactionInfo => ({
-  authToken:
-    "eyJhbGciOiJIUzUxMiJ9.eyJ0cmFuc2FjdGlvbklkIjoiMTdhYzhkZTMtMjAzMy00YzQ2LWI1MzQtZjE5MTk2NmNlODRjIiwicnB0SWQiOiI3Nzc3Nzc3Nzc3NzMzMDIwMDAwMDAwMDAwMDAwMCIsImVtYWlsIjoibmFtZS5zdXJuYW1lQHBhZ29wYS5pdCIsInBheW1lbnRUb2tlbiI6IjRkNTAwZTk5MDg3MTQyMDJiNTU3NTFlZDZiMWRmZGYzIiwianRpIjoiODUxNjQ2NDQzMjUxMTQxIn0.Fl3PoDBgtEhDSMFR3unkAow8JAe2ztYDoxlu7h-q_ygmmGvO7zP5dlztELUQCofcmYwhB4L9EgSLNT-HbiJgKA",
   clientId: ClientIdEnum.CHECKOUT,
-  errorCode,
   feeTotal: 99999999,
-  gateway,
-  gatewayAuthorizationStatus,
+  gatewayInfo,
+  nodeInfo,
   payments: [
     {
       amount: 1000 as AmountEuroCents,
@@ -45,7 +44,6 @@ export const createSuccessGetTransactionEntity = (
       ]
     }
   ],
-  sendPaymentResultOutcome,
   status,
   transactionId
 });
