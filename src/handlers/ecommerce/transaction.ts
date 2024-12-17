@@ -1645,7 +1645,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
             gateway: NPG_GATEWAY
           }
         )
@@ -1663,7 +1663,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
             gateway: NPG_GATEWAY
           }
         )
@@ -1681,7 +1681,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
             gateway: NPG_GATEWAY
           }
         )
@@ -1699,7 +1699,7 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
             sendPaymentResultOutcome: undefined
           },
           {
-            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
             gateway: NPG_GATEWAY
           }
         )
