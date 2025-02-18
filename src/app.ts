@@ -37,6 +37,7 @@ import {
   ecommerceGetPaymentMethods,
   retrieveCardDataFromNpg
 } from "./handlers/ecommerce/payment-method";
+import { checkoutAuthServiceLogin } from "./handlers/checkout-auth-service";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -259,6 +260,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.post(
     "/ecommerce/checkout/v1/transactions/:transactionId/auth-requests",
     ecommerceAuthRequest
+  );
+
+   // checkout-auth-service login mock
+   app.get(
+    "/checkout/auth-service/v1/auth/login",
+    checkoutAuthServiceLogin
   );
 
   return app;
