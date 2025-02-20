@@ -5,7 +5,7 @@ import { logger } from "../logger";
 export const checkoutAuthServiceLogin: RequestHandler = async (req, res) => {
   logger.info("[Get Auth Login] - Return success");
   const loginResponse: LoginResponse = {
-    urlRedirect: "http://loginurl.it"
+    urlRedirect: "http://localhost:8080/auth-redirect-url"
   };
   res.status(200).send(loginResponse);
 };
