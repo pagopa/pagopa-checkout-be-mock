@@ -38,6 +38,7 @@ import {
   retrieveCardDataFromNpg
 } from "./handlers/ecommerce/payment-method";
 import { checkoutAuthServiceLogin } from "./handlers/checkout-auth-service";
+import { checkoutFeatureFlag } from "./handlers/checkout-feature-flags";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -229,6 +230,9 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // checkout-auth-service login mock
   app.get("/checkout/auth-service/v1/auth/login", checkoutAuthServiceLogin);
+
+  // checkout feature flags mock
+  app.get("/checkout/feature-flags/v1", checkoutFeatureFlag);
 
   return app;
 };
