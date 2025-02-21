@@ -232,7 +232,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.get("/checkout/auth-service/v1/auth/login", checkoutAuthServiceLogin);
 
   // checkout feature flags mock
-  app.get("/checkout/feature-flags/v1/features/enabled", checkoutFeatureFlag);
+  app.get("/checkout/feature-flags/v1/features/values", checkoutFeatureFlag);
 
   return app;
 };
