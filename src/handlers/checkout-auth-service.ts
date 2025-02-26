@@ -34,3 +34,13 @@ export const checkoutAuthServicePostToken: RequestHandler = async (
   };
   res.status(200).send(loginResponse);
 };
+
+export const checkoutAuthServicePostToken500: RequestHandler = async (
+  req,
+  res
+) => {
+  const response: ProblemJson = {
+    title: "AuthCode or state is missing"
+  };
+  res.status(500).send(response);
+};
