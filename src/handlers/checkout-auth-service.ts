@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestHandler } from "express";
 import { LoginResponse } from "../generated/checkout-auth-service-v1/LoginResponse";
 import { logger } from "../logger";
 import { AuthResponse } from "../generated/checkout-auth-service-v1/AuthResponse";
 import { AuthRequest } from "../generated/checkout-auth-service-v1/AuthRequest";
 import { ProblemJson } from "../generated/checkout-auth-service-v1/ProblemJson";
+import { FlowCase, getFlowCookie } from "../flow";
 
 export const checkoutAuthServiceLogin: RequestHandler = async (_req, res) => {
   logger.info("[Get Auth Login] - Return success");
@@ -14,10 +16,7 @@ export const checkoutAuthServiceLogin: RequestHandler = async (_req, res) => {
   res.status(200).send(loginResponse);
 };
 
-export const checkoutAuthServicePostToken: RequestHandler = async (
-  req,
-  res
-) => {
+export const checkoutAuthServicePostToken = (req: any, res: any): void => {
   const body: AuthRequest = req.body;
   if (!body.authCode || !body.state) {
     logger.info("[Post Auth Token] - Error Missing authCode or state");
@@ -34,13 +33,26 @@ export const checkoutAuthServicePostToken: RequestHandler = async (
   };
   res.status(200).send(loginResponse);
 };
-
-export const checkoutAuthServicePostToken500: RequestHandler = async (
-  req,
-  res
-) => {
+const checkoutAuthServicePostToken500 = (res: any): void => {
   const response: ProblemJson = {
     title: "AuthCode or state is missing"
   };
   res.status(500).send(response);
+};
+
+export const checkoutAuthServicePostTokenHandler: RequestHandler = async (
+  req,
+  res
+) => {
+  logger.info("[User auth post token]");
+  // eslint-disable-next-line sonarjs/no-small-switch
+  switch (getFlowCookie(req)) {
+    case FlowCase.FAIL_POST_AUTH_TOKEN:
+      logger.info("[User auth post token] - Return error case 500");
+      checkoutAuthServicePostToken500(res);
+      break;
+    default:
+      logger.info("[User auth post token] - Return success case 200 OK");
+      checkoutAuthServicePostToken(req, res);
+  }
 };

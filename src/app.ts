@@ -39,7 +39,7 @@ import {
 } from "./handlers/ecommerce/payment-method";
 import {
   checkoutAuthServiceLogin,
-  checkoutAuthServicePostToken
+  checkoutAuthServicePostTokenHandler
 } from "./handlers/checkout-auth-service";
 import { checkoutFeatureFlag } from "./handlers/checkout-feature-flags";
 
@@ -235,7 +235,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.get("/checkout/auth-service/v1/auth/login", checkoutAuthServiceLogin);
   app.post(
     "/checkout/auth-service/v1/auth/token",
-    checkoutAuthServicePostToken
+    checkoutAuthServicePostTokenHandler
   );
 
   // checkout feature flags mock
