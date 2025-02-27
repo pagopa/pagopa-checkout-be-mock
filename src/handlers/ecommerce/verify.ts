@@ -26,6 +26,8 @@ const verifyErrorCase = [
   FlowCase.FAIL_VERIFY_503_PPT_STAZIONE_INT_PA_TIMEOUT
 ];
 
+const loginErrorCase = [FlowCase.FAIL_POST_AUTH_TOKEN];
+
 const returnSuccessResponse = (req: express.Request, res: any): void => {
   logger.info("[Verify ecommerce] - Return success case");
   res.status(200).send(createSuccessVerifyRptIdEntity(req.params.rptId));
@@ -72,7 +74,13 @@ export const ecommerceVerify: RequestHandler = async (req, res) => {
   const flowId = pipe(
     req.params.rptId,
     getFlowFromRptId,
-    O.map(id => (!verifyErrorCase.includes(id) ? FlowCase.OK : id)),
+    O.map(id =>
+      !verifyErrorCase.includes(id)
+        ? !loginErrorCase.includes(id)
+          ? FlowCase.OK
+          : id
+        : id
+    ),
     O.getOrElse(() => FlowCase.OK)
   );
   if (req.query.recaptchaResponse == null) {
