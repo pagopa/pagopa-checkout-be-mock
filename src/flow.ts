@@ -180,6 +180,9 @@ export enum FlowCase {
   FAIL_ACTIVATE_502_PPT_WISP_SESSIONE_SCONOSCIUTA,
   /* pagopa-checkout-auth-service: post auth token 5xx */
   FAIL_POST_AUTH_TOKEN,
+  FAIL_GET_USERS_401,
+  FAIL_GET_USERS_500,
+
   /** start pagopa-ecommerce: handle final outcome page for NPG status */
   /** Please note these tests are not used as a suffix of the rptId they only serve to reroute the flow for testing on the states of the CR pipeline of the checkout fe */
   // Status AUTHORIZATION_REQUESTED tests

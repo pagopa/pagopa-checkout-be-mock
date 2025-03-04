@@ -6,6 +6,7 @@ import { AuthResponse } from "../generated/checkout-auth-service-v1/AuthResponse
 import { AuthRequest } from "../generated/checkout-auth-service-v1/AuthRequest";
 import { ProblemJson } from "../generated/checkout-auth-service-v1/ProblemJson";
 import { FlowCase, getFlowCookie } from "../flow";
+import { UserInfoResponse } from "../generated/checkout-auth-service-v1/UserInfoResponse";
 
 export const checkoutAuthServiceLogin: RequestHandler = async (_req, res) => {
   logger.info("[Get Auth Login] - Return success");
@@ -54,5 +55,47 @@ export const checkoutAuthServicePostTokenHandler: RequestHandler = async (
     default:
       logger.info("[User auth post token] - Return success case 200 OK");
       checkoutAuthServicePostToken(req, res);
+  }
+};
+
+const checkoutAuthServiceGetUsers500 = (res: any): void => {
+  const response: ProblemJson = {
+    title: "Error retrieving user data"
+  };
+  res.status(500).send(response);
+};
+
+const checkoutAuthServiceGetUsers401 = (res: any): void => {
+  res.status(401).send({
+    title: "Unauthorized error"
+  } as ProblemJson);
+};
+
+const checkoutAuthServiceGetUsers = (res: any): void => {
+  const userInfo: UserInfoResponse = {
+    firstName: "Giulia",
+    lastName: "Rossi",
+    userId: "RSSGLI85M01H501Z"
+  };
+  return res.status(200).send(userInfo);
+};
+
+export const checkoutAuthServiceGetUsersHandler: RequestHandler = async (
+  req,
+  res
+): Promise<void> => {
+  logger.info("[Get Users]");
+  switch (getFlowCookie(req)) {
+    case FlowCase.FAIL_GET_USERS_500:
+      logger.info("[Get Users] - Return error case 500");
+      checkoutAuthServiceGetUsers500(res);
+      break;
+    case FlowCase.FAIL_GET_USERS_401:
+      logger.info("[Get Users] - Return error case 401");
+      checkoutAuthServiceGetUsers401(res);
+      break;
+    default:
+      logger.info("[Get Users] - Return success case 200 OK");
+      checkoutAuthServiceGetUsers(res);
   }
 };
