@@ -73,9 +73,9 @@ const checkoutAuthServiceGetUsers401 = (res: any): void => {
 
 const checkoutAuthServiceGetUsers = (res: any): void => {
   const userInfo: UserInfoResponse = {
-    firstName: "Giulia",
-    lastName: "Rossi",
-    userId: "RSSGLI85M01H501Z"
+    firstName: "MarioTest",
+    lastName: "RossiTest",
+    userId: "ZSSZLI85M01Z501Z"
   };
   return res.status(200).send(userInfo);
 };
