@@ -26,7 +26,11 @@ const verifyErrorCase = [
   FlowCase.FAIL_VERIFY_503_PPT_STAZIONE_INT_PA_TIMEOUT
 ];
 
-const loginErrorCase = [FlowCase.FAIL_POST_AUTH_TOKEN];
+const loginErrorCase = [
+  FlowCase.FAIL_POST_AUTH_TOKEN,
+  FlowCase.FAIL_GET_USERS_401,
+  FlowCase.FAIL_GET_USERS_500
+];
 
 const returnSuccessResponse = (req: express.Request, res: any): void => {
   logger.info("[Verify ecommerce] - Return success case");

@@ -38,6 +38,7 @@ import {
   retrieveCardDataFromNpg
 } from "./handlers/ecommerce/payment-method";
 import {
+  checkoutAuthServiceGetUsersHandler,
   checkoutAuthServiceLogin,
   checkoutAuthServicePostTokenHandler
 } from "./handlers/checkout-auth-service";
@@ -236,6 +237,10 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.post(
     "/checkout/auth-service/v1/auth/token",
     checkoutAuthServicePostTokenHandler
+  );
+  app.get(
+    "/checkout/auth-service/v1/auth/users",
+    checkoutAuthServiceGetUsersHandler
   );
 
   // checkout feature flags mock
