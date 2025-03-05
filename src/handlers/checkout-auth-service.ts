@@ -8,11 +8,22 @@ import { ProblemJson } from "../generated/checkout-auth-service-v1/ProblemJson";
 import { FlowCase, getFlowCookie } from "../flow";
 import { UserInfoResponse } from "../generated/checkout-auth-service-v1/UserInfoResponse";
 
+const generateRandomString = (length: number): string => {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  return Array.from({ length }, () =>
+    chars.charAt(Math.floor(Math.random() * chars.length))
+  ).join("");
+};
+
 export const checkoutAuthServiceLogin: RequestHandler = async (_req, res) => {
   logger.info("[Get Auth Login] - Return success");
+
+  const code = generateRandomString(16);
+  const state = generateRandomString(16);
+
   const loginResponse: LoginResponse = {
-    urlRedirect:
-      "http://localhost:1234/auth-callback?code=J0NYD7UqPejqXpl6Fdv8&state=1BWuOGF4L3CTroTEvUVF"
+    urlRedirect: `http://localhost:1234/auth-callback?code=${code}&state=${state}`
   };
   res.status(200).send(loginResponse);
 };
@@ -28,12 +39,14 @@ export const checkoutAuthServicePostToken = (req: any, res: any): void => {
     return;
   }
 
+  const authToken = generateRandomString(32);
   logger.info("[Post Auth Token] - Return success");
   const loginResponse: AuthResponse = {
-    authToken: "B2T4HeCx7wTvBRABSZ36"
+    authToken
   };
   res.status(200).send(loginResponse);
 };
+
 const checkoutAuthServicePostToken500 = (res: any): void => {
   const response: ProblemJson = {
     title: "AuthCode or state is missing"
