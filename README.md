@@ -354,3 +354,10 @@ RPT ID is 302016723740100568
 | COOKIE MOCK FLOW                                   | RptId Suffix |
 |----------------------------------------------------|--------------|
 | CLOSED                                             | 73           |
+
+## Authorization mock flow
+| COOKIE MOCK FLOW                                   | RptId Suffix |
+|----------------------------------------------------|--------------|
+| FAIL_POST_AUTH_TOKEN                               | 78           |
+| FAIL_GET_USERS_401                                 | 79           |
+| FAIL_GET_USERS_500                                 | 80           |
