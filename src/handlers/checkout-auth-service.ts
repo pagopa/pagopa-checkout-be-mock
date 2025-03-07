@@ -86,6 +86,7 @@ export const checkoutAuthServicePostTokenHandler: RequestHandler = async (
       break;
     case FlowCase.FAIL_POST_AUTH_TOKEN_429:
       logger.info("[User auth post token] - Return error case 429");
+      res.cookie("errOnce", "true", { httpOnly: true, maxAge: 2000 });
       checkoutAuthServicePostTokenError(res, 429);
       break;
     default:
