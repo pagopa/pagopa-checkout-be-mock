@@ -86,8 +86,8 @@ const checkoutAuthServiceGetUsers401 = (res: any): void => {
 
 const checkoutAuthServiceGetUsers = (res: any): void => {
   const userInfo: UserInfoResponse = {
-    firstName: "MarioTest",
-    lastName: "RossiTest",
+    familyName: "RossiTest",
+    name: "MarioTest",
     userId: "ZSSZLI85M01Z501Z"
   };
   return res.status(200).send(userInfo);
