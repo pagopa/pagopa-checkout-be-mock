@@ -49,7 +49,7 @@ export const checkoutAuthServicePostToken = (req: any, res: any): void => {
 
 const checkoutAuthServicePostTokenError = (res: any, code: number): void => {
   const response: ProblemJson = {
-    title: "AuthCode or state is missing"
+    title: "Generic AuthCode error"
   };
   res.status(code).send(response);
 };
