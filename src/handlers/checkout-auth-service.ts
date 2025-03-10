@@ -93,6 +93,22 @@ const checkoutAuthServiceGetUsers = (res: any): void => {
   return res.status(200).send(userInfo);
 };
 
+const checkoutAuthServiceLogout = (res: any): void => res.status(204).send();
+
+export const checkoutAuthServiceLogoutUsersHandler: RequestHandler = async (
+  req,
+  res
+): Promise<void> => {
+  logger.info("[Logout Users]");
+  if (getFlowCookie(req) === FlowCase.FAIL_GET_USERS_500) {
+    logger.info("[Logout Users] - Return error case 500");
+    checkoutAuthServiceLogout(res);
+  } else {
+    logger.info("[Get Users] - Return success case 200 OK");
+    checkoutAuthServiceLogout(res);
+  }
+};
+
 export const checkoutAuthServiceGetUsersHandler: RequestHandler = async (
   req,
   res
@@ -111,4 +127,12 @@ export const checkoutAuthServiceGetUsersHandler: RequestHandler = async (
       logger.info("[Get Users] - Return success case 200 OK");
       checkoutAuthServiceGetUsers(res);
   }
+};
+
+export const checkoutAuthServiceLogoutUsersHandler: RequestHandler = async (
+  req,
+  res
+): Promise<void> => {
+  logger.info("[Logout Users] - Return success case 204 OK");
+  checkoutAuthServiceGetUsers(res);
 };
