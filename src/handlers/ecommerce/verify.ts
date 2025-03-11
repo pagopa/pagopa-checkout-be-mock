@@ -14,7 +14,13 @@ import {
   error502PspSconosciuto,
   error503StazioneIntPATimeout
 } from "../../utils/ecommerce/verify";
-import { FlowCase, getFlowFromRptId, setFlowCookie } from "../../flow";
+import {
+  FlowCase,
+  getFlowCookie,
+  getFlowFromRptId,
+  setFlowCookie
+} from "../../flow";
+import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 
 const verifyErrorCase = [
   FlowCase.FAIL_VERIFY_400_INVALID_INPUT,
@@ -29,7 +35,8 @@ const verifyErrorCase = [
 const loginErrorCase = [
   FlowCase.FAIL_POST_AUTH_TOKEN,
   FlowCase.FAIL_GET_USERS_401,
-  FlowCase.FAIL_GET_USERS_500
+  FlowCase.FAIL_GET_USERS_500,
+  FlowCase.FAIL_UNAUTHORIZED_401
 ];
 
 const returnSuccessResponse = (req: express.Request, res: any): void => {
@@ -74,7 +81,7 @@ const return503StazioneIntPATimeout = (res: any): void => {
   res.status(503).send(error503StazioneIntPATimeout());
 };
 
-export const ecommerceVerify: RequestHandler = async (req, res) => {
+export const ecommerceVerify: RequestHandler = async (req, res, _next) => {
   const flowId = pipe(
     req.params.rptId,
     getFlowFromRptId,
@@ -120,5 +127,25 @@ export const ecommerceVerify: RequestHandler = async (req, res) => {
     default:
       setFlowCookie(res, flowId);
       returnSuccessResponse(req, res);
+  }
+};
+
+export const authService401 = (res: any): void => {
+  const response: ProblemJson = {
+    title: "Unauthorized Access"
+  };
+  res.status(401).send(response);
+};
+
+export const secureEcommerceVerify: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  if (getFlowCookie(req) === FlowCase.FAIL_UNAUTHORIZED_401) {
+    logger.info("[Verify ecommerce] - Return error case 401");
+    authService401(res);
+  } else {
+    ecommerceVerify(req, res, _next);
   }
 };

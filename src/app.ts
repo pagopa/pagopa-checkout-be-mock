@@ -20,12 +20,18 @@ import {
 } from "./handlers/transactions";
 import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER } from "./constants";
-import { ecommerceActivation } from "./handlers/ecommerce/activation";
+import {
+  ecommerceActivation,
+  secureEcommerceActivation
+} from "./handlers/ecommerce/activation";
 import {
   ecommerceDeleteTransaction,
   ecommerceGetTransaction
 } from "./handlers/ecommerce/transaction";
-import { ecommerceVerify } from "./handlers/ecommerce/verify";
+import {
+  ecommerceVerify,
+  secureEcommerceVerify
+} from "./handlers/ecommerce/verify";
 import {
   ecommerceGetPspByPaymentMethodsV1,
   ecommerceGetPspByPaymentMethodsV2
@@ -35,7 +41,9 @@ import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import {
   createFormWithNpg,
   ecommerceGetPaymentMethods,
-  retrieveCardDataFromNpg
+  retrieveCardDataFromNpg,
+  secureCreateFormWithNpg,
+  secureEcommerceGetPaymentMethods
 } from "./handlers/ecommerce/payment-method";
 import {
   checkoutAuthServiceGetUsersHandler,
@@ -241,6 +249,24 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.get(
     "/checkout/auth-service/v1/auth/users",
     checkoutAuthServiceGetUsersHandler
+  );
+
+  app.get(
+    "/checkout/auth-service/v3/auth/payment-method",
+    secureEcommerceGetPaymentMethods
+  );
+  app.get(
+    "/checkout/auth-service/v3/auth/payment-requests/:rptId",
+    secureEcommerceVerify
+  );
+  app.post(
+    "/checkout/auth-service/v3/auth/payment-methods/:id/sessions",
+    secureCreateFormWithNpg
+  );
+  // transaction-service v2 new transaction request mock
+  app.post(
+    "/checkout/auth-service/v3/auth/transactions",
+    secureEcommerceActivation
   );
 
   // checkout feature flags mock
