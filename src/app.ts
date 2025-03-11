@@ -194,7 +194,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.get("/ecommerce/checkout/v1/payment-methods", ecommerceGetPaymentMethods);
 
   app.get(
-    "/ecommerce/checkout/v3/auth/payment-method",
+    "/ecommerce/checkout/v3/auth/payment-methods",
     secureEcommerceGetPaymentMethods
   );
 
