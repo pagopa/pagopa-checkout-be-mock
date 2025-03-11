@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestHandler } from "express";
 import * as express from "express";
-import { pipe } from "fp-ts/lib/function";
 import * as O from "fp-ts/Option";
 import { logger } from "../../logger";
 import {
@@ -14,12 +13,7 @@ import {
   error502PspSconosciuto,
   error503StazioneIntPATimeout
 } from "../../utils/ecommerce/verify";
-import {
-  FlowCase,
-  getFlowCookie,
-  getFlowFromRptId,
-  setFlowCookie
-} from "../../flow";
+import { FlowCase, getFlowFromRptId, setFlowCookie } from "../../flow";
 import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 
 const verifyErrorCase = [
@@ -81,25 +75,23 @@ const return503StazioneIntPATimeout = (res: any): void => {
   res.status(503).send(error503StazioneIntPATimeout());
 };
 
-export const ecommerceVerify: RequestHandler = async (req, res, _next) => {
-  const flowId = pipe(
-    req.params.rptId,
-    getFlowFromRptId,
-    O.map(id =>
-      !verifyErrorCase.includes(id)
-        ? !loginErrorCase.includes(id)
-          ? FlowCase.OK
-          : id
-        : id
-    ),
-    O.getOrElse(() => FlowCase.OK)
-  );
-  if (req.query.recaptchaResponse == null) {
-    logger.error("Missing recaptchaResponse query param!");
-    res.status(404).send("Missing recaptchaResponse query param!");
-    return;
+const getFlowId = (rptId: string): FlowCase => {
+  const maybeFlowId = getFlowFromRptId(rptId);
+  if (O.isNone(maybeFlowId)) {
+    return FlowCase.OK;
   }
+  const flowId = maybeFlowId.value;
+  if (verifyErrorCase.includes(flowId)) {
+    return flowId;
+  }
+  if (loginErrorCase.includes(flowId)) {
+    return flowId;
+  }
+  return FlowCase.OK;
+};
 
+const ecommerceVerify: RequestHandler = async (req, res, _next) => {
+  const flowId = getFlowId(req.params.rptId);
   // eslint-disable-next-line no-console
   console.log(flowId);
   switch (flowId) {
@@ -137,12 +129,26 @@ export const authService401 = (res: any): void => {
   res.status(401).send(response);
 };
 
+export const ecommerceVerifyHandler: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  if (req.query.recaptchaResponse == null) {
+    logger.error("Missing recaptchaResponse query param!");
+    res.status(404).send("Missing recaptchaResponse query param!");
+    return;
+  }
+  ecommerceVerify(req, res, _next);
+};
+
 export const secureEcommerceVerify: RequestHandler = async (
   req,
   res,
   _next
 ) => {
-  if (getFlowCookie(req) === FlowCase.FAIL_UNAUTHORIZED_401) {
+  const flowId = getFlowId(req.params.rptId);
+  if (flowId === FlowCase.FAIL_UNAUTHORIZED_401) {
     logger.info("[Verify ecommerce] - Return error case 401");
     authService401(res);
   } else {
