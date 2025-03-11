@@ -26,11 +26,12 @@ const verifyErrorCase = [
   FlowCase.FAIL_VERIFY_503_PPT_STAZIONE_INT_PA_TIMEOUT
 ];
 
-const loginErrorCase = [
+const authErrorCase = [
   FlowCase.FAIL_POST_AUTH_TOKEN,
   FlowCase.FAIL_GET_USERS_401,
   FlowCase.FAIL_GET_USERS_500,
-  FlowCase.FAIL_UNAUTHORIZED_401
+  FlowCase.FAIL_UNAUTHORIZED_401,
+  FlowCase.FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS
 ];
 
 const returnSuccessResponse = (req: express.Request, res: any): void => {
@@ -84,7 +85,7 @@ const getFlowId = (rptId: string): FlowCase => {
   if (verifyErrorCase.includes(flowId)) {
     return flowId;
   }
-  if (loginErrorCase.includes(flowId)) {
+  if (authErrorCase.includes(flowId)) {
     return flowId;
   }
   return FlowCase.OK;
@@ -148,7 +149,7 @@ export const secureEcommerceVerify: RequestHandler = async (
   _next
 ) => {
   const flowId = getFlowId(req.params.rptId);
-  if (flowId === FlowCase.FAIL_UNAUTHORIZED_401) {
+  if (flowId === FlowCase.FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS) {
     logger.info("[Verify ecommerce] - Return error case 401");
     authService401(res);
   } else {
