@@ -243,7 +243,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     "/checkout/auth-service/v1/auth/users",
     checkoutAuthServiceGetUsersHandler
   );
-  app.get(
+  app.post(
     "/checkout/auth-service/v1/auth/logout",
     checkoutAuthServiceLogoutUsersHandler
   );
