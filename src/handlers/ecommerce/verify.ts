@@ -93,9 +93,6 @@ const getFlowId = (rptId: string): FlowCase => {
   if (authErrorCase.includes(flowId)) {
     return flowId;
   }
-  if (loginErrorCase.includes(flowId)) {
-    return flowId;
-  }
   if (logoutErrorCase.includes(flowId)) {
     return flowId;
   }
@@ -103,11 +100,6 @@ const getFlowId = (rptId: string): FlowCase => {
 };
 
 const ecommerceVerify: RequestHandler = async (req, res, _next) => {
-  if (req.query.recaptchaResponse == null) {
-    logger.error("Missing recaptchaResponse query param!");
-    res.status(404).send("Missing recaptchaResponse query param!");
-    return;
-  }
   const flowId = getFlowId(req.params.rptId);
   // eslint-disable-next-line no-console
   console.log(flowId);
