@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestHandler } from "express";
 import * as express from "express";
-import { pipe } from "fp-ts/lib/function";
 import * as O from "fp-ts/Option";
 import { logger } from "../../logger";
 import {
@@ -15,6 +14,7 @@ import {
   error503StazioneIntPATimeout
 } from "../../utils/ecommerce/verify";
 import { FlowCase, getFlowFromRptId, setFlowCookie } from "../../flow";
+import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 
 const verifyErrorCase = [
   FlowCase.FAIL_VERIFY_400_INVALID_INPUT,
@@ -26,10 +26,15 @@ const verifyErrorCase = [
   FlowCase.FAIL_VERIFY_503_PPT_STAZIONE_INT_PA_TIMEOUT
 ];
 
-const loginErrorCase = [
+const authErrorCase = [
   FlowCase.FAIL_POST_AUTH_TOKEN,
+  FlowCase.FAIL_POST_AUTH_TOKEN_503,
+  FlowCase.FAIL_POST_AUTH_TOKEN_504,
+  FlowCase.FAIL_POST_AUTH_TOKEN_429,
   FlowCase.FAIL_GET_USERS_401,
-  FlowCase.FAIL_GET_USERS_500
+  FlowCase.FAIL_GET_USERS_500,
+  FlowCase.FAIL_UNAUTHORIZED_401,
+  FlowCase.FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS
 ];
 
 const logoutErrorCase = [FlowCase.FAIL_LOGOUT_400, FlowCase.FAIL_LOGOUT_500];
@@ -76,27 +81,34 @@ const return503StazioneIntPATimeout = (res: any): void => {
   res.status(503).send(error503StazioneIntPATimeout());
 };
 
-export const ecommerceVerify: RequestHandler = async (req, res) => {
-  const flowId = pipe(
-    req.params.rptId,
-    getFlowFromRptId,
-    O.map(id =>
-      !(
-        verifyErrorCase.includes(id) ||
-        loginErrorCase.includes(id) ||
-        logoutErrorCase.includes(id)
-      )
-        ? FlowCase.OK
-        : id
-    ),
-    O.getOrElse(() => FlowCase.OK)
-  );
+const getFlowId = (rptId: string): FlowCase => {
+  const maybeFlowId = getFlowFromRptId(rptId);
+  if (O.isNone(maybeFlowId)) {
+    return FlowCase.OK;
+  }
+  const flowId = maybeFlowId.value;
+  if (verifyErrorCase.includes(flowId)) {
+    return flowId;
+  }
+  if (authErrorCase.includes(flowId)) {
+    return flowId;
+  }
+  if (loginErrorCase.includes(flowId)) {
+    return flowId;
+  }
+  if (logoutErrorCase.includes(flowId)) {
+    return flowId;
+  }
+  return FlowCase.OK;
+};
+
+const ecommerceVerify: RequestHandler = async (req, res, _next) => {
   if (req.query.recaptchaResponse == null) {
     logger.error("Missing recaptchaResponse query param!");
     res.status(404).send("Missing recaptchaResponse query param!");
     return;
   }
-
+  const flowId = getFlowId(req.params.rptId);
   // eslint-disable-next-line no-console
   console.log(flowId);
   switch (flowId) {
@@ -124,5 +136,39 @@ export const ecommerceVerify: RequestHandler = async (req, res) => {
     default:
       setFlowCookie(res, flowId);
       returnSuccessResponse(req, res);
+  }
+};
+
+export const authService401 = (res: any): void => {
+  const response: ProblemJson = {
+    title: "Unauthorized Access"
+  };
+  res.status(401).send(response);
+};
+
+export const ecommerceVerifyHandler: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  if (req.query.recaptchaResponse == null) {
+    logger.error("Missing recaptchaResponse query param!");
+    res.status(404).send("Missing recaptchaResponse query param!");
+    return;
+  }
+  ecommerceVerify(req, res, _next);
+};
+
+export const secureEcommerceVerify: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  const flowId = getFlowId(req.params.rptId);
+  if (flowId === FlowCase.FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS) {
+    logger.info("[Verify ecommerce] - Return error case 401");
+    authService401(res);
+  } else {
+    ecommerceVerify(req, res, _next);
   }
 };

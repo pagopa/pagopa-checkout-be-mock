@@ -13,11 +13,34 @@ import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { Field } from "../../generated/ecommerce/Field";
 import { SessionPaymentMethodResponse } from "../../generated/ecommerce/SessionPaymentMethodResponse";
 import { config } from "../../config";
-import { getSessionIdCookie, setSessionIdCookie } from "../../flow";
+import {
+  FlowCase,
+  getFlowCookie,
+  getSessionIdCookie,
+  setSessionIdCookie
+} from "../../flow";
+import { authService401 } from "./verify";
 
-export const ecommerceGetPaymentMethods: RequestHandler = async (req, res) => {
+export const ecommerceGetPaymentMethods: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
   logger.info("[Get payment-methods ecommerce] - Return success case");
   res.status(200).send(createSuccessGetPaymentMethods());
+};
+
+export const secureEcommerceGetPaymentMethods: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  if (getFlowCookie(req) === FlowCase.FAIL_UNAUTHORIZED_401) {
+    logger.info("[Get payment-methods ecommerce] - Return error case 401");
+    authService401(res);
+  } else {
+    ecommerceGetPaymentMethods(req, res, _next);
+  }
 };
 
 const NPG_API_KEY = config.NPG_API_KEY;
@@ -50,7 +73,7 @@ export const buildCreateSessionResponse = (
   }
 });
 
-export const createFormWithNpg: RequestHandler = async (_req, res) => {
+export const createFormWithNpg: RequestHandler = async (_req, res, _next) => {
   logger.info(
     `[Invoke NPG for create form using payment method id: ${_req.params.id}] - Return success case`
   );
@@ -110,6 +133,21 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
     }),
     TE.mapLeft(() => res.status(500).send(internalServerError()))
   )();
+};
+
+export const secureCreateFormWithNpg: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  if (getFlowCookie(req) === FlowCase.FAIL_UNAUTHORIZED_401) {
+    logger.info(
+      `[Invoke NPG for create form using payment method id: ${req.params.id}] - Return error case 401`
+    );
+    authService401(res);
+  } else {
+    createFormWithNpg(req, res, _next);
+  }
 };
 
 export const retrieveCardDataFromNpg: RequestHandler = async (_req, res) => {
