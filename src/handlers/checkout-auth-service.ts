@@ -94,14 +94,28 @@ const checkoutAuthServiceGetUsers = (res: any): void => {
 };
 
 const checkoutAuthServiceLogout = (res: any): void => res.status(204).send();
+const checkoutAuthServiceLogout4xx = (res: any): void => res.status(400).send();
+const checkoutAuthServiceLogout5xx = (res: any): void => res.status(500).send();
 
 export const checkoutAuthServiceLogoutUsersHandler: RequestHandler = async (
   req,
   res
 ): Promise<void> => {
   logger.info("[Logout Users]");
-  logger.info("[Logout Users] - Return success case 200 OK");
-  checkoutAuthServiceLogout(res);
+
+  switch (getFlowCookie(req)) {
+    case FlowCase.FAIL_LOGOUT_400:
+      logger.info("[Get Users] - Return error case 500");
+      checkoutAuthServiceLogout4xx(res);
+      break;
+    case FlowCase.FAIL_LOGOUT_500:
+      logger.info("[Get Users] - Return error case 400");
+      checkoutAuthServiceLogout5xx(res);
+      break;
+    default:
+      logger.info("[Logout Users] - Return success case 204 OK");
+      checkoutAuthServiceLogout(res);
+  }
 };
 
 export const checkoutAuthServiceGetUsersHandler: RequestHandler = async (

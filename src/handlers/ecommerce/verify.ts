@@ -32,6 +32,8 @@ const loginErrorCase = [
   FlowCase.FAIL_GET_USERS_500
 ];
 
+const logoutErrorCase = [FlowCase.FAIL_LOGOUT_400, FlowCase.FAIL_LOGOUT_500];
+
 const returnSuccessResponse = (req: express.Request, res: any): void => {
   logger.info("[Verify ecommerce] - Return success case");
   res.status(200).send(createSuccessVerifyRptIdEntity(req.params.rptId));
@@ -79,10 +81,12 @@ export const ecommerceVerify: RequestHandler = async (req, res) => {
     req.params.rptId,
     getFlowFromRptId,
     O.map(id =>
-      !verifyErrorCase.includes(id)
-        ? !loginErrorCase.includes(id)
-          ? FlowCase.OK
-          : id
+      !(
+        verifyErrorCase.includes(id) ||
+        loginErrorCase.includes(id) ||
+        logoutErrorCase.includes(id)
+      )
+        ? FlowCase.OK
         : id
     ),
     O.getOrElse(() => FlowCase.OK)
