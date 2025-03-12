@@ -366,3 +366,5 @@ The authentication endpoints are driven to fail by using the following rptId suf
 | FAIL_POST_AUTH_TOKEN_429                           | 81           |
 | FAIL_GET_USERS_401                                 | 82           |
 | FAIL_GET_USERS_500                                 | 83           |
+| FAIL_UNAUTHORIZED_401                              | 84           |
+| FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS             | 85           |

@@ -20,12 +20,18 @@ import {
 } from "./handlers/transactions";
 import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER } from "./constants";
-import { ecommerceActivation } from "./handlers/ecommerce/activation";
+import {
+  ecommerceActivation,
+  secureEcommerceActivation
+} from "./handlers/ecommerce/activation";
 import {
   ecommerceDeleteTransaction,
   ecommerceGetTransaction
 } from "./handlers/ecommerce/transaction";
-import { ecommerceVerify } from "./handlers/ecommerce/verify";
+import {
+  ecommerceVerifyHandler,
+  secureEcommerceVerify
+} from "./handlers/ecommerce/verify";
 import {
   ecommerceGetPspByPaymentMethodsV1,
   ecommerceGetPspByPaymentMethodsV2
@@ -35,7 +41,9 @@ import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import {
   createFormWithNpg,
   ecommerceGetPaymentMethods,
-  retrieveCardDataFromNpg
+  retrieveCardDataFromNpg,
+  secureCreateFormWithNpg,
+  secureEcommerceGetPaymentMethods
 } from "./handlers/ecommerce/payment-method";
 import {
   checkoutAuthServiceGetUsersHandler,
@@ -169,13 +177,26 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   );
 
   // payment-requests-service get cart requests mock
-  app.get("/ecommerce/checkout/v1/payment-requests/:rptId", ecommerceVerify);
+  app.get(
+    "/ecommerce/checkout/v1/payment-requests/:rptId",
+    ecommerceVerifyHandler
+  );
+
+  app.get(
+    "/ecommerce/checkout/v3/auth/payment-requests/:rptId",
+    secureEcommerceVerify
+  );
 
   // payment-requests-service get cart requests mock
   app.get("/ecommerce/checkout/v1/carts/:id", ecommerceGetCart);
 
   // TODO refactoring to handle errors scenario
   app.get("/ecommerce/checkout/v1/payment-methods", ecommerceGetPaymentMethods);
+
+  app.get(
+    "/ecommerce/checkout/v3/auth/payment-methods",
+    secureEcommerceGetPaymentMethods
+  );
 
   // payment-methods-service get psp by payment methods V1 requests mock
   app.post(
@@ -201,6 +222,11 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     retrieveCardDataFromNpg
   );
 
+  app.post(
+    "/ecommerce/checkout/v3/auth/payment-methods/:id/sessions",
+    secureCreateFormWithNpg
+  );
+
   // transaction-service new transaction request mock
   // v1 is deprecated
   /* app.get(
@@ -219,6 +245,11 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // transaction-service v2 new transaction request mock
   app.post("/ecommerce/checkout/v2/transactions", ecommerceActivation);
+
+  app.post(
+    "/commerce/checkout/v3/auth/transactions",
+    secureEcommerceActivation
+  );
 
   // transaction-service transaction user cancel
   app.delete(
@@ -242,6 +273,8 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     "/checkout/auth-service/v1/auth/users",
     checkoutAuthServiceGetUsersHandler
   );
+
+  // transaction-service v2 new transaction request mock
 
   // checkout feature flags mock
   app.get("/checkout/feature-flags/v1/features/values", checkoutFeatureFlag);

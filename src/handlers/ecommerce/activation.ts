@@ -20,6 +20,7 @@ import {
   FlowCase,
   generateTransactionId,
   getErrorCodeFromRptId,
+  getFlowCookie,
   getFlowFromRptId,
   getGatewayFromRptId,
   getSendPaymentResultOutcomeFromRptId,
@@ -31,6 +32,7 @@ import {
   VposFlowCase,
   XPayFlowCase
 } from "../../flow";
+import { authService401 } from "./verify";
 
 const caluclateFeeCase = [
   FlowCase.OK_ABOVETHRESHOLD_CALUCLATE_FEE,
@@ -162,7 +164,7 @@ const return503StazioneIntPAErrorResponse = (res: any): void => {
 };
 
 // eslint-disable-next-line complexity
-export const ecommerceActivation: RequestHandler = async (req, res) => {
+export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
   const version = req.path.match(/\/ecommerce\/checkout\/(\w{2})/)?.slice(1);
   logger.info(`[Activation ecommerce] - version: ${version}`);
 
@@ -264,5 +266,20 @@ export const ecommerceActivation: RequestHandler = async (req, res) => {
       setPaymentGatewayCookie(res, paymentGateway);
       setErrorCodeCookie(res, errorCode, paymentGateway);
       returnSuccessResponse(req, res);
+  }
+};
+
+export const secureEcommerceActivation: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  if (getFlowCookie(req) === FlowCase.FAIL_UNAUTHORIZED_401) {
+    logger.info(
+      "[Post trasactions activation ecommerce] - Return error case 401"
+    );
+    authService401(res);
+  } else {
+    ecommerceActivation(req, res, _next);
   }
 };
