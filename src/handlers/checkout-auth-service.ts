@@ -47,11 +47,11 @@ export const checkoutAuthServicePostToken = (req: any, res: any): void => {
   res.status(200).send(loginResponse);
 };
 
-const checkoutAuthServicePostToken500 = (res: any): void => {
+const checkoutAuthServicePostTokenError = (res: any, code: number): void => {
   const response: ProblemJson = {
-    title: "AuthCode or state is missing"
+    title: "Generic AuthCode error"
   };
-  res.status(500).send(response);
+  res.status(code).send(response);
 };
 
 export const checkoutAuthServicePostTokenHandler: RequestHandler = async (
@@ -59,11 +59,35 @@ export const checkoutAuthServicePostTokenHandler: RequestHandler = async (
   res
 ) => {
   logger.info("[User auth post token]");
-  // eslint-disable-next-line sonarjs/no-small-switch
-  switch (getFlowCookie(req)) {
+  const flow = getFlowCookie(req);
+  const secondCallAlreadySet = Boolean(req.cookies.errOnce);
+
+  if (flow !== FlowCase.FAIL_POST_AUTH_TOKEN && secondCallAlreadySet) {
+    logger.info(
+      "[User auth post token] - Second call for non-500 error => Return 200"
+    );
+    return checkoutAuthServicePostToken(req, res);
+  }
+
+  switch (flow) {
     case FlowCase.FAIL_POST_AUTH_TOKEN:
       logger.info("[User auth post token] - Return error case 500");
-      checkoutAuthServicePostToken500(res);
+      checkoutAuthServicePostTokenError(res, 500);
+      break;
+    case FlowCase.FAIL_POST_AUTH_TOKEN_503:
+      logger.info("[User auth post token] - Return error case 503");
+      res.cookie("errOnce", "true", { httpOnly: true, maxAge: 2000 });
+      checkoutAuthServicePostTokenError(res, 503);
+      break;
+    case FlowCase.FAIL_POST_AUTH_TOKEN_504:
+      logger.info("[User auth post token] - Return error case 504");
+      res.cookie("errOnce", "true", { httpOnly: true, maxAge: 2000 });
+      checkoutAuthServicePostTokenError(res, 504);
+      break;
+    case FlowCase.FAIL_POST_AUTH_TOKEN_429:
+      logger.info("[User auth post token] - Return error case 429");
+      res.cookie("errOnce", "true", { httpOnly: true, maxAge: 2000 });
+      checkoutAuthServicePostTokenError(res, 429);
       break;
     default:
       logger.info("[User auth post token] - Return success case 200 OK");

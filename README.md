@@ -361,7 +361,10 @@ The authentication endpoints are driven to fail by using the following rptId suf
 | COOKIE MOCK FLOW                                   | RptId Suffix |
 |----------------------------------------------------|--------------|
 | FAIL_POST_AUTH_TOKEN                               | 78           |
-| FAIL_GET_USERS_401                                 | 79           |
-| FAIL_GET_USERS_500                                 | 80           |
-| FAIL_UNAUTHORIZED_401                              | 81           |
-| FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS             | 82           |
+| FAIL_POST_AUTH_TOKEN_503                           | 79           |
+| FAIL_POST_AUTH_TOKEN_504                           | 80           |
+| FAIL_POST_AUTH_TOKEN_429                           | 81           |
+| FAIL_GET_USERS_401                                 | 82           |
+| FAIL_GET_USERS_500                                 | 83           |
+| FAIL_UNAUTHORIZED_401                              | 84           |
+| FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS             | 85           |
