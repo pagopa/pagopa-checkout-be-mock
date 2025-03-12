@@ -28,6 +28,9 @@ const verifyErrorCase = [
 
 const loginErrorCase = [
   FlowCase.FAIL_POST_AUTH_TOKEN,
+  FlowCase.FAIL_POST_AUTH_TOKEN_503,
+  FlowCase.FAIL_POST_AUTH_TOKEN_504,
+  FlowCase.FAIL_POST_AUTH_TOKEN_429,
   FlowCase.FAIL_GET_USERS_401,
   FlowCase.FAIL_GET_USERS_500
 ];
