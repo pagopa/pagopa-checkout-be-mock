@@ -247,7 +247,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.post("/ecommerce/checkout/v2/transactions", ecommerceActivation);
 
   app.post(
-    "/commerce/checkout/v3/auth/transactions",
+    "/ecommerce/checkout/v3/auth/transactions",
     secureEcommerceActivation
   );
 
