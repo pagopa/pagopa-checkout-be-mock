@@ -94,6 +94,14 @@ const pgsEsitoMappingCase = [
   FlowCase.CLOSED
 ];
 
+const loginErrorCase = [
+  FlowCase.FAIL_POST_AUTH_TOKEN,
+  FlowCase.FAIL_GET_USERS_401,
+  FlowCase.FAIL_GET_USERS_500
+];
+
+const logoutErrorCase = [FlowCase.FAIL_LOGOUT_400, FlowCase.FAIL_LOGOUT_500];
+
 const returnSuccessResponse = (
   req: express.Request,
   res: any,
@@ -190,7 +198,9 @@ export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
       !activationErrorCase.includes(id) &&
       !caluclateFeeCase.includes(id) &&
       !transactionUserCancelCase.includes(id) &&
-      !pgsEsitoMappingCase.includes(id)
+      !pgsEsitoMappingCase.includes(id) &&
+      !loginErrorCase &&
+      !logoutErrorCase
         ? FlowCase.OK
         : id
     ),

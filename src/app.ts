@@ -48,7 +48,8 @@ import {
 import {
   checkoutAuthServiceGetUsersHandler,
   checkoutAuthServiceLogin,
-  checkoutAuthServicePostTokenHandler
+  checkoutAuthServicePostTokenHandler,
+  checkoutAuthServiceLogoutUsersHandler
 } from "./handlers/checkout-auth-service";
 import { checkoutFeatureFlag } from "./handlers/checkout-feature-flags";
 
@@ -272,6 +273,10 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.get(
     "/checkout/auth-service/v1/auth/users",
     checkoutAuthServiceGetUsersHandler
+  );
+  app.post(
+    "/checkout/auth-service/v1/auth/logout",
+    checkoutAuthServiceLogoutUsersHandler
   );
 
   // transaction-service v2 new transaction request mock

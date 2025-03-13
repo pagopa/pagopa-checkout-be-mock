@@ -37,6 +37,8 @@ const authErrorCase = [
   FlowCase.FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS
 ];
 
+const logoutErrorCase = [FlowCase.FAIL_LOGOUT_400, FlowCase.FAIL_LOGOUT_500];
+
 const returnSuccessResponse = (req: express.Request, res: any): void => {
   logger.info("[Verify ecommerce] - Return success case");
   res.status(200).send(createSuccessVerifyRptIdEntity(req.params.rptId));
@@ -89,6 +91,9 @@ const getFlowId = (rptId: string): FlowCase => {
     return flowId;
   }
   if (authErrorCase.includes(flowId)) {
+    return flowId;
+  }
+  if (logoutErrorCase.includes(flowId)) {
     return flowId;
   }
   return FlowCase.OK;
