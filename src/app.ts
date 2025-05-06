@@ -26,7 +26,8 @@ import {
 } from "./handlers/ecommerce/activation";
 import {
   ecommerceDeleteTransaction,
-  ecommerceGetTransaction
+  ecommerceGetTransaction,
+  ecommerceGetTransactionOutcome
 } from "./handlers/ecommerce/transaction";
 import {
   ecommerceVerifyHandler,
@@ -283,6 +284,11 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // checkout feature flags mock
   app.get("/checkout/feature-flags/v1/features/values", checkoutFeatureFlag);
+
+  app.get(
+    "/ecommerce/checkout/vi/transactions/:id/outcomes",
+    ecommerceGetTransactionOutcome
+  );
 
   return app;
 };

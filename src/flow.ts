@@ -559,8 +559,32 @@ export enum FlowCase {
 
   REFUND_ERROR_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK,
 
-  REFUNDED_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK
+  REFUNDED_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK,
   /** end pagopa-ecommerce: handle final status outcome page for REDIRECT gateway */
+
+  /** start pagopa-ecommerce-outcome */
+  OUTCOME_0,
+  OUTCOME_1,
+  OUTCOME_2,
+  OUTCOME_3,
+  OUTCOME_4,
+  OUTCOME_5,
+  OUTCOME_6,
+  OUTCOME_7,
+  OUTCOME_8,
+  OUTCOME_9,
+  OUTCOME_10,
+  OUTCOME_11,
+  OUTCOME_12,
+  OUTCOME_13,
+  OUTCOME_14,
+  OUTCOME_17,
+  OUTCOME_25,
+  OUTCOME_99,
+  OUTCOME_116,
+  OUTCOME_117,
+  OUTCOME_121
+  /** end pagopa-ecommerce-outcome */
 }
 
 type FlowCaseKey = keyof typeof FlowCase;
