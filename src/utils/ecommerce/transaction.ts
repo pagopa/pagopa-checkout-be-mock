@@ -68,8 +68,10 @@ export const internalServerError500 = (): ProblemJson => ({
 export const createSuccessGetTransactionOutcomesEntity = (
   outcome: number,
   isFinalStatus: boolean,
-  totalAmount?: AmountEuroCents
+  totalAmount?: AmountEuroCents,
+  fees?: AmountEuroCents
 ): TransactionOutcomeInfo => ({
+  fees,
   isFinalStatus,
   outcome,
   totalAmount

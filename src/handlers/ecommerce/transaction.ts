@@ -2882,7 +2882,8 @@ export const ecommerceGetTransactionOutcome: RequestHandler = async (
           createSuccessGetTransactionOutcomesEntity(
             0,
             true,
-            12000 as AmountEuroCents
+            12000 as AmountEuroCents,
+            100 as AmountEuroCents
           )
         );
     case FlowCase.OUTCOME_1:
@@ -2965,7 +2966,8 @@ export const ecommerceGetTransactionOutcome: RequestHandler = async (
           createSuccessGetTransactionOutcomesEntity(
             0,
             true,
-            12000 as AmountEuroCents
+            12000 as AmountEuroCents,
+            100 as AmountEuroCents
           )
         );
   }
