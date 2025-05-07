@@ -286,7 +286,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.get("/checkout/feature-flags/v1/features/values", checkoutFeatureFlag);
 
   app.get(
-    "/ecommerce/checkout/vi/transactions/:id/outcomes",
+    "/ecommerce/checkout/v1/transactions/:id/outcomes",
     ecommerceGetTransactionOutcome
   );
 
