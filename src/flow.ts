@@ -89,16 +89,9 @@ export enum TransactionOutcomeInfoCase {
   OUTCOME_2,
   OUTCOME_3,
   OUTCOME_4,
-  OUTCOME_5,
-  OUTCOME_6,
   OUTCOME_7,
   OUTCOME_8,
-  OUTCOME_9,
   OUTCOME_10,
-  OUTCOME_11,
-  OUTCOME_12,
-  OUTCOME_13,
-  OUTCOME_14,
   OUTCOME_17,
   OUTCOME_18,
   OUTCOME_25,
@@ -682,9 +675,11 @@ export const maybeGetTransactionOutcomeInfoCookie: (
   req: express.Request
 ) => O.Option<TransactionOutcomeInfoCase> = req =>
   pipe(
-    O.fromNullable(req.cookies.outcomeInfo),
+    O.fromNullable(req.cookies.transactionOutcome),
     id => {
-      logger.info(`Request outcome info cookie: [${req.cookies.outcomeInfo}]`);
+      logger.info(
+        `Request outcome info cookie: [${req.cookies.transactionOutcome}]`
+      );
       return id;
     },
     O.filter(id => id in TransactionOutcomeInfoCase),
@@ -692,6 +687,16 @@ export const maybeGetTransactionOutcomeInfoCookie: (
       (id: TransactionOutcomeInfoCaseEnumKey) => TransactionOutcomeInfoCase[id]
     )
   );
+
+export const maybeGetOutcomeInfoRetriesCookie: (
+  req: express.Request
+) => O.Option<number> = req =>
+  pipe(O.fromNullable(req.cookies.transactionOutcomeRetries), id => {
+    logger.info(
+      `Request outcome info cookie: [${req.cookies.transactionOutcomeRetries}]`
+    );
+    return id;
+  });
 
 export const maybeGetSendPaymentResultCookie: (
   req: express.Request
@@ -738,6 +743,14 @@ export const getOutcomeInfoCookie: (
   pipe(
     maybeGetTransactionOutcomeInfoCookie(req),
     O.getOrElse(() => (undefined as unknown) as TransactionOutcomeInfoCase)
+  );
+
+export const getOutcomeInfoRetriesCookie: (
+  req: express.Request
+) => number = req =>
+  pipe(
+    maybeGetOutcomeInfoRetriesCookie(req),
+    O.getOrElse(() => 0)
   );
 
 export const maybeGetPaymentGatewayCookie: (
@@ -872,7 +885,15 @@ export const setPaymentGatewayCookie: (
   );
 };
 
-export const setTransactionOutcomeCase: (
+export const setOutcomeRetriesCookie: (
+  res: express.Response,
+  value: number
+) => void = (res, val) => {
+  logger.info(`Set transactionOutcomeRetries cookie to: [${val}]`);
+  res.cookie("transactionOutcomeRetries", val);
+};
+
+export const setTransactionOutcomeCaseCookie: (
   res: express.Response,
   transactionOutcome: TransactionOutcomeInfoCase | undefined
 ) => void = (res, transactionOutcome) => {
@@ -884,6 +905,7 @@ export const setTransactionOutcomeCase: (
         `Set transactionOutcome cookie to: [${TransactionOutcomeInfoCase[id]}]`
       );
       res.cookie("transactionOutcome", TransactionOutcomeInfoCase[id]);
+      setOutcomeRetriesCookie(res, 3); // It attempts 3 times before getting wanted value
     })
   );
 };

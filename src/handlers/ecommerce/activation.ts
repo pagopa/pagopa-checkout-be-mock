@@ -30,7 +30,7 @@ import {
   setFlowCookie,
   setPaymentGatewayCookie,
   setSendPaymentResultOutcomeCookie,
-  setTransactionOutcomeCase,
+  setTransactionOutcomeCaseCookie,
   VposFlowCase,
   XPayFlowCase
 } from "../../flow";
@@ -299,7 +299,7 @@ export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
       setSendPaymentResultOutcomeCookie(res, sendPaymentResultOutcome);
       setPaymentGatewayCookie(res, paymentGateway);
       setErrorCodeCookie(res, errorCode, paymentGateway);
-      setTransactionOutcomeCase(res, transactionOutcomeInfoCaseId);
+      setTransactionOutcomeCaseCookie(res, transactionOutcomeInfoCaseId);
       returnSuccessResponse(req, res);
   }
 };

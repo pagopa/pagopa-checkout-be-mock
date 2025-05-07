@@ -5,8 +5,10 @@ import {
   getErrorCodeCookie,
   getFlowCookie,
   getOutcomeInfoCookie,
+  getOutcomeInfoRetriesCookie,
   getPaymentGatewayCookie,
   getSendPaymentResultCookie,
+  setOutcomeRetriesCookie,
   TransactionOutcomeInfoCase
 } from "../../flow";
 import { logger } from "../../logger";
@@ -2876,6 +2878,13 @@ export const ecommerceGetTransactionOutcome: RequestHandler = async (
 ) => {
   logger.info("[Get transaction outcome ecommerce] - Return success case");
   // eslint-disable-next-line sonarjs/max-switch-cases, sonarjs/no-duplicated-branches
+  const retry = getOutcomeInfoRetriesCookie(req);
+  if (retry != null && retry > 0) {
+    setOutcomeRetriesCookie(res, retry - 1);
+    return res
+      .status(200)
+      .send(createSuccessGetTransactionOutcomesEntity(1, false));
+  }
   switch (getOutcomeInfoCookie(req)) {
     case TransactionOutcomeInfoCase.OUTCOME_0:
       return res
@@ -2904,14 +2913,6 @@ export const ecommerceGetTransactionOutcome: RequestHandler = async (
       return res
         .status(200)
         .send(createSuccessGetTransactionOutcomesEntity(4, true));
-    case TransactionOutcomeInfoCase.OUTCOME_5:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(5, true));
-    case TransactionOutcomeInfoCase.OUTCOME_6:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(6, true));
     case TransactionOutcomeInfoCase.OUTCOME_7:
       return res
         .status(200)
@@ -2920,30 +2921,10 @@ export const ecommerceGetTransactionOutcome: RequestHandler = async (
       return res
         .status(200)
         .send(createSuccessGetTransactionOutcomesEntity(8, true));
-    case TransactionOutcomeInfoCase.OUTCOME_9:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(9, true));
     case TransactionOutcomeInfoCase.OUTCOME_10:
       return res
         .status(200)
         .send(createSuccessGetTransactionOutcomesEntity(10, true));
-    case TransactionOutcomeInfoCase.OUTCOME_11:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(11, true));
-    case TransactionOutcomeInfoCase.OUTCOME_12:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(12, true));
-    case TransactionOutcomeInfoCase.OUTCOME_13:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(13, true));
-    case TransactionOutcomeInfoCase.OUTCOME_14:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(14, true));
     case TransactionOutcomeInfoCase.OUTCOME_17:
       return res
         .status(200)
