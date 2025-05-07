@@ -24,11 +24,13 @@ import {
   getFlowFromRptId,
   getGatewayFromRptId,
   getSendPaymentResultOutcomeFromRptId,
+  getTransactionOutcomeFromRptId,
   SendPaymentResultOutcomeCase,
   setErrorCodeCookie,
   setFlowCookie,
   setPaymentGatewayCookie,
   setSendPaymentResultOutcomeCookie,
+  setTransactionOutcomeCase,
   VposFlowCase,
   XPayFlowCase
 } from "../../flow";
@@ -101,6 +103,21 @@ const loginErrorCase = [
 ];
 
 const logoutErrorCase = [FlowCase.FAIL_LOGOUT_400, FlowCase.FAIL_LOGOUT_500];
+
+const transactionOutcomeCase = [
+  FlowCase.OUTCOME_0,
+  FlowCase.OUTCOME_1,
+  FlowCase.OUTCOME_2,
+  FlowCase.OUTCOME_3,
+  FlowCase.OUTCOME_4,
+  FlowCase.OUTCOME_8,
+  FlowCase.OUTCOME_14,
+  FlowCase.OUTCOME_17,
+  FlowCase.OUTCOME_18,
+  FlowCase.OUTCOME_121,
+  FlowCase.OUTCOME_116,
+  FlowCase.OUTCOME_117
+];
 
 const returnSuccessResponse = (
   req: express.Request,
@@ -188,6 +205,12 @@ export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
     O.getOrElseW(() => undefined)
   );
 
+  const transactionOutcomeInfoCaseId = pipe(
+    req.body.paymentNotices[0].rptId,
+    getTransactionOutcomeFromRptId,
+    O.getOrElseW(() => undefined)
+  );
+
   const errorCode = getErrorCodeFromRptId(req.body.paymentNotices[0].rptId);
 
   const flowId = pipe(
@@ -200,7 +223,8 @@ export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
       !transactionUserCancelCase.includes(id) &&
       !pgsEsitoMappingCase.includes(id) &&
       !loginErrorCase &&
-      !logoutErrorCase
+      !logoutErrorCase &&
+      !transactionOutcomeCase.includes(id)
         ? FlowCase.OK
         : id
     ),
@@ -275,6 +299,7 @@ export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
       setSendPaymentResultOutcomeCookie(res, sendPaymentResultOutcome);
       setPaymentGatewayCookie(res, paymentGateway);
       setErrorCodeCookie(res, errorCode, paymentGateway);
+      setTransactionOutcomeCase(res, transactionOutcomeInfoCaseId);
       returnSuccessResponse(req, res);
   }
 };
