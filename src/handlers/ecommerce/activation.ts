@@ -97,21 +97,6 @@ const loginErrorCase = [
 
 const logoutErrorCase = [FlowCase.FAIL_LOGOUT_400, FlowCase.FAIL_LOGOUT_500];
 
-const transactionOutcomeCase = [
-  FlowCase.OUTCOME_0,
-  FlowCase.OUTCOME_1,
-  FlowCase.OUTCOME_2,
-  FlowCase.OUTCOME_3,
-  FlowCase.OUTCOME_4,
-  FlowCase.OUTCOME_8,
-  FlowCase.OUTCOME_14,
-  FlowCase.OUTCOME_17,
-  FlowCase.OUTCOME_18,
-  FlowCase.OUTCOME_121,
-  FlowCase.OUTCOME_116,
-  FlowCase.OUTCOME_117
-];
-
 const returnSuccessResponse = (
   req: express.Request,
   res: any,
@@ -216,8 +201,7 @@ export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
       !transactionUserCancelCase.includes(id) &&
       !pgsEsitoMappingCase.includes(id) &&
       !loginErrorCase &&
-      !logoutErrorCase &&
-      !transactionOutcomeCase.includes(id)
+      !logoutErrorCase
         ? FlowCase.OK
         : id
     ),

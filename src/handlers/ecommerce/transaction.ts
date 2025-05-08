@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable extra-rules/no-commented-out-code */
 import { RequestHandler } from "express";
 import {
   FlowCase,
@@ -7,9 +8,7 @@ import {
   getOutcomeInfoCookie,
   getOutcomeInfoRetriesCookie,
   getPaymentGatewayCookie,
-  getSendPaymentResultCookie,
-  setOutcomeRetriesCookie,
-  TransactionOutcomeInfoCase
+  getSendPaymentResultCookie
 } from "../../flow";
 import { logger } from "../../logger";
 import {
@@ -2880,78 +2879,30 @@ export const ecommerceGetTransactionOutcome: RequestHandler = async (
   // eslint-disable-next-line sonarjs/max-switch-cases, sonarjs/no-duplicated-branches
   const retry = getOutcomeInfoRetriesCookie(req);
   if (retry != null && retry > 0) {
-    setOutcomeRetriesCookie(res, retry - 1);
+    // setOutcomeRetriesCookie(res, retry - 1);
     return res
       .status(200)
       .send(createSuccessGetTransactionOutcomesEntity(1, false));
   }
-  switch (getOutcomeInfoCookie(req)) {
-    case TransactionOutcomeInfoCase.OUTCOME_0:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionOutcomesEntity(
-            0,
-            true,
-            12000 as AmountEuroCents,
-            100 as AmountEuroCents
-          )
-        );
-    case TransactionOutcomeInfoCase.OUTCOME_1:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(1, true));
-    case TransactionOutcomeInfoCase.OUTCOME_2:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(2, true));
-    case TransactionOutcomeInfoCase.OUTCOME_3:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(3, true));
-    case TransactionOutcomeInfoCase.OUTCOME_4:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(4, true));
-    case TransactionOutcomeInfoCase.OUTCOME_7:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(7, true));
-    case TransactionOutcomeInfoCase.OUTCOME_8:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(8, true));
-    case TransactionOutcomeInfoCase.OUTCOME_10:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(10, true));
-    case TransactionOutcomeInfoCase.OUTCOME_17:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(17, true));
-    case TransactionOutcomeInfoCase.OUTCOME_116:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(116, true));
-    case TransactionOutcomeInfoCase.OUTCOME_117:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(117, true));
-    case TransactionOutcomeInfoCase.OUTCOME_121:
-      return res
-        .status(200)
-        .send(createSuccessGetTransactionOutcomesEntity(121, true));
-    // eslint-disable-next-line sonarjs/no-duplicated-branches
-    default:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionOutcomesEntity(
-            0,
-            true,
-            12000 as AmountEuroCents,
-            100 as AmountEuroCents
-          )
-        );
+  if (getOutcomeInfoCookie(req) === 0) {
+    return res
+      .status(200)
+      .send(
+        createSuccessGetTransactionOutcomesEntity(
+          0,
+          true,
+          12000 as AmountEuroCents,
+          100 as AmountEuroCents
+        )
+      );
+  } else {
+    return res
+      .status(200)
+      .send(
+        createSuccessGetTransactionOutcomesEntity(
+          getOutcomeInfoCookie(req),
+          true
+        )
+      );
   }
 };

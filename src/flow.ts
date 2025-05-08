@@ -85,21 +85,21 @@ export enum SendPaymentResultOutcomeCase {
 
 export enum TransactionOutcomeInfoCase {
   /** start pagopa-ecommerce-outcome */
-  OUTCOME_0,
-  OUTCOME_1,
-  OUTCOME_2,
-  OUTCOME_3,
-  OUTCOME_4,
-  OUTCOME_7,
-  OUTCOME_8,
-  OUTCOME_10,
-  OUTCOME_17,
-  OUTCOME_18,
-  OUTCOME_25,
-  OUTCOME_99,
-  OUTCOME_116,
-  OUTCOME_117,
-  OUTCOME_121
+  OUTCOME_0 = "000",
+  OUTCOME_1 = "001",
+  OUTCOME_2 = "002",
+  OUTCOME_3 = "003",
+  OUTCOME_4 = "004",
+  OUTCOME_7 = "007",
+  OUTCOME_8 = "008",
+  OUTCOME_10 = "010",
+  OUTCOME_17 = "017",
+  OUTCOME_18 = "018",
+  OUTCOME_25 = "025",
+  OUTCOME_99 = "099",
+  OUTCOME_116 = "116",
+  OUTCOME_117 = "117",
+  OUTCOME_121 = "121"
   /** end pagopa-ecommerce-outcome */
 }
 
@@ -210,20 +210,6 @@ export enum FlowCase {
   FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS,
   FAIL_LOGOUT_400,
   FAIL_LOGOUT_500,
-  OUTCOME_0,
-  OUTCOME_1,
-  OUTCOME_2,
-  OUTCOME_3,
-  OUTCOME_4,
-  OUTCOME_8,
-  OUTCOME_14,
-  OUTCOME_17,
-  OUTCOME_18,
-  OUTCOME_25,
-  OUTCOME_99,
-  OUTCOME_116,
-  OUTCOME_117,
-  OUTCOME_121,
 
   /** start pagopa-ecommerce: handle final outcome page for NPG status */
   /** Please note these tests are not used as a suffix of the rptId they only serve to reroute the flow for testing on the states of the CR pipeline of the checkout fe */
@@ -604,7 +590,6 @@ type GatewayCaseKey = keyof typeof GatewayCase;
 type ErrorCodeCaseXPAYKey = keyof typeof ErrorCodeCaseXPAY;
 type ErrorCodeCaseVPOSKey = keyof typeof ErrorCodeCaseVPOS;
 type SendPaymentResultOutcomeEnumKey = keyof typeof SendPaymentResultOutcomeEnum;
-type TransactionOutcomeInfoCaseEnumKey = keyof typeof TransactionOutcomeInfoCase;
 
 export const getFlowFromRptId: (
   rptId: string
@@ -645,8 +630,12 @@ export const getSendPaymentResultOutcomeFromRptId: (
 export const getTransactionOutcomeFromRptId: (
   rptId: string
 ) => O.Option<TransactionOutcomeInfoCase> = rptId => {
-  const flowId = Number(rptId.slice(-21, -18));
-  if (flowId in TransactionOutcomeInfoCase) {
+  const flowId = rptId.slice(-21, -18);
+  logger.info(`Request mockFlow cookie: [${flowId}]`);
+  if (
+    Object.values(TransactionOutcomeInfoCase).filter(v => v === flowId)
+      .length === 1
+  ) {
     return O.some(flowId as TransactionOutcomeInfoCase);
   } else {
     return O.none;
@@ -674,19 +663,15 @@ export const getFlowCookie: (req: express.Request) => FlowCase = req =>
 
 export const maybeGetTransactionOutcomeInfoCookie: (
   req: express.Request
-) => O.Option<TransactionOutcomeInfoCase> = req =>
+) => O.Option<number> = req =>
   pipe(
     O.fromNullable(req.cookies.transactionOutcome),
-    id => {
+    O.map(id => {
       logger.info(
         `Request outcome info cookie: [${req.cookies.transactionOutcome}]`
       );
-      return id;
-    },
-    O.filter(id => id in TransactionOutcomeInfoCase),
-    O.map(
-      (id: TransactionOutcomeInfoCaseEnumKey) => TransactionOutcomeInfoCase[id]
-    )
+      return Number.parseInt(id, 10);
+    })
   );
 
 export const maybeGetOutcomeInfoRetriesCookie: (
@@ -738,12 +723,10 @@ export const getSendPaymentResultCookie: (
     O.getOrElse(() => (undefined as unknown) as SendPaymentResultOutcomeEnum)
   );
 
-export const getOutcomeInfoCookie: (
-  req: express.Request
-) => TransactionOutcomeInfoCase = req =>
+export const getOutcomeInfoCookie: (req: express.Request) => number = req =>
   pipe(
     maybeGetTransactionOutcomeInfoCookie(req),
-    O.getOrElse(() => (undefined as unknown) as TransactionOutcomeInfoCase)
+    O.getOrElse(() => 0)
   );
 
 export const getOutcomeInfoRetriesCookie: (
@@ -858,20 +841,6 @@ export const setErrorCodeCookie: (
   }
 };
 
-export const setOutcomeInfoCookie: (
-  res: express.Response,
-  outcome: TransactionOutcomeInfoCase | undefined
-) => void = (res, gatewayID) => {
-  pipe(
-    gatewayID,
-    O.fromNullable,
-    O.map(id => {
-      logger.info(`Set outcome cookie to: [${TransactionOutcomeInfoCase[id]}]`);
-      res.cookie("outcomeInfo", TransactionOutcomeInfoCase[id]);
-    })
-  );
-};
-
 export const setPaymentGatewayCookie: (
   res: express.Response,
   gatewayID: GatewayCase | undefined
@@ -898,15 +867,24 @@ export const setTransactionOutcomeCaseCookie: (
   res: express.Response,
   transactionOutcome: TransactionOutcomeInfoCase | undefined
 ) => void = (res, transactionOutcome) => {
+  logger.info(`Try to Set transactionOutcome cookie ${transactionOutcome}`);
+  res.clearCookie("transactionOutcome");
   pipe(
     transactionOutcome,
     O.fromNullable,
     O.map(id => {
-      logger.info(
-        `Set transactionOutcome cookie to: [${TransactionOutcomeInfoCase[id]}]`
-      );
-      res.cookie("transactionOutcome", TransactionOutcomeInfoCase[id]);
-      // setOutcomeRetriesCookie(res, 3); // It attempts 3 times before getting wanted value
+      logger.info(`Try to Set transactionOutcome cookie to: [${id}]`);
+      if (
+        Object.values(TransactionOutcomeInfoCase).filter(v => v === id)
+          .length === 1
+      ) {
+        logger.info(`Set transactionOutcome cookie to: [${id}]`);
+        logger.info(
+          `Set transactionOutcome cookie to: [${Number.parseInt(id, 10)}]`
+        );
+        res.cookie("transactionOutcome", Number.parseInt(id, 10));
+        // setOutcomeRetriesCookie(res, 3); // It attempts 3 times before getting wanted value
+      }
     })
   );
 };
