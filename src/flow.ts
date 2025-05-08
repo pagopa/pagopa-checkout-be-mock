@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/no-identical-functions */
+/* eslint-disable extra-rules/no-commented-out-code */
 import * as O from "fp-ts/lib/Option";
 import * as express from "express";
 import * as E from "fp-ts/Either";
@@ -644,7 +645,7 @@ export const getSendPaymentResultOutcomeFromRptId: (
 export const getTransactionOutcomeFromRptId: (
   rptId: string
 ) => O.Option<TransactionOutcomeInfoCase> = rptId => {
-  const flowId = Number(rptId.slice(-10, -7));
+  const flowId = Number(rptId.slice(-21, -18));
   if (flowId in TransactionOutcomeInfoCase) {
     return O.some(flowId as TransactionOutcomeInfoCase);
   } else {
@@ -693,7 +694,7 @@ export const maybeGetOutcomeInfoRetriesCookie: (
 ) => O.Option<number> = req =>
   pipe(O.fromNullable(req.cookies.transactionOutcomeRetries), id => {
     logger.info(
-      `Request outcome info cookie: [${req.cookies.transactionOutcomeRetries}]`
+      `Request outcome info retries cookie: [${req.cookies.transactionOutcomeRetries}]`
     );
     return id;
   });
@@ -905,7 +906,7 @@ export const setTransactionOutcomeCaseCookie: (
         `Set transactionOutcome cookie to: [${TransactionOutcomeInfoCase[id]}]`
       );
       res.cookie("transactionOutcome", TransactionOutcomeInfoCase[id]);
-      setOutcomeRetriesCookie(res, 3); // It attempts 3 times before getting wanted value
+      // setOutcomeRetriesCookie(res, 3); // It attempts 3 times before getting wanted value
     })
   );
 };

@@ -19,17 +19,10 @@ import {
 import {
   FlowCase,
   generateTransactionId,
-  getErrorCodeFromRptId,
   getFlowCookie,
   getFlowFromRptId,
-  getGatewayFromRptId,
-  getSendPaymentResultOutcomeFromRptId,
   getTransactionOutcomeFromRptId,
-  SendPaymentResultOutcomeCase,
-  setErrorCodeCookie,
   setFlowCookie,
-  setPaymentGatewayCookie,
-  setSendPaymentResultOutcomeCookie,
   setTransactionOutcomeCaseCookie,
   VposFlowCase,
   XPayFlowCase
@@ -192,7 +185,7 @@ const return503StazioneIntPAErrorResponse = (res: any): void => {
 export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
   const version = req.path.match(/\/ecommerce\/checkout\/(\w{2})/)?.slice(1);
   logger.info(`[Activation ecommerce] - version: ${version}`);
-
+  /*
   const sendPaymentResultOutcome = pipe(
     req.body.paymentNotices[0].rptId,
     getSendPaymentResultOutcomeFromRptId,
@@ -204,14 +197,14 @@ export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
     getGatewayFromRptId,
     O.getOrElseW(() => undefined)
   );
-
+*/
   const transactionOutcomeInfoCaseId = pipe(
     req.body.paymentNotices[0].rptId,
     getTransactionOutcomeFromRptId,
     O.getOrElseW(() => undefined)
   );
 
-  const errorCode = getErrorCodeFromRptId(req.body.paymentNotices[0].rptId);
+  // const errorCode = getErrorCodeFromRptId(req.body.paymentNotices[0].rptId);
 
   const flowId = pipe(
     req.body.paymentNotices[0].rptId,
@@ -296,9 +289,6 @@ export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
       break;
     default:
       setFlowCookie(res, flowId);
-      setSendPaymentResultOutcomeCookie(res, sendPaymentResultOutcome);
-      setPaymentGatewayCookie(res, paymentGateway);
-      setErrorCodeCookie(res, errorCode, paymentGateway);
       setTransactionOutcomeCaseCookie(res, transactionOutcomeInfoCaseId);
       returnSuccessResponse(req, res);
   }
