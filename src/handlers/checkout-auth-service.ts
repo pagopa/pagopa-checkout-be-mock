@@ -111,8 +111,7 @@ const checkoutAuthServiceGetUsers401 = (res: any): void => {
 const checkoutAuthServiceGetUsers = (res: any): void => {
   const userInfo: UserInfoResponse = {
     familyName: "RossiTest",
-    name: "MarioTest",
-    userId: "ZSSZLI85M01Z501Z"
+    name: "MarioTest"
   };
   return res.status(200).send(userInfo);
 };
