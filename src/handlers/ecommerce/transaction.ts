@@ -2891,7 +2891,7 @@ export const ecommerceGetTransactionOutcome: RequestHandler = async (
         createSuccessGetTransactionOutcomesEntity(
           0,
           true,
-          12000 as AmountEuroCents,
+          12015 as AmountEuroCents,
           100 as AmountEuroCents
         )
       );
