@@ -101,6 +101,21 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
         }
       ],
       status: PaymentMethodStatusEnum.ENABLED
+    },
+    {
+      asset: "https://assets.cdn.platform.pagopa.it/apm/mybank.png",
+      description: "MyBank",
+      id: "2c61e6ed-f874-4b30-97ef-bdf89d488ee4",
+      methodManagement: PaymentMethodManagementTypeEnum.NOT_ONBOARDABLE,
+      name: "MYBANK",
+      paymentTypeCode: "MYBK",
+      ranges: [
+        {
+          max: 999999 as NonNegativeInteger,
+          min: 0 as NonNegativeInteger
+        }
+      ],
+      status: PaymentMethodStatusEnum.ENABLED
     }
   ]
 });
