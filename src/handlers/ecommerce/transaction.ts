@@ -1,20 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable extra-rules/no-commented-out-code */
 import { RequestHandler } from "express";
 import {
   FlowCase,
   getErrorCodeCookie,
   getFlowCookie,
+  getOutcomeInfoCookie,
+  getOutcomeInfoRetriesCookie,
   getPaymentGatewayCookie,
   getSendPaymentResultCookie
 } from "../../flow";
 import { logger } from "../../logger";
 import {
   createSuccessGetTransactionEntity,
+  createSuccessGetTransactionOutcomesEntity,
   error404TransactionIdNotFound,
   internalServerError500
 } from "../../utils/ecommerce/transaction";
 import { TransactionStatusEnum } from "../../generated/ecommerce/TransactionStatus";
 import { SendPaymentResultOutcomeEnum } from "../../generated/ecommerce/NewTransactionResponse";
+import { AmountEuroCents } from "../../generated/ecommerce/AmountEuroCents";
 
 export const NPG_GATEWAY = "NPG";
 
@@ -2863,5 +2868,41 @@ export const ecommerceDeleteTransaction: RequestHandler = async (req, res) => {
         "[Delete transaction ecommerce] - Return success case 202 accepted"
       );
       res.status(202).send();
+  }
+};
+
+export const ecommerceGetTransactionOutcome: RequestHandler = async (
+  req,
+  res
+) => {
+  logger.info("[Get transaction outcome ecommerce] - Return success case");
+  // eslint-disable-next-line sonarjs/max-switch-cases, sonarjs/no-duplicated-branches
+  const retry = getOutcomeInfoRetriesCookie(req);
+  if (retry != null && retry > 0) {
+    // setOutcomeRetriesCookie(res, retry - 1);
+    return res
+      .status(200)
+      .send(createSuccessGetTransactionOutcomesEntity(1, false));
+  }
+  if (getOutcomeInfoCookie(req) === 0) {
+    return res
+      .status(200)
+      .send(
+        createSuccessGetTransactionOutcomesEntity(
+          0,
+          true,
+          12000 as AmountEuroCents,
+          15 as AmountEuroCents
+        )
+      );
+  } else {
+    return res
+      .status(200)
+      .send(
+        createSuccessGetTransactionOutcomesEntity(
+          getOutcomeInfoCookie(req),
+          true
+        )
+      );
   }
 };
