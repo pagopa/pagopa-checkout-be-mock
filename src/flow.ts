@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/no-identical-functions */
+/* eslint-disable extra-rules/no-commented-out-code */
 import * as O from "fp-ts/lib/Option";
 import * as express from "express";
 import * as E from "fp-ts/Either";
@@ -80,6 +81,26 @@ export enum SendPaymentResultOutcomeCase {
   UNDEFINED,
   OK,
   KO
+}
+
+export enum TransactionOutcomeInfoCase {
+  /** start pagopa-ecommerce-outcome */
+  OUTCOME_0 = "000",
+  OUTCOME_1 = "001",
+  OUTCOME_2 = "002",
+  OUTCOME_3 = "003",
+  OUTCOME_4 = "004",
+  OUTCOME_7 = "007",
+  OUTCOME_8 = "008",
+  OUTCOME_10 = "010",
+  OUTCOME_17 = "017",
+  OUTCOME_18 = "018",
+  OUTCOME_25 = "025",
+  OUTCOME_99 = "099",
+  OUTCOME_116 = "116",
+  OUTCOME_117 = "117",
+  OUTCOME_121 = "121"
+  /** end pagopa-ecommerce-outcome */
 }
 
 export enum FlowCase {
@@ -606,6 +627,21 @@ export const getSendPaymentResultOutcomeFromRptId: (
   }
 };
 
+export const getTransactionOutcomeFromRptId: (
+  rptId: string
+) => O.Option<TransactionOutcomeInfoCase> = rptId => {
+  const flowId = rptId.slice(-21, -18);
+  logger.info(`Request mockFlow cookie: [${flowId}]`);
+  if (
+    Object.values(TransactionOutcomeInfoCase).filter(v => v === flowId)
+      .length === 1
+  ) {
+    return O.some(flowId as TransactionOutcomeInfoCase);
+  } else {
+    return O.none;
+  }
+};
+
 export const maybeGetFlowCookie: (
   req: express.Request
 ) => O.Option<FlowCase> = req =>
@@ -624,6 +660,29 @@ export const getFlowCookie: (req: express.Request) => FlowCase = req =>
     maybeGetFlowCookie(req),
     O.getOrElse(() => FlowCase.OK as FlowCase)
   );
+
+export const maybeGetTransactionOutcomeInfoCookie: (
+  req: express.Request
+) => O.Option<number> = req =>
+  pipe(
+    O.fromNullable(req.cookies.transactionOutcome),
+    O.map(id => {
+      logger.info(
+        `Request outcome info cookie: [${req.cookies.transactionOutcome}]`
+      );
+      return Number.parseInt(id, 10);
+    })
+  );
+
+export const maybeGetOutcomeInfoRetriesCookie: (
+  req: express.Request
+) => O.Option<number> = req =>
+  pipe(O.fromNullable(req.cookies.transactionOutcomeRetries), id => {
+    logger.info(
+      `Request outcome info retries cookie: [${req.cookies.transactionOutcomeRetries}]`
+    );
+    return id;
+  });
 
 export const maybeGetSendPaymentResultCookie: (
   req: express.Request
@@ -662,6 +721,20 @@ export const getSendPaymentResultCookie: (
   pipe(
     maybeGetSendPaymentResultCookie(req),
     O.getOrElse(() => (undefined as unknown) as SendPaymentResultOutcomeEnum)
+  );
+
+export const getOutcomeInfoCookie: (req: express.Request) => number = req =>
+  pipe(
+    maybeGetTransactionOutcomeInfoCookie(req),
+    O.getOrElse(() => 0)
+  );
+
+export const getOutcomeInfoRetriesCookie: (
+  req: express.Request
+) => number = req =>
+  pipe(
+    maybeGetOutcomeInfoRetriesCookie(req),
+    O.getOrElse(() => 0)
   );
 
 export const maybeGetPaymentGatewayCookie: (
@@ -778,6 +851,40 @@ export const setPaymentGatewayCookie: (
     O.map(id => {
       logger.info(`Set paymentGateway cookie to: [${GatewayCase[id]}]`);
       res.cookie("paymentGateway", GatewayCase[id]);
+    })
+  );
+};
+
+export const setOutcomeRetriesCookie: (
+  res: express.Response,
+  value: number
+) => void = (res, val) => {
+  logger.info(`Set transactionOutcomeRetries cookie to: [${val}]`);
+  res.cookie("transactionOutcomeRetries", val);
+};
+
+export const setTransactionOutcomeCaseCookie: (
+  res: express.Response,
+  transactionOutcome: TransactionOutcomeInfoCase | undefined
+) => void = (res, transactionOutcome) => {
+  logger.info(`Try to Set transactionOutcome cookie ${transactionOutcome}`);
+  res.clearCookie("transactionOutcome");
+  pipe(
+    transactionOutcome,
+    O.fromNullable,
+    O.map(id => {
+      logger.info(`Try to Set transactionOutcome cookie to: [${id}]`);
+      if (
+        Object.values(TransactionOutcomeInfoCase).filter(v => v === id)
+          .length === 1
+      ) {
+        logger.info(`Set transactionOutcome cookie to: [${id}]`);
+        logger.info(
+          `Set transactionOutcome cookie to: [${Number.parseInt(id, 10)}]`
+        );
+        res.cookie("transactionOutcome", Number.parseInt(id, 10));
+        // setOutcomeRetriesCookie(res, 3); // It attempts 3 times before getting wanted value
+      }
     })
   );
 };

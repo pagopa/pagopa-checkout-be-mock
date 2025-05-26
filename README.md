@@ -370,3 +370,25 @@ The authentication endpoints are driven to fail by using the following rptId suf
 | FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS             | 85           |
 | FAIL_LOGOUT_400                                    | 86           |
 | FAIL_LOGOUT_500                                    | 87           |
+
+## Outcome mock flow
+Since outcome evaluation logic has been moved to backend, in the frontend we have only to mock the response received. So a new way to mock the api response has been implemented, based on public administration fiscal code. The fiscal code is composed by 11 digits. The last 3 set the outcome code. For example to have outcome code to be 0 the fiscal code should be 77777777000, to have 121 the fiscal code should be 77777777121. All 3-digits combination code not present in this table, will end in outcomo 0 (success).
+
+| COOKIE MOCK FLOW                                   | PA FiscalCode Suffix |
+|----------------------------------------------------|----------------------|
+| OUTCOME_0                                          | 000                  |
+| OUTCOME_1                                          | 001                  |
+| OUTCOME_2                                          | 002                  |
+| OUTCOME_3                                          | 003                  |
+| OUTCOME_4                                          | 004                  |
+| OUTCOME_7                                          | 007                  |
+| OUTCOME_8                                          | 008                  |
+| OUTCOME_10                                         | 010                  |
+| OUTCOME_17                                         | 017                  |
+| OUTCOME_18                                         | 018                  |
+| OUTCOME_25                                         | 025                  |
+| OUTCOME_99                                         | 099                  |
+| OUTCOME_116                                        | 116                  |
+| OUTCOME_117                                        | 117                  |
+| OUTCOME_121                                        | 121                  |
+

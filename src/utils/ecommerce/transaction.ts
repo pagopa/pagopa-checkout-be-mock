@@ -10,6 +10,7 @@ import {
   TransactionInfoGatewayInfo,
   TransactionInfoNodeInfo
 } from "../../generated/ecommerce-v2/TransactionInfo";
+import { TransactionOutcomeInfo } from "../../generated/ecommerce/TransactionOutcomeInfo";
 
 export const createSuccessGetTransactionEntity = (
   transactionId: string,
@@ -62,4 +63,16 @@ export const internalServerError500 = (): ProblemJson => ({
   instance: "Example instance",
   status: 500 as HttpStatusCode,
   title: "Internal server error"
+});
+
+export const createSuccessGetTransactionOutcomesEntity = (
+  outcome: number,
+  isFinalStatus: boolean,
+  totalAmount?: AmountEuroCents,
+  fees?: AmountEuroCents
+): TransactionOutcomeInfo => ({
+  fees,
+  isFinalStatus,
+  outcome,
+  totalAmount
 });
