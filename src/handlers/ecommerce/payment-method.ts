@@ -77,6 +77,8 @@ export const createFormWithNpg: RequestHandler = async (_req, res, _next) => {
   logger.info(
     `[Invoke NPG for create form using payment method id: ${_req.params.id}] - Return success case`
   );
+
+  logger.info("SONO QUI");
   const orderId = uuid().substring(0, 15);
   const postData = JSON.stringify({
     merchantUrl: `${_req.protocol}://${_req.get("Host")}`,
