@@ -7,6 +7,7 @@ export const checkoutFeatureFlag: RequestHandler = async (req, res) => {
   const loginResponse: FeatureFlagsResponse = {
     isAuthenticationEnabled: true,
     isPspPickerPageEnabled: true,
+    isMaintenancePageEnabled: false,
     isScheduledMaintenanceBannerEnabled: false
   };
   res.status(200).send(loginResponse);
