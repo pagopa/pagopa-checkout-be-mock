@@ -643,6 +643,14 @@ export const getTransactionOutcomeFromRptId: (
   }
 };
 
+export const getTransactionOutcomeRetryFromRptId: (
+  rptId: string
+) => number = rptId => {
+  const retryVal = Number(rptId.slice(-18, -17));
+  logger.info(`Request retry cookie: [${retryVal}]`);
+  return retryVal;
+};
+
 export const maybeGetFlowCookie: (
   req: express.Request
 ) => O.Option<FlowCase> = req =>
@@ -866,8 +874,9 @@ export const setOutcomeRetriesCookie: (
 
 export const setTransactionOutcomeCaseCookie: (
   res: express.Response,
-  transactionOutcome: TransactionOutcomeInfoCase | undefined
-) => void = (res, transactionOutcome) => {
+  transactionOutcome: TransactionOutcomeInfoCase | undefined,
+  retryNumber: number | undefined,
+) => void = (res, transactionOutcome, retryNumber) => {
   logger.info(`Try to Set transactionOutcome cookie ${transactionOutcome}`);
   res.clearCookie("transactionOutcome");
   pipe(
@@ -885,10 +894,7 @@ export const setTransactionOutcomeCaseCookie: (
         );
         res.cookie("transactionOutcome", Number.parseInt(id, 10));
         logger.info(`Retry poll: ${id}`);
-        if (id === TransactionOutcomeInfoCase.OUTCOME_122) {
-          logger.info(`Retry poll:`);
-          setOutcomeRetriesCookie(res, 5); // It attempts 3 times before getting wanted value
-        }
+        setOutcomeRetriesCookie(res, retryNumber || 0); // It attempts 3 times before getting wanted value
       }
     })
   );
