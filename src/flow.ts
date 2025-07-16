@@ -894,7 +894,7 @@ export const setTransactionOutcomeCaseCookie: (
         );
         res.cookie("transactionOutcome", Number.parseInt(id, 10));
         logger.info(`Retry poll: ${id}`);
-        setOutcomeRetriesCookie(res, retryNumber || 0); // It attempts 3 times before getting wanted value
+        setOutcomeRetriesCookie(res, retryNumber || 0); // It attempts retryNumber times before getting wanted value
       }
     })
   );
