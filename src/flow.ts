@@ -99,7 +99,8 @@ export enum TransactionOutcomeInfoCase {
   OUTCOME_99 = "099",
   OUTCOME_116 = "116",
   OUTCOME_117 = "117",
-  OUTCOME_121 = "121"
+  OUTCOME_121 = "121",
+  OUTCOME_122 = "122"
   /** end pagopa-ecommerce-outcome */
 }
 
@@ -883,7 +884,11 @@ export const setTransactionOutcomeCaseCookie: (
           `Set transactionOutcome cookie to: [${Number.parseInt(id, 10)}]`
         );
         res.cookie("transactionOutcome", Number.parseInt(id, 10));
-        // setOutcomeRetriesCookie(res, 3); // It attempts 3 times before getting wanted value
+        logger.info(`Retry poll: ${id}`);
+        if (id === TransactionOutcomeInfoCase.OUTCOME_122) {
+          logger.info(`Retry poll:`);
+          setOutcomeRetriesCookie(res, 5); // It attempts 3 times before getting wanted value
+        }
       }
     })
   );
