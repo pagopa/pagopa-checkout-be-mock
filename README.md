@@ -69,7 +69,7 @@ $ yarn start
 
 ## Executing error flows
 
-If you invoke the `/checkout/payments/v1/payment-requests/:rptId` endpoint with an RPT id of the format `777777777773020167237496700xx` where `xx` is one of the flow codes below, you can control the failure mode of different handlers called from Checkout frontend during the payment process.
+If you invoke the `/checkout/payments/v1/payment-requests/:rptId` endpoint with an RPT id of the format `77777777777302016723749670yxx` where `xx` is one of the flow codes below, you can control the failure mode of different handlers called from Checkout frontend during the payment process. The y digit can be used to specify the number of retry attempts to simulate before returning the mocked respon
 
 This is currently implemented via a `mockFlow` cookie which is returned from the endpoint with the flow name as the value.
 
