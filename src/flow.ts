@@ -99,8 +99,7 @@ export enum TransactionOutcomeInfoCase {
   OUTCOME_99 = "099",
   OUTCOME_116 = "116",
   OUTCOME_117 = "117",
-  OUTCOME_121 = "121",
-  OUTCOME_122 = "122"
+  OUTCOME_121 = "121"
   /** end pagopa-ecommerce-outcome */
 }
 
@@ -646,7 +645,8 @@ export const getTransactionOutcomeFromRptId: (
 export const getTransactionOutcomeRetryFromRptId: (
   rptId: string
 ) => number = rptId => {
-  const retryVal = Number(rptId.slice(-18, -17));
+  logger.info(`rptId = [${rptId}]`);
+  const retryVal = Number(rptId.slice(-3, -2));
   logger.info(`Request retry cookie: [${retryVal}]`);
   return retryVal;
 };
@@ -875,7 +875,7 @@ export const setOutcomeRetriesCookie: (
 export const setTransactionOutcomeCaseCookie: (
   res: express.Response,
   transactionOutcome: TransactionOutcomeInfoCase | undefined,
-  retryNumber: number | undefined,
+  retryNumber: number | undefined
 ) => void = (res, transactionOutcome, retryNumber) => {
   logger.info(`Try to Set transactionOutcome cookie ${transactionOutcome}`);
   res.clearCookie("transactionOutcome");

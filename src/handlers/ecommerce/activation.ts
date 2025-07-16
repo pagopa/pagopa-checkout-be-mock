@@ -183,7 +183,6 @@ export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
     getTransactionOutcomeRetryFromRptId
   );
 
-
   // const errorCode = getErrorCodeFromRptId(req.body.paymentNotices[0].rptId);
 
   const flowId = pipe(
@@ -268,7 +267,11 @@ export const ecommerceActivation: RequestHandler = async (req, res, _next) => {
       break;
     default:
       setFlowCookie(res, flowId);
-      setTransactionOutcomeCaseCookie(res, transactionOutcomeInfoCaseId, retryOutcomeVal);
+      setTransactionOutcomeCaseCookie(
+        res,
+        transactionOutcomeInfoCaseId,
+        retryOutcomeVal
+      );
       returnSuccessResponse(req, res);
   }
 };
