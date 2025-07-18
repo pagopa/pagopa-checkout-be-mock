@@ -2878,6 +2878,8 @@ export const ecommerceGetTransactionOutcome: RequestHandler = async (
   logger.info("[Get transaction outcome ecommerce] - Return success case");
   // eslint-disable-next-line sonarjs/max-switch-cases, sonarjs/no-duplicated-branches
   const retry = getOutcomeInfoRetriesCookie(req);
+
+  logger.info(`[Retry polling: ${retry}]`);
   if (retry != null && retry > 0) {
     // setOutcomeRetriesCookie(res, retry - 1);
     return res
