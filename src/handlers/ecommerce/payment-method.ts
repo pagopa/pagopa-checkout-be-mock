@@ -7,7 +7,10 @@ import * as TE from "fp-ts/lib/TaskEither";
 import { v4 as uuid } from "uuid";
 import { formatValidationErrors } from "io-ts-reporters";
 import { logger } from "../../logger";
-import { createSuccessGetPaymentMethods } from "../../utils/ecommerce/payment-method";
+import {
+  convertV1GetPaymentMethodsToV2,
+  createSuccessGetPaymentMethods
+} from "../../utils/ecommerce/payment-method";
 import { CreateSessionResponse } from "../../generated/ecommerce/CreateSessionResponse";
 import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { Field } from "../../generated/ecommerce/Field";
@@ -19,6 +22,8 @@ import {
   getSessionIdCookie,
   setSessionIdCookie
 } from "../../flow";
+import { PaymentMethodsRequest } from "../../generated/ecommerce-v2/PaymentMethodsRequest";
+import { error400BadRequest } from "../../utils/ecommerce/psp";
 import { authService401 } from "./verify";
 
 export const ecommerceGetPaymentMethods: RequestHandler = async (
@@ -30,6 +35,24 @@ export const ecommerceGetPaymentMethods: RequestHandler = async (
   res.status(200).send(createSuccessGetPaymentMethods());
 };
 
+export const ecommerceGetPaymentMethodsV2: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  logger.info("[Get payment-methods V2 ecommerce] - Return success case");
+  return pipe(
+    req.body,
+    PaymentMethodsRequest.decode,
+    E.fold(
+      error => {
+        logger.error(`Error decoding payment methods request`, error);
+        return res.status(400).send(error400BadRequest());
+      },
+      () => res.status(200).send(convertV1GetPaymentMethodsToV2())
+    )
+  );
+};
 export const secureEcommerceGetPaymentMethods: RequestHandler = async (
   req,
   res,

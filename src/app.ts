@@ -42,6 +42,7 @@ import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import {
   createFormWithNpg,
   ecommerceGetPaymentMethods,
+  ecommerceGetPaymentMethodsV2,
   retrieveCardDataFromNpg,
   secureCreateFormWithNpg,
   secureEcommerceGetPaymentMethods
@@ -192,8 +193,14 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   // payment-requests-service get cart requests mock
   app.get("/ecommerce/checkout/v1/carts/:id", ecommerceGetCart);
 
-  // TODO refactoring to handle errors scenario
+  // get all payment methods (ecommerce method management)
   app.get("/ecommerce/checkout/v1/payment-methods", ecommerceGetPaymentMethods);
+
+  // get all payment methods (GMP method management)
+  app.post(
+    "/ecommerce/checkout/v2/payment-methods",
+    ecommerceGetPaymentMethodsV2
+  );
 
   app.get(
     "/ecommerce/checkout/v3/auth/payment-methods",

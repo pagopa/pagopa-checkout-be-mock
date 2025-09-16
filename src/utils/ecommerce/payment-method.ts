@@ -2,6 +2,13 @@ import { NonNegativeInteger } from "@pagopa/ts-commons/lib/numbers";
 import { PaymentMethodsResponse } from "../../generated/ecommerce/PaymentMethodsResponse";
 import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
 import { PaymentMethodManagementTypeEnum } from "../../generated/ecommerce/PaymentMethodManagementType";
+import { PaymentMethodsResponse as PaymentMethodsResponseV2 } from "../../generated/ecommerce-v2/PaymentMethodsResponse";
+import {
+  PaymentTypeCodeEnum,
+  MethodManagementEnum,
+  StatusEnum
+} from "../../generated/ecommerce-v2/PaymentMethodResponse";
+import { getEnumFromString } from "../utils";
 
 export const cardBrandAssets = {
   AMEX: "https://assets.cdn.platform.pagopa.it/creditcard/amex.png",
@@ -119,3 +126,39 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
     }
   ]
 });
+
+export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
+  const paymentMethodResponse = createSuccessGetPaymentMethods();
+  return {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    paymentMethods: paymentMethodResponse.paymentMethods!.map(p => ({
+      description: {
+        EN: `${p.description}_EN_description`,
+        IT: p.description
+      },
+      feeRange: {
+        max: p.ranges[0].max as number,
+        min: p.ranges[0].min as number
+      },
+      group: getEnumFromString(PaymentTypeCodeEnum, p.paymentTypeCode),
+      id: p.id,
+      methodManagement: getEnumFromString(
+        MethodManagementEnum,
+        p.methodManagement
+      ),
+      name: {
+        EN: `${p.name}_EN_name`,
+        IT: p.name
+      },
+      paymentMethodAsset: p.asset ?? "http://asset",
+      paymentMethodTypes: [p.paymentTypeCode === "CP" ? "CARTE" : "CONTO"],
+      paymentMethodsBrandAssets: p.brandAssets,
+      paymentTypeCode: getEnumFromString(
+        PaymentTypeCodeEnum,
+        p.paymentTypeCode
+      ),
+      status: StatusEnum.ENABLED,
+      validityDateFrom: new Date("2000-01-01")
+    }))
+  };
+};
