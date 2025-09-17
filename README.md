@@ -392,3 +392,15 @@ Since outcome evaluation logic has been moved to backend, in the frontend we hav
 | OUTCOME_117                                        | 117                  |
 | OUTCOME_121                                        | 121                  |
 
+## Checkout feature flags api
+Checkout f.e. reads feature flags at runtime invoking a backend api that tells if specific ff are enabled or not
+
+Each feature flag can be tuned using specific cookies in the request.
+
+| Feature flag                         | Description                                                                                     | Default value | Cookie to change value               | Cookie valid values   |
+|--------------------------------------|-------------------------------------------------------------------------------------------------|---------------|--------------------------------------|-----------------------|
+| isAuthenticationEnabled              | Boolean FF to enable SPID/CIE authentication                                                    | true          | authenticationEnabledFF              | boolean (true/false)  | 
+| isMaintenancePageEnabled             | Boolean FF to enable maintenance page                                                           | false         | maintenancePageEnabledFF             | boolean (true/false)  |
+| isPaymentMethodsHandlerEnabled       | Boolean FF to enable payment method handler (GMP) as client from where retrieve payment methods | true          | paymentMethodsHandlerEnabledFF       | boolean (true/false)  |
+| isPspPickerPageEnabled               | Boolean FF to enable PSP picker page                                                            | true          | pspPickerPageEnabledFF               | boolean (true/false)  |
+| isScheduledMaintenanceBannerEnabled  | Boolean FF to enable maintenance banner                                                         | false         | scheduledMaintenanceBannerEnabledFF  | boolean (true/false)  |
