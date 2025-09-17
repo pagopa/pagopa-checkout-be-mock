@@ -40,7 +40,7 @@ export const ecommerceGetPaymentMethodsV2: RequestHandler = async (
   res,
   _next
 ) => {
-  logger.info("[Get payment-methods V2 ecommerce] - Return success case");
+  logger.info("[Get all payment-methods V2 ecommerce] - Return success case");
   return pipe(
     req.body,
     PaymentMethodsRequest.decode,
@@ -59,7 +59,7 @@ export const ecommerceGetPaymentMethodsV4: RequestHandler = async (
   res,
   _next
 ) => {
-  logger.info("[Get payment-methods V2 ecommerce] - Return success case");
+  logger.info("[Get all payment-methods V4 ecommerce] - Return success case");
   return pipe(
     req.body,
     PaymentMethodsRequest.decode,
@@ -72,10 +72,10 @@ export const ecommerceGetPaymentMethodsV4: RequestHandler = async (
       error => {
         if (error === FlowCase.FAIL_UNAUTHORIZED_401) {
           logger.info("Return unauthorized due to flow cookie");
-          res.sendStatus(401);
+          return res.sendStatus(401);
         } else {
           logger.error("Error decoding payment methods request", error);
-          res.status(400).send(error400BadRequest());
+          return res.status(400).send(error400BadRequest());
         }
       },
       _ => res.status(200).send(convertV1GetPaymentMethodsToV2())
