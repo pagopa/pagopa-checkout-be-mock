@@ -43,6 +43,7 @@ import {
   createFormWithNpg,
   ecommerceGetPaymentMethods,
   ecommerceGetPaymentMethodsV2,
+  ecommerceGetPaymentMethodsV4,
   retrieveCardDataFromNpg,
   secureCreateFormWithNpg,
   secureEcommerceGetPaymentMethods
@@ -200,6 +201,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.post(
     "/ecommerce/checkout/v2/payment-methods",
     ecommerceGetPaymentMethodsV2
+  );
+
+  // get all payment methods (GMP method management) for authenticated user
+  app.post(
+    "/ecommerce/checkout/v4/payment-methods",
+    ecommerceGetPaymentMethodsV4
   );
 
   app.get(

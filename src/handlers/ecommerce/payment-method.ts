@@ -53,6 +53,36 @@ export const ecommerceGetPaymentMethodsV2: RequestHandler = async (
     )
   );
 };
+
+export const ecommerceGetPaymentMethodsV4: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  logger.info("[Get payment-methods V2 ecommerce] - Return success case");
+  return pipe(
+    req.body,
+    PaymentMethodsRequest.decode,
+    E.map(_ => getFlowCookie(req)),
+    E.filterOrElseW(
+      flowCookie => flowCookie !== FlowCase.FAIL_UNAUTHORIZED_401,
+      () => FlowCase.FAIL_UNAUTHORIZED_401
+    ),
+    E.fold(
+      error => {
+        if (error === FlowCase.FAIL_UNAUTHORIZED_401) {
+          logger.info("Return unauthorized due to flow cookie");
+          res.sendStatus(401);
+        } else {
+          logger.error("Error decoding payment methods request", error);
+          res.status(400).send(error400BadRequest());
+        }
+      },
+      _ => res.status(200).send(convertV1GetPaymentMethodsToV2())
+    )
+  );
+};
+
 export const secureEcommerceGetPaymentMethods: RequestHandler = async (
   req,
   res,
