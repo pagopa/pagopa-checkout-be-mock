@@ -133,8 +133,11 @@ export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     paymentMethods: paymentMethodResponse.paymentMethods!.map(p => ({
       description: {
+        DE: `${p.description}_DE_description`,
         EN: `${p.description}_EN_description`,
-        IT: p.description
+        FR: `${p.description}_FR_description`,
+        IT: p.description,
+        SL: `${p.description}_SL_description`
       },
       feeRange: {
         max: p.ranges[0].max as number,
@@ -147,8 +150,11 @@ export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
         p.methodManagement
       ),
       name: {
-        EN: `${p.name}_EN_name`,
-        IT: p.name
+        DE: `${p.description}_DE_name`,
+        EN: `${p.description}_EN_name`,
+        FR: `${p.description}_FR_name`,
+        IT: p.description,
+        SL: `${p.description}_SL_name`
       },
       paymentMethodAsset: p.asset ?? "http://asset",
       paymentMethodTypes: [p.paymentTypeCode === "CP" ? "CARTE" : "CONTO"],

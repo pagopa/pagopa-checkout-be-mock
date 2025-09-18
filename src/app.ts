@@ -205,7 +205,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // get all payment methods (GMP method management) for authenticated user
   app.post(
-    "/ecommerce/checkout/v4/payment-methods",
+    "/ecommerce/checkout/v4/auth/payment-methods",
     ecommerceGetPaymentMethodsV4
   );
 
