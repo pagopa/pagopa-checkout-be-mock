@@ -395,7 +395,10 @@ Since outcome evaluation logic has been moved to backend, in the frontend we hav
 ## Checkout feature flags api
 Checkout f.e. reads feature flags at runtime invoking a backend api that tells if specific ff are enabled or not
 
-Each feature flag can be tuned using specific cookies in the request.
+Each feature flag can be tuned using specific cookies in the request. For example:
+`document.cookie = "nameOfTheCookieToEdit=true|false; path=/";`
+`location.reload`
+Refreshing the front end would cause the new cookie value to be set.
 
 | Feature flag                         | Description                                                                                     | Default value | Cookie to change value               | Cookie valid values   |
 |--------------------------------------|-------------------------------------------------------------------------------------------------|---------------|--------------------------------------|-----------------------|
