@@ -123,6 +123,20 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
         }
       ],
       status: PaymentMethodStatusEnum.ENABLED
+    },
+    {
+      description: "Test disabled method",
+      id: "d80f127a-89b9-42b4-8e17-45c15ab8c954",
+      methodManagement: PaymentMethodManagementTypeEnum.REDIRECT,
+      name: "Test disabled method",
+      paymentTypeCode: "RICO",
+      ranges: [
+        {
+          max: 999999 as NonNegativeInteger,
+          min: 0 as NonNegativeInteger
+        }
+      ],
+      status: PaymentMethodStatusEnum.DISABLED
     }
   ]
 });
@@ -139,10 +153,14 @@ export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
         IT: p.description,
         SL: `${p.description}_SL_description`
       },
-      feeRange: {
-        max: p.ranges[0].max as number,
-        min: p.ranges[0].min as number
-      },
+      // remove fees from one method
+      feeRange:
+        p.paymentTypeCode !== "MYBK"
+          ? {
+              max: p.ranges[0].max as number,
+              min: p.ranges[0].min as number
+            }
+          : undefined,
       group: getEnumFromString(PaymentTypeCodeEnum, p.paymentTypeCode),
       id: p.id,
       methodManagement: getEnumFromString(
@@ -163,7 +181,10 @@ export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
         PaymentTypeCodeEnum,
         p.paymentTypeCode
       ),
-      status: StatusEnum.ENABLED,
+      status:
+        p.status.toString() === "ENABLED"
+          ? StatusEnum.ENABLED
+          : StatusEnum.DISABLED,
       validityDateFrom: new Date("2000-01-01")
     }))
   };
