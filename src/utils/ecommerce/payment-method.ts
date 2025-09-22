@@ -31,8 +31,8 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
       paymentTypeCode: "CP",
       ranges: [
         {
-          max: 999999 as NonNegativeInteger,
-          min: 0 as NonNegativeInteger
+          max: 1000 as NonNegativeInteger,
+          min: 1000 as NonNegativeInteger
         }
       ],
       status: PaymentMethodStatusEnum.ENABLED
