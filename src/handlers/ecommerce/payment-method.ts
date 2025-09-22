@@ -72,7 +72,7 @@ export const ecommerceGetPaymentMethodsV4: RequestHandler = async (
       error => {
         if (error === FlowCase.FAIL_UNAUTHORIZED_401) {
           logger.info("Return unauthorized due to flow cookie");
-          return res.sendStatus(401);
+          return authService401(res);
         } else {
           logger.error("Error decoding payment methods request", error);
           return res.status(400).send(error400BadRequest());
