@@ -2,6 +2,13 @@ import { NonNegativeInteger } from "@pagopa/ts-commons/lib/numbers";
 import { PaymentMethodsResponse } from "../../generated/ecommerce/PaymentMethodsResponse";
 import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethodStatus";
 import { PaymentMethodManagementTypeEnum } from "../../generated/ecommerce/PaymentMethodManagementType";
+import { PaymentMethodsResponse as PaymentMethodsResponseV2 } from "../../generated/ecommerce-v2/PaymentMethodsResponse";
+import {
+  PaymentTypeCodeEnum,
+  MethodManagementEnum,
+  StatusEnum
+} from "../../generated/ecommerce-v2/PaymentMethodResponse";
+import { getEnumFromString } from "../utils";
 
 export const cardBrandAssets = {
   AMEX: "https://assets.cdn.platform.pagopa.it/creditcard/amex.png",
@@ -24,8 +31,8 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
       paymentTypeCode: "CP",
       ranges: [
         {
-          max: 999999 as NonNegativeInteger,
-          min: 0 as NonNegativeInteger
+          max: 1000 as NonNegativeInteger,
+          min: 1000 as NonNegativeInteger
         }
       ],
       status: PaymentMethodStatusEnum.ENABLED
@@ -116,6 +123,69 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
         }
       ],
       status: PaymentMethodStatusEnum.ENABLED
+    },
+    {
+      description: "Test disabled method",
+      id: "d80f127a-89b9-42b4-8e17-45c15ab8c954",
+      methodManagement: PaymentMethodManagementTypeEnum.REDIRECT,
+      name: "Test disabled method",
+      paymentTypeCode: "RICO",
+      ranges: [
+        {
+          max: 999999 as NonNegativeInteger,
+          min: 0 as NonNegativeInteger
+        }
+      ],
+      status: PaymentMethodStatusEnum.DISABLED
     }
   ]
 });
+
+export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
+  const paymentMethodResponse = createSuccessGetPaymentMethods();
+  return {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    paymentMethods: paymentMethodResponse.paymentMethods!.map(p => ({
+      description: {
+        DE: `${p.description}_DE_description`,
+        EN: `${p.description}_EN_description`,
+        FR: `${p.description}_FR_description`,
+        IT: p.description,
+        SL: `${p.description}_SL_description`
+      },
+      // remove fees from one method
+      feeRange:
+        p.paymentTypeCode !== "MYBK"
+          ? {
+              max: p.ranges[0].max as number,
+              min: p.ranges[0].min as number
+            }
+          : undefined,
+      group: getEnumFromString(PaymentTypeCodeEnum, p.paymentTypeCode),
+      id: p.id,
+      methodManagement: getEnumFromString(
+        MethodManagementEnum,
+        p.methodManagement
+      ),
+      name: {
+        DE: `${p.description}_DE_name`,
+        EN: `${p.description}_EN_name`,
+        FR: `${p.description}_FR_name`,
+        IT: p.description,
+        SL: `${p.description}_SL_name`
+      },
+      paymentMethodAsset: p.asset ?? "http://asset",
+      paymentMethodTypes: [p.paymentTypeCode === "CP" ? "CARTE" : "CONTO"],
+      paymentMethodsBrandAssets: p.brandAssets,
+      paymentTypeCode: getEnumFromString(
+        PaymentTypeCodeEnum,
+        p.paymentTypeCode
+      ),
+      status:
+        p.status.toString() === "ENABLED"
+          ? StatusEnum.ENABLED
+          : StatusEnum.DISABLED,
+      validityDateFrom: new Date("2000-01-01")
+    }))
+  };
+};
