@@ -166,7 +166,7 @@ export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
       id: p.id,
       metadata:
         p.paymentTypeCode === "MYBK"
-          ? ({ INSTALLMENTS: "true" } as PaymentMethodResponseMetadata)
+          ? ({ BUY_NOW_PAY_LATER: "true" } as PaymentMethodResponseMetadata)
           : {},
       methodManagement: getEnumFromString(
         MethodManagementEnum,
