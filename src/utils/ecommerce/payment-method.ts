@@ -6,7 +6,8 @@ import { PaymentMethodsResponse as PaymentMethodsResponseV2 } from "../../genera
 import {
   PaymentTypeCodeEnum,
   MethodManagementEnum,
-  StatusEnum
+  StatusEnum,
+  PaymentMethodResponseMetadata
 } from "../../generated/ecommerce-v2/PaymentMethodResponse";
 import { getEnumFromString } from "../utils";
 
@@ -163,6 +164,10 @@ export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
           : undefined,
       group: getEnumFromString(PaymentTypeCodeEnum, p.paymentTypeCode),
       id: p.id,
+      metadata:
+        p.paymentTypeCode === "MYBK"
+          ? ({ BUY_NOW_PAY_LATER: "true" } as PaymentMethodResponseMetadata)
+          : {},
       methodManagement: getEnumFromString(
         MethodManagementEnum,
         p.methodManagement
@@ -175,7 +180,13 @@ export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
         SL: `${p.description}_SL_name`
       },
       paymentMethodAsset: p.asset ?? "http://asset",
-      paymentMethodTypes: [p.paymentTypeCode === "CP" ? "CARTE" : "CONTO"],
+      paymentMethodTypes: [
+        p.paymentTypeCode === "CP"
+          ? "CARTE"
+          : p.paymentTypeCode === "SATY"
+          ? "APP"
+          : "CONTO"
+      ],
       paymentMethodsBrandAssets: p.brandAssets,
       paymentTypeCode: getEnumFromString(
         PaymentTypeCodeEnum,
