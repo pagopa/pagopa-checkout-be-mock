@@ -53,6 +53,7 @@ import {
   checkoutAuthServiceLogoutUsersHandler
 } from "./handlers/checkout-auth-service";
 import { checkoutFeatureFlag } from "./handlers/checkout-feature-flags";
+import { checkoutIntegrities } from "./handlers/checkout-integrities";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -288,6 +289,13 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.get(
     "/ecommerce/checkout/v1/transactions/:id/outcomes",
     ecommerceGetTransactionOutcome
+  );
+
+  // resource integrities for frontends
+
+  app.get(
+    "/ecommerce/checkout/v1/integrities/:resourceId",
+    checkoutIntegrities
   );
 
   return app;
