@@ -232,6 +232,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     createFormWithNpg
   );
 
+  // payment-methods-service preauthorizations npg proxy - ecommerce-fe webview
+  app.post(
+    "/ecommerce/webview/v1/payment-methods/:id/sessions",
+    createFormWithNpg
+  );
+
   // payment-methods-service session payment method npg proxy
   app.get(
     "/ecommerce/checkout/v1/payment-methods/:id/sessions/:orderId",
