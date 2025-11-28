@@ -13,7 +13,11 @@ import * as cookieParser from "cookie-parser";
 //   paymentCheckHandler
 // } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
-import { addWalletHandler, updateWalletHandler } from "./handlers/wallet";
+import {
+  addWalletHandler,
+  ecommerceGetWallets,
+  updateWalletHandler
+} from "./handlers/wallet";
 import {
   checkTransactionHandler,
   resume3ds2Handler
@@ -309,6 +313,9 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     "/ecommerce/checkout/v1/transactions/:id/outcomes",
     ecommerceGetTransactionOutcome
   );
+
+  // wallet-service get wallets
+  app.get("/ecommerce/checkout/v1/users/wallets", ecommerceGetWallets);
 
   return app;
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars, sort-keys */
 import { pipe } from "fp-ts/function";
 import * as E from "fp-ts/Either";
 import { fold, map } from "fp-ts/Either";
@@ -27,6 +28,12 @@ import { AddWalletUsingPOSTT } from "../generated/payment_manager/requestTypes";
 import { WalletResponse } from "../generated/payment_manager/WalletResponse";
 import { FlowCase, getFlowCookie } from "../flow";
 import { logger } from "../logger";
+import { WalletInfo } from "../generated/ecommerce-wallet/WalletInfo";
+import { WalletInfoDetails } from "../generated/ecommerce-wallet/WalletInfoDetails";
+import { WalletClient } from "../generated/ecommerce-wallet/WalletClient";
+import { WalletApplicationInfo } from "../generated/ecommerce-wallet/WalletApplicationInfo";
+import { WalletStatusEnum } from "../generated/ecommerce-wallet/WalletStatus";
+import { WalletClientStatusEnum } from "../generated/ecommerce-wallet/WalletClientStatus";
 
 // eslint-disable-next-line functional/no-let
 let creditCard: CreditCard;
@@ -145,4 +152,93 @@ export const updateWalletHandler: RequestHandler = async (req, res) => {
     tupleWith(res),
     fold(_e => res.status(500).send(), sendResponseWithData)
   );
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, sort-keys
+const mockWallets: ReadonlyArray<WalletInfo> = [
+  {
+    walletId: "11111111-1111-1111-1111-111111111111",
+    paymentMethodId: "pm_1",
+    paymentMethodAsset: "http://logo.cdn/brandLogo1",
+    status: WalletStatusEnum.VALIDATED,
+    creationDate: new Date(),
+    updateDate: new Date(),
+    applications: [{ name: "APP1", status: "ENABLED" }] as ReadonlyArray<
+      WalletApplicationInfo
+    >,
+    clients: {
+      IO: { status: WalletClientStatusEnum.ENABLED }
+    },
+    details: {
+      type: "CARDS",
+      brand: "VISA",
+      lastFourDigits: "1234",
+      expiryDate: "203012"
+    } as WalletInfoDetails
+  },
+  {
+    walletId: "22222222-2222-2222-2222-222222222222",
+    paymentMethodId: "pm_2",
+    paymentMethodAsset: "http://logo.cdn/brandLogo2",
+    status: WalletStatusEnum.VALIDATED,
+    creationDate: new Date(),
+    updateDate: new Date(),
+    applications: [{ name: "APP2", status: "DISABLED" }] as ReadonlyArray<
+      WalletApplicationInfo
+    >,
+    clients: {
+      IO: { status: WalletClientStatusEnum.DISABLED }
+    },
+    details: {
+      type: "PAYPAL",
+      pspId: "psp_123",
+      pspBusinessName: "PayPal Business",
+      maskedEmail: "test***@***test.it"
+    } as WalletInfoDetails
+  },
+  {
+    walletId: "33333333-3333-3333-3333-333333333333",
+    paymentMethodId: "pm_3",
+    paymentMethodAsset: "http://logo.cdn/brandLogo3",
+    status: WalletStatusEnum.VALIDATED,
+    creationDate: new Date(),
+    updateDate: new Date(),
+    applications: [{ name: "APP3", status: "ENABLED" }] as ReadonlyArray<
+      WalletApplicationInfo
+    >,
+    clients: {
+      IO: { status: WalletClientStatusEnum.ENABLED }
+    },
+    details: {
+      type: "CARDS",
+      brand: "MASTERCARD",
+      lastFourDigits: "5678",
+      expiryDate: "202406"
+    } as WalletInfoDetails
+  },
+  {
+    walletId: "44444444-4444-4444-4444-444444444444",
+    paymentMethodId: "pm_4",
+    paymentMethodAsset: "http://logo.cdn/brandLogo4",
+    status: WalletStatusEnum.VALIDATED,
+    creationDate: new Date(),
+    updateDate: new Date(),
+    applications: [{ name: "APP4", status: "DISABLED" }] as ReadonlyArray<
+      WalletApplicationInfo
+    >,
+    clients: {
+      IO: { status: WalletClientStatusEnum.DISABLED }
+    },
+    details: {
+      type: "PAYPAL",
+      pspId: "psp_456",
+      pspBusinessName: "PayPal Enterprise",
+      maskedEmail: "demo***@***demo.it"
+    } as WalletInfoDetails
+  }
+];
+
+export const ecommerceGetWallets: RequestHandler = async (_req, res) => {
+  logger.info("GET WALLLETS ");
+  res.json({ wallets: mockWallets });
 };
