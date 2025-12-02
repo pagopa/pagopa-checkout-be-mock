@@ -158,8 +158,9 @@ export const updateWalletHandler: RequestHandler = async (req, res) => {
 const mockWallets: ReadonlyArray<WalletInfo> = [
   {
     walletId: "11111111-1111-1111-1111-111111111111",
-    paymentMethodId: "pm_1",
-    paymentMethodAsset: "http://logo.cdn/brandLogo1",
+    paymentMethodId: "cf3cc414-3b6f-46f6-a0ae-0f2e96188a56",
+    paymentMethodAsset:
+      "https://assets.cdn.platform.pagopa.it/creditcard/generic.png",
     status: WalletStatusEnum.VALIDATED,
     creationDate: new Date(),
     updateDate: new Date(),
@@ -172,14 +173,14 @@ const mockWallets: ReadonlyArray<WalletInfo> = [
     details: {
       type: "CARDS",
       brand: "VISA",
-      lastFourDigits: "1234",
+      lastFourDigits: "1334",
       expiryDate: "203012"
     } as WalletInfoDetails
   },
   {
     walletId: "22222222-2222-2222-2222-222222222222",
-    paymentMethodId: "pm_2",
-    paymentMethodAsset: "http://logo.cdn/brandLogo2",
+    paymentMethodId: "8f2a657e-4dd1-4f1a-9c48-c9df81203699",
+    paymentMethodAsset: "https://assets.cdn.platform.pagopa.it/apm/paypal.png",
     status: WalletStatusEnum.VALIDATED,
     creationDate: new Date(),
     updateDate: new Date(),
@@ -194,46 +195,6 @@ const mockWallets: ReadonlyArray<WalletInfo> = [
       pspId: "psp_123",
       pspBusinessName: "PayPal Business",
       maskedEmail: "test***@***test.it"
-    } as WalletInfoDetails
-  },
-  {
-    walletId: "33333333-3333-3333-3333-333333333333",
-    paymentMethodId: "pm_3",
-    paymentMethodAsset: "http://logo.cdn/brandLogo3",
-    status: WalletStatusEnum.VALIDATED,
-    creationDate: new Date(),
-    updateDate: new Date(),
-    applications: [{ name: "APP3", status: "ENABLED" }] as ReadonlyArray<
-      WalletApplicationInfo
-    >,
-    clients: {
-      IO: { status: WalletClientStatusEnum.ENABLED }
-    },
-    details: {
-      type: "CARDS",
-      brand: "MASTERCARD",
-      lastFourDigits: "5678",
-      expiryDate: "202406"
-    } as WalletInfoDetails
-  },
-  {
-    walletId: "44444444-4444-4444-4444-444444444444",
-    paymentMethodId: "pm_4",
-    paymentMethodAsset: "http://logo.cdn/brandLogo4",
-    status: WalletStatusEnum.VALIDATED,
-    creationDate: new Date(),
-    updateDate: new Date(),
-    applications: [{ name: "APP4", status: "DISABLED" }] as ReadonlyArray<
-      WalletApplicationInfo
-    >,
-    clients: {
-      IO: { status: WalletClientStatusEnum.DISABLED }
-    },
-    details: {
-      type: "PAYPAL",
-      pspId: "psp_456",
-      pspBusinessName: "PayPal Enterprise",
-      maskedEmail: "demo***@***demo.it"
     } as WalletInfoDetails
   }
 ];
