@@ -315,7 +315,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   );
 
   // wallet-service get wallets
-  app.get("/ecommerce/checkout/v1/users/wallets", ecommerceGetWallets);
+  app.get("/checkout/payment-wallet/v1/users/wallets", ecommerceGetWallets);
 
   return app;
 };
