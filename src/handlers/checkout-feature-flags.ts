@@ -31,7 +31,7 @@ export const checkoutFeatureFlag: RequestHandler = async (req, res) => {
     ),
     isPaymentWalletEnabled: readFeatureFlagFromCookie(
       req.cookies,
-      "walletEnabledFF",
+      "paymentWalletEnabledFF",
       true
     ),
     isPspPickerPageEnabled: readFeatureFlagFromCookie(
