@@ -17,10 +17,7 @@ import {
 } from "../../utils/ecommerce/auth-request";
 import { logger } from "../../logger";
 import { RequestAuthorizationRequest } from "../../generated/ecommerce/RequestAuthorizationRequest";
-import {
-  PaymentInstrumentDetail2,
-  PaymentInstrumentDetail3
-} from "../../generated/ecommerce/PaymentInstrumentDetail";
+import { PaymentInstrumentDetail3 } from "../../generated/ecommerce/PaymentInstrumentDetail";
 import { RequestAuthorizationResponse } from "../../generated/ecommerce/RequestAuthorizationResponse";
 import { config } from "../../config";
 
@@ -90,18 +87,21 @@ const processAuthorizationRequest = (req: any, res: any): void => {
           resp.details,
           PaymentInstrumentDetail3.decode,
           O.fromEither,
+          // perform confirm payment only for cards payments
+          O.filter(detail => {
+            logger.info("auth request detail type: " + detail.detailType);
+            return detail.detailType === "cards";
+          }),
           O.fold(
             () => {
               pipe(
-                resp.details,
-                PaymentInstrumentDetail2.decode,
-                O.fromEither,
-                O.map(
-                  () =>
-                    res
-                      .status(200)
-                      .send(createSuccessAuthRequestResponseEntity()) // Type card invoke PGS
-                )
+                O.fromNullable(resp.details),
+                O.map(() => {
+                  logger.info("returning mocked response auth request");
+                  res
+                    .status(200)
+                    .send(createSuccessAuthRequestResponseEntity(req)); // Type card invoke PGS
+                })
               );
             },
             () => confirmPaymentFromNpg(req, res) // Type card invoke NPG
