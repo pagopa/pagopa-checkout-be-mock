@@ -97,7 +97,6 @@ const processAuthorizationRequest = (req: any, res: any): void => {
               pipe(
                 O.fromNullable(resp.details),
                 O.map(() => {
-                  logger.info("returning mocked response auth request");
                   res
                     .status(200)
                     .send(createSuccessAuthRequestResponseEntity(req)); // Type card invoke PGS
