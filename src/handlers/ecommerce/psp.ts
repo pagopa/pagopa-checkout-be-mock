@@ -7,7 +7,6 @@ import { logger } from "../../logger";
 import {
   Version,
   createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold,
-  createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdIdPsp,
   createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold,
   error400BadRequest,
   error404NotFound
@@ -53,14 +52,10 @@ const handleCalculateFeeResponseBody = (
       return res
         .status(200)
         .send(
-          req.body.idPspList?.length > 0
-            ? createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdIdPsp(
-                version,
-                req.body.idPspList?.[0]
-              )
-            : createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold(
-                version
-              )
+          createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold(
+            version,
+            req.body.idPspList
+          )
         );
   }
 };

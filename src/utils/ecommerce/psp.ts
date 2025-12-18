@@ -208,40 +208,31 @@ const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThresholdV2 = (): Cal
 });
 
 export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold = (
-  version: Version
-): CalculateFeeResponseV1 | CalculateFeeResponseV2 => {
-  switch (version) {
-    case Version.V1:
-      return createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV1();
-    case Version.V2:
-      return createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV2();
-    default:
-      throw Error(`Unhandled calculate fees version: ${version}`);
-  }
-};
-
-export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdIdPsp = (
   version: Version,
-  idPsp: string
+  pspList?: ReadonlyArray<string>
 ): CalculateFeeResponseV1 | CalculateFeeResponseV2 => {
-  switch (version) {
-    case Version.V1: {
-      const response = createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV1();
-      return {
-        ...response,
-        bundles: response.bundles.filter(b => b.idPsp === idPsp)
-      };
+  const response: CalculateFeeResponseV1 | CalculateFeeResponseV2 = (():
+    | CalculateFeeResponseV1
+    | CalculateFeeResponseV2 => {
+    switch (version) {
+      case Version.V1:
+        return createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV1();
+      case Version.V2:
+        return createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV2();
+      default:
+        throw new Error(`Unhandled calculate fees version: ${version}`);
     }
-    case Version.V2: {
-      const response = createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV2();
-      return {
-        ...response,
-        bundles: response.bundles.filter(b => b.idPsp === idPsp)
-      };
-    }
-    default:
-      throw Error(`Unhandled calculate fees version: ${version}`);
+  })();
+
+  if (pspList && pspList.length > 0) {
+    const pspSet = new Set(pspList);
+    return {
+      ...response,
+      bundles: response.bundles.filter(b => b.idPsp && pspSet.has(b.idPsp))
+    };
   }
+
+  return response;
 };
 
 export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = (
