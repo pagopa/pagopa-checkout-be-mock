@@ -192,7 +192,7 @@ const mockWallets: ReadonlyArray<WalletInfo> = [
     },
     details: {
       type: "PAYPAL",
-      pspId: "psp_123",
+      pspId: "BNLIITRR",
       pspBusinessName: "PayPal Business",
       maskedEmail: "test***@***test.it"
     } as WalletInfoDetails

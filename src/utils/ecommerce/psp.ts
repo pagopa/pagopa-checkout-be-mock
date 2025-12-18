@@ -220,6 +220,30 @@ export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold =
   }
 };
 
+export const createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdIdPsp = (
+  version: Version,
+  idPsp: string
+): CalculateFeeResponseV1 | CalculateFeeResponseV2 => {
+  switch (version) {
+    case Version.V1: {
+      const response = createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV1();
+      return {
+        ...response,
+        bundles: response.bundles.filter(b => b.idPsp === idPsp)
+      };
+    }
+    case Version.V2: {
+      const response = createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThresholdV2();
+      return {
+        ...response,
+        bundles: response.bundles.filter(b => b.idPsp === idPsp)
+      };
+    }
+    default:
+      throw Error(`Unhandled calculate fees version: ${version}`);
+  }
+};
+
 export const createSuccessGetPspByPaymentMethodsIdResponseEntityUpThreshold = (
   version: Version
 ): CalculateFeeResponseV1 | CalculateFeeResponseV2 => {
