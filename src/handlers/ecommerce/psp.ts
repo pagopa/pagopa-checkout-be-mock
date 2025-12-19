@@ -53,7 +53,8 @@ const handleCalculateFeeResponseBody = (
         .status(200)
         .send(
           createSuccessGetPspByPaymentMethodsIdResponseEntityBelowThreshold(
-            version
+            version,
+            req.body.idPspList
           )
         );
   }
