@@ -5241,9 +5241,7 @@ http-proxy-agent@^2.1.0:
     debug "3.1.0"
 
 http-proxy-middleware@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-2.0.1.tgz#7ef3417a479fb7666a571e09966c66a39bd2c15f"
-  integrity sha512-cfaXRVoZxSed/BmkA7SwBVNI9Kj7HFltaE5rqYOub5kWzWZ+gofV2koVN1j2rMW7pEfSSlCHGJ31xmuyFyfLOg==
+  version "2.0.9"
   dependencies:
     "@types/http-proxy" "^1.17.5"
     http-proxy "^1.18.1"
