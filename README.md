@@ -69,7 +69,7 @@ $ yarn start
 
 ## Executing error flows
 
-If you invoke the `/checkout/payments/v1/payment-requests/:rptId` endpoint with an RPT id of the format `777777777773020167237496700xx` where `xx` is one of the flow codes below, you can control the failure mode of different handlers called from Checkout frontend during the payment process.
+If you invoke the `/checkout/payments/v1/payment-requests/:rptId` endpoint with an RPT id of the format `77777777777302016723749670yxx` where `xx` is one of the flow codes below, you can control the failure mode of different handlers called from Checkout frontend during the payment process. The y digit can be used to specify the number of retry attempts to simulate before returning the mocked response
 
 This is currently implemented via a `mockFlow` cookie which is returned from the endpoint with the flow name as the value.
 
@@ -118,6 +118,10 @@ This is currently implemented via a `mockFlow` cookie which is returned from the
 | NODO_TAKEN_IN_CHARGE                                  | 40        |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND            | 41        |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED    | 42        |
+| FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED    | 74        |
+| FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE | 75        |
+| NOT_FOUND_CALCULATE_FEE                               | 76        |
+| FAIL_ACTIVATE_502_PPT_WISP_SESSIONE_SCONOSCIUTA       | 77        |
 
 ## XPAY Authorization Error Flow
 The XPAY authorization polling endpoint `/xpay/authorizations/:paymentAuthorizationId` require a paymentAuthorizationId as query param as UUID (YXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX). To enforce the success case the first character must be a `0`. It will returns an error otherwise (404 - Not Found).
@@ -161,7 +165,7 @@ Here a brief explanation of the simulated flows:
 
 
 ## Ecommerce activation Error Flow
-The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a list of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`]. Also, if the rptId ends in `41` or `42` the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND or FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED in the mockFlow cookies to simulate the error in auth request.
+The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` require a body with a list of notices to pay. To enforce the success case, the last two characters of the first rptId in the list must be different from [`11`,`12`,`13`,`15`,`75`,`76`]. Also, if the rptId ends in `41` or `42` the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND or FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED in the mockFlow cookies to simulate the error in auth request. if the rptId ends in `74`the success case will be invoked by entering the value of FAIL_AUTH_REQUEST_5XX.
 In the remaining success cases, the cookie will be valued with OK to simulate a positive auth-request case.
 To generate transaction ids with prefixes useful for xpay and vpos calls, the suffix of the RPTID must be one of these [`43`,`44`,`45`,`46`,`47`,`48`,`49`,`50`,`51`,`52`,`53`,`54`]
 The list of possible flow cases:
@@ -172,6 +176,7 @@ The list of possible flow cases:
 | FAIL_ACTIVATE_504_PPT_STAZIONE_INT_PA_TIMEOUT                 | XXXXXXXXXXXXXXXXXXXXXXXXXXX15 | (not set)                                          | (no)                                 |
 | FAIL_ACTIVATE_409_PPT_PAGAMENTO_IN_CORSO                      | XXXXXXXXXXXXXXXXXXXXXXXXXXX12 | (not set)                                          | (no)                                 |
 | FAIL_ACTIVATE_404_PPT_DOMINIO_SCONOSCIUTO                     | XXXXXXXXXXXXXXXXXXXXXXXXXXX11 | (not set)                                          | (no)                                 |
+| FAIL_ACTIVATE_502_PPT_WISP_SESSIONE_SCONOSCIUTA               | XXXXXXXXXXXXXXXXXXXXXXXXXXX76 | (not set)                                          | (no)                                 |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND                    | XXXXXXXXXXXXXXXXXXXXXXXXXXX41 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         | (generic UUID)                       |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED            | XXXXXXXXXXXXXXXXXXXXXXXXXXX42 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED | (generic UUID)                       |
 | OK                                                            | XXXXXXXXXXXXXXXXXXXXXXXXXXXXX | OK                                                 | (generic UUID)                       |
@@ -187,6 +192,7 @@ The list of possible flow cases:
 | ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_CHALLENGE_DENY        | XXXXXXXXXXXXXXXXXXXXXXXXXXX52 | (not set)                                          | 06XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX |
 | ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_METHOD_CHALLENGE_DENY | XXXXXXXXXXXXXXXXXXXXXXXXXXX53 | (not set)                                          | 07XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX |
 | ACTIVATE_VPOS_TRASACTION_ID_WITH_PREFIX_PAYMENT_NOT_FOUND     | XXXXXXXXXXXXXXXXXXXXXXXXXXX54 | (not set)                                          | 08XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX |
+| FAIL_AUTH_REQUEST_5XX                                         | XXXXXXXXXXXXXXXXXXXXXXXXXXX74 | FAIL_AUTH_REQUEST_5XX                              | (generic UUID)                       |
 
 ## Ecommerce calculate fees Flow
 The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` also drive the calculate fee result, since that api is empty of any information about `transactionId` or `rptId`. So using specific suffix for rptId in the activation post, it will success and we will sure to obtain specific result from calculate fee. The calculate fee api returns the `BundleOption` object. By its boolean field `belowThreshold` the checkout frontend will show different disclaimer. The suffix of the RPTID must be one of these [`55`,`56`,`57`]. `55` will drive for a response with `belowThreshold` in `BundleOption` as false. `56` will drive for a response with `belowThreshold` in `BundleOption` as true. To make the call fail use suffix `57`. The default behaviour (all other rptId) is the `belowThreshold` in `BundleOption` as true. Everyone of this suffix put a specific cookie value in the browser.
@@ -197,6 +203,7 @@ The ecommerce transaction fee/calculate endpoint `/ecommerce/checkout/v1/fee/cal
 | OK_ABOVETHRESHOLD_CALUCLATE_FEE                    | 200 success case belowThreshold false | 55           |
 | OK_BELOWTHRESHOLD_CALUCLATE_FEE                    | 200 success case belowThreshold true  | 56           |
 | FAIL_CALCULATE_FEE                                 | 400 bad request                       | 57           |  
+| NOT_FOUND_CALCULATE_FEE                            | 404 not fount                         | 76           |  
 
 ## Ecommerce transaction user cancel Flow
 The ecommerce transaction activation endpoint `/checkout/ecommerce/v1/transactions` also drive the transaction cancel user result. So using specific suffix for rptId in the activation post, it will success and we will sure to obtain specific result from transaction user cancel api. The suffix of the RPTID must be one of these [`58`,`59`,`60`]. `58` will drive delete transaction response with success result and set flow cookie OK_TRANSACTION_USER_CANCEL. `59` will drive for a delete transaction error with 404 httpStatus and set cookie flow ID_NOT_FOUND_TRANSACTION_USER_CANCEL. `60` will drive for a delete transaction error with 500 httpStatus and set cookie flow INTERNAL_SERVER_ERROR_TRANSACTION_USER_CANCEL.
@@ -216,6 +223,7 @@ The ecommerce transaction auth-requests endpoint `/checkout/ecommerce/v1/transac
 | OK                                                 | 200 success case                      |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND         | 404 transactionId not fuond           |
 | FAIL_AUTH_REQUEST_TRANSACTION_ID_ALREADY_PROCESSED | 409 transaction already processed     |   
+| FAIL_AUTH_REQUEST_5XX                              | 502 bad gateway                       |   
 
 ## Ecommerce final state flow
 The ecommerce transaction get transaction endpoint `/checkout/ecommerce/v1/transactions/:transactionId` is driven by the following cookie mockFlow values:
@@ -346,3 +354,57 @@ RPT ID is 302016723740100568
 | COOKIE MOCK FLOW                                   | RptId Suffix |
 |----------------------------------------------------|--------------|
 | CLOSED                                             | 73           |
+
+## Authorization mock flow
+The authentication endpoints are driven to fail by using the following rptId suffix for different failure case
+
+| COOKIE MOCK FLOW                                   | RptId Suffix |
+|----------------------------------------------------|--------------|
+| FAIL_POST_AUTH_TOKEN                               | 78           |
+| FAIL_POST_AUTH_TOKEN_503                           | 79           |
+| FAIL_POST_AUTH_TOKEN_504                           | 80           |
+| FAIL_POST_AUTH_TOKEN_429                           | 81           |
+| FAIL_GET_USERS_401                                 | 82           |
+| FAIL_GET_USERS_500                                 | 83           |
+| FAIL_UNAUTHORIZED_401                              | 84           |
+| FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS             | 85           |
+| FAIL_LOGOUT_400                                    | 86           |
+| FAIL_LOGOUT_500                                    | 87           |
+
+## Outcome mock flow
+Since outcome evaluation logic has been moved to backend, in the frontend we have only to mock the response received. So a new way to mock the api response has been implemented, based on public administration fiscal code. The fiscal code is composed by 11 digits. The last 3 set the outcome code. For example to have outcome code to be 0 the fiscal code should be 77777777000, to have 121 the fiscal code should be 77777777121. All 3-digits combination code not present in this table, will end in outcomo 0 (success).
+
+| COOKIE MOCK FLOW                                   | PA FiscalCode Suffix |
+|----------------------------------------------------|----------------------|
+| OUTCOME_0                                          | 000                  |
+| OUTCOME_1                                          | 001                  |
+| OUTCOME_2                                          | 002                  |
+| OUTCOME_3                                          | 003                  |
+| OUTCOME_4                                          | 004                  |
+| OUTCOME_7                                          | 007                  |
+| OUTCOME_8                                          | 008                  |
+| OUTCOME_10                                         | 010                  |
+| OUTCOME_17                                         | 017                  |
+| OUTCOME_18                                         | 018                  |
+| OUTCOME_25                                         | 025                  |
+| OUTCOME_99                                         | 099                  |
+| OUTCOME_116                                        | 116                  |
+| OUTCOME_117                                        | 117                  |
+| OUTCOME_121                                        | 121                  |
+
+## Checkout feature flags api
+Checkout f.e. reads feature flags at runtime invoking a backend api that tells if specific ff are enabled or not
+
+Each feature flag can be tuned using specific cookies in the request. For example:
+`document.cookie = "nameOfTheCookieToEdit=true|false; path=/";`
+`location.reload`
+Refreshing the front end would cause the new cookie value to be set.
+
+| Feature flag                         | Description                                                                                     | Default value | Cookie to change value               | Cookie valid values   |
+|--------------------------------------|-------------------------------------------------------------------------------------------------|---------------|--------------------------------------|-----------------------|
+| isAuthenticationEnabled              | Boolean FF to enable SPID/CIE authentication                                                    | true          | authenticationEnabledFF              | boolean (true/false)  | 
+| isMaintenancePageEnabled             | Boolean FF to enable maintenance page                                                           | false         | maintenancePageEnabledFF             | boolean (true/false)  |
+| isPaymentMethodsHandlerEnabled       | Boolean FF to enable payment method handler (GMP) as client from where retrieve payment methods | true          | paymentMethodsHandlerEnabledFF       | boolean (true/false)  |
+| isPaymentWalletEnabled               | Boolean FF to enable user onboarded wallets list on checkout                                    | true          | paymentWalletEnabledFF               | boolean (true/false)  |
+| isPspPickerPageEnabled               | Boolean FF to enable PSP picker page                                                            | true          | pspPickerPageEnabledFF               | boolean (true/false)  |
+| isScheduledMaintenanceBannerEnabled  | Boolean FF to enable maintenance banner                                                         | false         | scheduledMaintenanceBannerEnabledFF  | boolean (true/false)  |

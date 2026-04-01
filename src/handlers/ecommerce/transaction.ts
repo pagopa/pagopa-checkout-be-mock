@@ -1,22 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable extra-rules/no-commented-out-code */
 import { RequestHandler } from "express";
 import {
   FlowCase,
   getErrorCodeCookie,
   getFlowCookie,
+  getOutcomeInfoCookie,
+  getOutcomeInfoRetriesCookie,
   getPaymentGatewayCookie,
   getSendPaymentResultCookie
 } from "../../flow";
 import { logger } from "../../logger";
 import {
   createSuccessGetTransactionEntity,
+  createSuccessGetTransactionOutcomesEntity,
   error404TransactionIdNotFound,
   internalServerError500
 } from "../../utils/ecommerce/transaction";
 import { TransactionStatusEnum } from "../../generated/ecommerce/TransactionStatus";
 import { SendPaymentResultOutcomeEnum } from "../../generated/ecommerce/NewTransactionResponse";
+import { AmountEuroCents } from "../../generated/ecommerce/AmountEuroCents";
 
 export const NPG_GATEWAY = "NPG";
+
+export const REDIRECT_GATEWAY = "REDIRECT";
 
 export enum NpgErrorCode {
   ERROR_CODE_100 = "100",
@@ -893,6 +900,14 @@ export enum NpgAuthorizationStatus {
   FAILED = "FAILED"
 }
 
+export enum RedirectAuthorizationStatus {
+  OK = "OK",
+  KO = "KO",
+  CANCELED = "CANCELED",
+  ERROR = "ERROR",
+  EXPIRED = "EXPIRED"
+}
+
 // eslint-disable-next-line max-lines-per-function, complexity
 export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
   logger.info("[Get transaction ecommerce] - Return success case");
@@ -902,304 +917,338 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
   // eslint-disable-next-line sonarjs/max-switch-cases, sonarjs/no-duplicated-branches
   switch (getFlowCookie(req)) {
     case FlowCase.NOTIFICATION_REQUESTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFICATION_REQUESTED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFICATION_REQUESTED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.NOTIFICATION_ERROR:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFICATION_ERROR,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFICATION_ERROR,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.NOTIFIED_KO:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFIED_KO,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFIED_KO,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.REFUNDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.REFUNDED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUNDED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.REFUND_REQUESTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.REFUND_REQUESTED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUND_REQUESTED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.REFUND_ERROR:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.REFUND_ERROR,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUND_ERROR,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.EXPIRED_NOT_AUTHORIZED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED_NOT_AUTHORIZED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED_NOT_AUTHORIZED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.CANCELED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CANCELED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CANCELED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.CANCELLATION_EXPIRED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CANCELLATION_EXPIRED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CANCELLATION_EXPIRED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.EXPIRED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            gateway,
-            errorCode,
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
             sendPaymentResultOutcome
-          )
-        );
+          },
+          {
+            errorCode,
+            gateway
+          }
+        )
+      );
     case FlowCase.CLOSED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSED,
-            undefined,
-            undefined,
-            SendPaymentResultOutcomeEnum.NOT_RECEIVED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSED,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.NOT_RECEIVED
+          },
+          undefined
+        )
+      );
     case FlowCase.AUTHORIZATION_REQUESTED_NO_NPG_OUTCOME:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            undefined
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: undefined,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_EXECUTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_AUTHORIZED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.AUTHORIZED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.AUTHORIZED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_PENDING:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.PENDING
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.PENDING,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_VOIDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.VOIDED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.VOIDED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_REFUNDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.REFUNDED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.REFUNDED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_FAILED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.FAILED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.FAILED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_CANCELED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.CANCELED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.CANCELED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_DENIED_BY_RISK:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.DENIED_BY_RISK
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_THREEDS_VALIDATED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.THREEDS_VALIDATED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_THREEDS_FAILED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.THREEDS_FAILED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_100:
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_101:
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_102:
@@ -1240,148 +1289,160 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913:
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999:
     case FlowCase.AUTHORIZATION_COMPLETED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.AUTHORIZATION_COMPLETED,
-            NPG_GATEWAY,
-            authCompletedNpgErrorCode.get(getFlowCookie(req)),
-            undefined,
-            NpgAuthorizationStatus.DECLINED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            errorCode: authCompletedNpgErrorCode.get(getFlowCookie(req)),
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_EXECUTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_AUTHORIZED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.AUTHORIZED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.AUTHORIZED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_PENDING:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.PENDING
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.PENDING,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_VOIDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.VOIDED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.VOIDED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_REFUNDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.REFUNDED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.REFUNDED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_FAILED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.FAILED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.FAILED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_CANCELED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.CANCELED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.CANCELED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DENIED_BY_RISK:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.DENIED_BY_RISK
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_THREEDS_VALIDATED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.THREEDS_VALIDATED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_THREEDS_FAILED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.THREEDS_FAILED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_100:
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_101:
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_102:
@@ -1422,148 +1483,232 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913:
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999:
     case FlowCase.CLOSURE_REQUESTED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_REQUESTED,
-            NPG_GATEWAY,
-            closureRequestedNpgErrorCode.get(getFlowCookie(req)),
-            undefined,
-            NpgAuthorizationStatus.DECLINED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            errorCode: closureRequestedNpgErrorCode.get(getFlowCookie(req)),
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_EXECUTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_AUTHORIZED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.AUTHORIZED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.AUTHORIZED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_PENDING:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.PENDING
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.PENDING,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_VOIDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.VOIDED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.VOIDED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_REFUNDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.REFUNDED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.REFUNDED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_FAILED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.FAILED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.FAILED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_CANCELED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.CANCELED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.CANCELED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DENIED_BY_RISK:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.DENIED_BY_RISK
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_THREEDS_VALIDATED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.THREEDS_VALIDATED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_THREEDS_FAILED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.THREEDS_FAILED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_422_DID_NOT_RECEIVE_RPT:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            closePaymentResultError: {
+              description: "Node did not receive RPT yet",
+              statusCode: 422
+            },
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_400_REFUND_CASES:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            closePaymentResultError: {
+              description: "Invalid idBrokerPSP",
+              statusCode: 400
+            },
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_404_REFUND_CASES:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            closePaymentResultError: {
+              description: "The indicated PSP does not exist",
+              statusCode: 404
+            },
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_422_OUTCOME_ALREADY_ACQUIRED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            closePaymentResultError: {
+              description: "Outcome already acquired",
+              statusCode: 422
+            },
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_100:
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_101:
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_102:
@@ -1604,257 +1749,277 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913:
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999:
     case FlowCase.CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSURE_ERROR,
-            NPG_GATEWAY,
-            closureErrorNpgErrorCode.get(getFlowCookie(req)),
-            undefined,
-            NpgAuthorizationStatus.DECLINED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            errorCode: closureErrorNpgErrorCode.get(getFlowCookie(req)),
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.CLOSED_WITH_NPG_AUTH_STATUS_EXECUTED_SEND_PAYMENT_RESULT_NOT_RECEIVED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.CLOSED,
-            NPG_GATEWAY,
-            undefined,
-            SendPaymentResultOutcomeEnum.NOT_RECEIVED,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSED,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.NOT_RECEIVED
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.NOTIFICATION_REQUESTED_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
     case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFICATION_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            SendPaymentResultOutcomeEnum.OK,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFICATION_REQUESTED,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.NOTIFICATION_REQUESTED_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
     case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFICATION_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            SendPaymentResultOutcomeEnum.KO,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFICATION_REQUESTED,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.NOTIFICATION_ERROR_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
     case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_ERROR_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFICATION_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            SendPaymentResultOutcomeEnum.OK,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFICATION_ERROR,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.NOTIFICATION_ERROR_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
     case FlowCase.EXPIRED_TRANSACTION_FOR_NOTIFICATION_ERROR_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFICATION_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            SendPaymentResultOutcomeEnum.KO,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFICATION_ERROR,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.NOTIFIED_OK_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_OK:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFIED_OK,
-            NPG_GATEWAY,
-            undefined,
-            SendPaymentResultOutcomeEnum.OK,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFIED_OK,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.NOTIFIED_KO_WITH_NPG_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_KO:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.NOTIFIED_KO,
-            NPG_GATEWAY,
-            undefined,
-            SendPaymentResultOutcomeEnum.KO,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFIED_KO,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_REQUESTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            undefined
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: undefined,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_EXECUTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
 
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_AUTHORIZED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.AUTHORIZED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.AUTHORIZED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_PENDING:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.PENDING
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.PENDING,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_VOIDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.VOIDED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.VOIDED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_REFUNDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.REFUNDED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.REFUNDED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_FAILED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.FAILED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.FAILED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_CANCELED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.CANCELED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.CANCELED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DENIED_BY_RISK:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.DENIED_BY_RISK
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_THREEDS_VALIDATED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.THREEDS_VALIDATED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_THREEDS_FAILED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.THREEDS_FAILED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_100:
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_101:
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_102:
@@ -1895,151 +2060,163 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_913:
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_999:
     case FlowCase.EXPIRED_TRANSACTION_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            expiredTransactionForAuthCompletedNpgErrorCode.get(
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            errorCode: expiredTransactionForAuthCompletedNpgErrorCode.get(
               getFlowCookie(req)
             ),
-            undefined,
-            NpgAuthorizationStatus.DECLINED
-          )
-        );
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.EXPIRED_TRANSACTION_FOR_CLOSURE_REQUESTED_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_NOT_RECEIVED:
     case FlowCase.EXPIRED_TRANSACTION_FOR_CLOSURE_ERROR_AUTH_STATUS_EXECUTED_AND_SEND_PAYMENT_RESULT_NOT_RECEIVED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.EXPIRED,
-            NPG_GATEWAY,
-            undefined,
-            SendPaymentResultOutcomeEnum.NOT_RECEIVED,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.NOT_RECEIVED
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_AUTHORIZED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.AUTHORIZED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.AUTHORIZED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_PENDING:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.PENDING
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.PENDING,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_VOIDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.VOIDED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.VOIDED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_REFUNDED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.REFUNDED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.REFUNDED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_FAILED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.FAILED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.FAILED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_CANCELED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.CANCELED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.CANCELED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DENIED_BY_RISK:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.DENIED_BY_RISK
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.DENIED_BY_RISK,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_THREEDS_VALIDATED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.THREEDS_VALIDATED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_VALIDATED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_THREEDS_FAILED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.THREEDS_FAILED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.THREEDS_FAILED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_100:
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_101:
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_102:
@@ -2080,57 +2257,578 @@ export const ecommerceGetTransaction: RequestHandler = async (req, res) => {
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913:
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999:
     case FlowCase.UNAUTHORIZED_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.UNAUTHORIZED,
-            NPG_GATEWAY,
-            unauthorizedNpgErrorCode.get(getFlowCookie(req)),
-            undefined,
-            NpgAuthorizationStatus.DECLINED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.DECLINED,
+            errorCode: unauthorizedNpgErrorCode.get(getFlowCookie(req)),
+
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.REFUND_REQUESTED_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.REFUND_REQUESTED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUND_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.REFUND_ERROR_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.REFUND_ERROR,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUND_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
     case FlowCase.REFUNDED_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED:
-      return res
-        .status(200)
-        .send(
-          createSuccessGetTransactionEntity(
-            req.params.transactionId,
-            TransactionStatusEnum.REFUNDED,
-            NPG_GATEWAY,
-            undefined,
-            undefined,
-            NpgAuthorizationStatus.EXECUTED
-          )
-        );
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUNDED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: NpgAuthorizationStatus.EXECUTED,
+            gateway: NPG_GATEWAY
+          }
+        )
+      );
+    case FlowCase.AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_KO:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.KO,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_CANCELED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.CANCELED,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_ERROR:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.ERROR,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_EXPIRED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.AUTHORIZATION_COMPLETED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.EXPIRED,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_KO:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.KO,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_CANCELED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.CANCELED,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_ERROR:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.ERROR,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_EXPIRED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_REQUESTED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.EXPIRED,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_KO:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.KO,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_CANCELED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.CANCELED,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_ERROR:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.ERROR,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_EXPIRED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.CLOSURE_ERROR,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.EXPIRED,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_KO:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.KO,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_CANCELED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.CANCELED,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_ERROR:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.ERROR,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_EXPIRED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.EXPIRED,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.NOTIFICATION_REQUESTED_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFICATION_REQUESTED,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.NOTIFICATION_REQUESTED_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.UNAUTHORIZED,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.NOTIFICATION_ERROR_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFICATION_ERROR,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.NOTIFICATION_ERROR_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFICATION_ERROR,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.NOTIFIED_OK_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFIED_OK,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.NOTIFIED_KO_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.NOTIFIED_KO,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_KO:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.KO,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_CANCELED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.CANCELED,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_EXPIRED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.EXPIRED,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_ERROR:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: undefined
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.ERROR,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_CLOSURE_REQUESTED_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_NOT_RECEIVED:
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_CLOSURE_ERROR_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_NOT_RECEIVED:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.NOT_RECEIVED
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK:
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_ERROR_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.OK
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.EXPIRED,
+          {
+            sendPaymentResultOutcome: SendPaymentResultOutcomeEnum.KO
+          },
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_ERROR_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO:
+    case FlowCase.REFUND_REQUESTED_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUND_REQUESTED,
+          undefined,
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.REFUND_ERROR_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUND_ERROR,
+          undefined,
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
+    case FlowCase.REFUNDED_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK:
+      return res.status(200).send(
+        createSuccessGetTransactionEntity(
+          req.params.transactionId,
+          TransactionStatusEnum.REFUNDED,
+          undefined,
+          {
+            authorizationStatus: RedirectAuthorizationStatus.OK,
+            gateway: REDIRECT_GATEWAY
+          }
+        )
+      );
     default:
       return res
         .status(200)
@@ -2170,5 +2868,43 @@ export const ecommerceDeleteTransaction: RequestHandler = async (req, res) => {
         "[Delete transaction ecommerce] - Return success case 202 accepted"
       );
       res.status(202).send();
+  }
+};
+
+export const ecommerceGetTransactionOutcome: RequestHandler = async (
+  req,
+  res
+) => {
+  logger.info("[Get transaction outcome ecommerce] - Return success case");
+  // eslint-disable-next-line sonarjs/max-switch-cases, sonarjs/no-duplicated-branches
+  const retry = getOutcomeInfoRetriesCookie(req);
+
+  logger.info(`[Retry polling: ${retry}]`);
+  if (retry != null && retry > 0) {
+    // setOutcomeRetriesCookie(res, retry - 1);
+    return res
+      .status(200)
+      .send(createSuccessGetTransactionOutcomesEntity(1, false));
+  }
+  if (getOutcomeInfoCookie(req) === 0) {
+    return res
+      .status(200)
+      .send(
+        createSuccessGetTransactionOutcomesEntity(
+          0,
+          true,
+          12000 as AmountEuroCents,
+          15 as AmountEuroCents
+        )
+      );
+  } else {
+    return res
+      .status(200)
+      .send(
+        createSuccessGetTransactionOutcomesEntity(
+          getOutcomeInfoCookie(req),
+          true
+        )
+      );
   }
 };

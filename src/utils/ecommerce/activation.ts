@@ -45,24 +45,24 @@ export const fillRequestPaymentInfoWithMockData = (
   pipe(
     O.fromNullable(paymentsInfo),
     O.map(paymentNotices =>
-      paymentNotices.map(paymentNotice => ({
+      paymentNotices.map((paymentNotice, index) => ({
         amount: paymentNotice.amount,
         isAllCCP: false,
-        paymentToken: "paymentToken1",
-        reason: "reason1",
+        paymentToken: `paymentToken${index}`,
+        reason: `reason${index}`,
         rptId: paymentNotice.rptId,
         transferList: [
           {
             digitalStamp: true,
-            paFiscalCode: "66666666666",
+            paFiscalCode: index.toString().repeat(11),
             transferAmount: 100 as AmountEuroCents,
-            transferCategory: "transferCategory1"
+            transferCategory: `transferCategory${index}`
           },
           {
             digitalStamp: false,
-            paFiscalCode: "77777777777",
+            paFiscalCode: (index + 1).toString().repeat(11),
             transferAmount: 900 as AmountEuroCents,
-            transferCategory: "transferCategory2"
+            transferCategory: `transferCategory${index + 1}`
           }
         ]
       }))
@@ -120,8 +120,21 @@ export const error503StazioneIntPATimeout = (): PartyConfigurationFaultPaymentPr
   title: "Party configuration Fault"
 });
 
+export const error503StazioneIntPAErrorResponse = (): PartyConfigurationFaultPaymentProblemJson => ({
+  faultCodeCategory: PartyConfigurationFaultCategoryEnum.DOMAIN_UNKNOWN,
+  faultCodeDetail:
+    PartyConfigurationFaultEnum.PPT_STAZIONE_INT_PA_ERRORE_RESPONSE,
+  title: "EC error"
+});
+
 export const error502GenericError = (): GatewayFaultPaymentProblemJson => ({
   faultCodeCategory: GatewayFaultCategoryEnum.GENERIC_ERROR,
   faultCodeDetail: "NODE_ERROR_NOT_HANDLED",
+  title: "Generic Error Fault"
+});
+
+export const error502WispSessioneSconosciuta = (): GatewayFaultPaymentProblemJson => ({
+  faultCodeCategory: GatewayFaultCategoryEnum.GENERIC_ERROR,
+  faultCodeDetail: "PPT_WISP_SESSIONE_SCONOSCIUTA",
   title: "Generic Error Fault"
 });

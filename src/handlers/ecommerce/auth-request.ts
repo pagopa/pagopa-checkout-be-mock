@@ -12,14 +12,12 @@ import {
   createSuccessAuthRequestResponseEntityFromNPG,
   error400InvalidRequestBody,
   error404TransactionIdNotFound,
-  error409TransactionAlreadyProcessed
+  error409TransactionAlreadyProcessed,
+  error5XX
 } from "../../utils/ecommerce/auth-request";
 import { logger } from "../../logger";
 import { RequestAuthorizationRequest } from "../../generated/ecommerce/RequestAuthorizationRequest";
-import {
-  PaymentInstrumentDetail2,
-  PaymentInstrumentDetail3
-} from "../../generated/ecommerce/PaymentInstrumentDetail";
+import { PaymentInstrumentDetail3 } from "../../generated/ecommerce/PaymentInstrumentDetail";
 import { RequestAuthorizationResponse } from "../../generated/ecommerce/RequestAuthorizationResponse";
 import { config } from "../../config";
 
@@ -89,18 +87,20 @@ const processAuthorizationRequest = (req: any, res: any): void => {
           resp.details,
           PaymentInstrumentDetail3.decode,
           O.fromEither,
+          // perform confirm payment only for cards payments
+          O.filter(detail => {
+            logger.info("auth request detail type: " + detail.detailType);
+            return detail.detailType === "cards";
+          }),
           O.fold(
             () => {
               pipe(
-                resp.details,
-                PaymentInstrumentDetail2.decode,
-                O.fromEither,
-                O.map(
-                  () =>
-                    res
-                      .status(200)
-                      .send(createSuccessAuthRequestResponseEntity()) // Type card invoke PGS
-                )
+                O.fromNullable(resp.details),
+                O.map(() => {
+                  res
+                    .status(200)
+                    .send(createSuccessAuthRequestResponseEntity(req)); // Type card invoke PGS
+                })
               );
             },
             () => confirmPaymentFromNpg(req, res) // Type card invoke NPG
@@ -129,6 +129,11 @@ const return404ErrorTransactionIdNotFound = (
   res.status(404).send(error404TransactionIdNotFound(transactionId));
 };
 
+const return5XXError = (res: any): void => {
+  logger.info("[Auth-request ecommerce] - Return 5XX BAD GATEWAY");
+  res.status(500).send(error5XX());
+};
+
 export const ecommerceAuthRequest: RequestHandler = async (req, res) => {
   const transactionId = req.params.transactionId;
   switch (getFlowCookie(req)) {
@@ -137,6 +142,9 @@ export const ecommerceAuthRequest: RequestHandler = async (req, res) => {
       break;
     case FlowCase.FAIL_AUTH_REQUEST_TRANSACTION_ID_NOT_FOUND:
       return404ErrorTransactionIdNotFound(transactionId, res);
+      break;
+    case FlowCase.FAIL_AUTH_REQUEST_5XX:
+      return5XXError(res);
       break;
     default:
       processAuthorizationRequest(req, res);

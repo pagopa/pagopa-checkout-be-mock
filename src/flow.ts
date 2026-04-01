@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/no-identical-functions */
+/* eslint-disable extra-rules/no-commented-out-code */
 import * as O from "fp-ts/lib/Option";
 import * as express from "express";
 import * as E from "fp-ts/Either";
@@ -80,6 +81,26 @@ export enum SendPaymentResultOutcomeCase {
   UNDEFINED,
   OK,
   KO
+}
+
+export enum TransactionOutcomeInfoCase {
+  /** start pagopa-ecommerce-outcome */
+  OUTCOME_0 = "000",
+  OUTCOME_1 = "001",
+  OUTCOME_2 = "002",
+  OUTCOME_3 = "003",
+  OUTCOME_4 = "004",
+  OUTCOME_7 = "007",
+  OUTCOME_8 = "008",
+  OUTCOME_10 = "010",
+  OUTCOME_17 = "017",
+  OUTCOME_18 = "018",
+  OUTCOME_25 = "025",
+  OUTCOME_99 = "099",
+  OUTCOME_116 = "116",
+  OUTCOME_117 = "117",
+  OUTCOME_121 = "121"
+  /** end pagopa-ecommerce-outcome */
 }
 
 export enum FlowCase {
@@ -173,6 +194,23 @@ export enum FlowCase {
   UNAUTHORIZED,
   /* pagopa-ecommerce: waiting sendPaymentResult */
   CLOSED,
+  FAIL_AUTH_REQUEST_5XX,
+  FAIL_ACTIVATE_503_PPT_STAZIONE_INT_PA_ERRORE_RESPONSE,
+  /* pagopa-ecommerce: calculate/fee not found */
+  NOT_FOUND_CALCULATE_FEE,
+  FAIL_ACTIVATE_502_PPT_WISP_SESSIONE_SCONOSCIUTA,
+  /* pagopa-checkout-auth-service: post auth token 5xx */
+  FAIL_POST_AUTH_TOKEN,
+  FAIL_POST_AUTH_TOKEN_503,
+  FAIL_POST_AUTH_TOKEN_504,
+  FAIL_POST_AUTH_TOKEN_429,
+  FAIL_GET_USERS_401,
+  FAIL_GET_USERS_500,
+  FAIL_UNAUTHORIZED_401,
+  FAIL_UNAUTHORIZED_401_PAYMENT_REQUESTS,
+  FAIL_LOGOUT_400,
+  FAIL_LOGOUT_500,
+
   /** start pagopa-ecommerce: handle final outcome page for NPG status */
   /** Please note these tests are not used as a suffix of the rptId they only serve to reroute the flow for testing on the states of the CR pipeline of the checkout fe */
   // Status AUTHORIZATION_REQUESTED tests
@@ -330,6 +368,11 @@ export enum FlowCase {
   CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_913,
   CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_999,
   CLOSURE_ERROR_WITH_NPG_AUTH_STATUS_DECLINED_ERROR_CODE_GENERIC,
+  // Errors on close payment
+  CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_422_DID_NOT_RECEIVE_RPT,
+  CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_422_OUTCOME_ALREADY_ACQUIRED,
+  CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_400_REFUND_CASES,
+  CLOSURE_ERROR_WITH_NPG_ON_CLOSE_PAYMENT_ERROR_CODE_404_REFUND_CASES,
   // Status CLOSED tests
   CLOSED_WITH_NPG_AUTH_STATUS_EXECUTED_SEND_PAYMENT_RESULT_NOT_RECEIVED,
   // Status UNAUTHORIZED
@@ -456,9 +499,89 @@ export enum FlowCase {
   // Status REFUND
   REFUND_REQUESTED_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED,
   REFUND_ERROR_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED,
-  REFUNDED_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED
-
+  REFUNDED_TRANSACTION_WITH_NPG_AUTH_STATUS_EXECUTED,
   /** end pagopa-ecommerce: handle final outcome page for NPG status */
+  /** start pagopa-ecommerce: handle final status outcome page for REDIRECT gateway */
+  AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_OK,
+
+  AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_KO,
+
+  AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_CANCELED,
+
+  AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_ERROR,
+
+  AUTHORIZATION_COMPLETED_WITH_REDIRECT_AUTH_STATUS_EXPIRED,
+
+  CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_OK,
+
+  CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_KO,
+
+  CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_CANCELED,
+
+  CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_ERROR,
+
+  CLOSURE_REQUESTED_WITH_REDIRECT_AUTH_STATUS_EXPIRED,
+
+  CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_OK,
+
+  CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_KO,
+
+  CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_CANCELED,
+
+  CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_ERROR,
+
+  CLOSURE_ERROR_WITH_REDIRECT_AUTH_STATUS_EXPIRED,
+
+  UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_OK,
+
+  UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_KO,
+
+  UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_CANCELED,
+
+  UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_ERROR,
+
+  UNAUTHORIZED_WITH_REDIRECT_AUTH_STATUS_EXPIRED,
+
+  NOTIFICATION_REQUESTED_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK,
+
+  NOTIFICATION_REQUESTED_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO,
+
+  NOTIFICATION_ERROR_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK,
+
+  NOTIFICATION_ERROR_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO,
+
+  NOTIFIED_OK_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK,
+
+  NOTIFIED_KO_WITH_REDIRECT_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO,
+
+  EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_OK,
+
+  EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_KO,
+
+  EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_CANCELED,
+
+  EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_EXPIRED,
+
+  EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_AUTHORIZATION_COMPLETED_AUTH_STATUS_ERROR,
+
+  EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_CLOSURE_REQUESTED_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_NOT_RECEIVED,
+
+  EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_CLOSURE_ERROR_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_NOT_RECEIVED,
+
+  EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK,
+
+  EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_ERROR_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_OK,
+
+  EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_REQUESTED_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO,
+
+  EXPIRED_TRANSACTION_WITH_REDIRECT_FOR_NOTIFICATION_ERROR_AUTH_STATUS_OK_AND_SEND_PAYMENT_RESULT_KO,
+
+  REFUND_REQUESTED_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK,
+
+  REFUND_ERROR_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK,
+
+  REFUNDED_TRANSACTION_WITH_REDIRECT_AUTH_STATUS_OK
+  /** end pagopa-ecommerce: handle final status outcome page for REDIRECT gateway */
 }
 
 type FlowCaseKey = keyof typeof FlowCase;
@@ -504,6 +627,30 @@ export const getSendPaymentResultOutcomeFromRptId: (
   }
 };
 
+export const getTransactionOutcomeFromRptId: (
+  rptId: string
+) => O.Option<TransactionOutcomeInfoCase> = rptId => {
+  const flowId = rptId.slice(-21, -18);
+  logger.info(`Request mockFlow cookie: [${flowId}]`);
+  if (
+    Object.values(TransactionOutcomeInfoCase).filter(v => v === flowId)
+      .length === 1
+  ) {
+    return O.some(flowId as TransactionOutcomeInfoCase);
+  } else {
+    return O.none;
+  }
+};
+
+export const getTransactionOutcomeRetryFromRptId: (
+  rptId: string
+) => number = rptId => {
+  logger.info(`rptId = [${rptId}]`);
+  const retryVal = Number(rptId.slice(-3, -2));
+  logger.info(`Request retry cookie: [${retryVal}]`);
+  return retryVal;
+};
+
 export const maybeGetFlowCookie: (
   req: express.Request
 ) => O.Option<FlowCase> = req =>
@@ -522,6 +669,29 @@ export const getFlowCookie: (req: express.Request) => FlowCase = req =>
     maybeGetFlowCookie(req),
     O.getOrElse(() => FlowCase.OK as FlowCase)
   );
+
+export const maybeGetTransactionOutcomeInfoCookie: (
+  req: express.Request
+) => O.Option<number> = req =>
+  pipe(
+    O.fromNullable(req.cookies.transactionOutcome),
+    O.map(id => {
+      logger.info(
+        `Request outcome info cookie: [${req.cookies.transactionOutcome}]`
+      );
+      return Number.parseInt(id, 10);
+    })
+  );
+
+export const maybeGetOutcomeInfoRetriesCookie: (
+  req: express.Request
+) => O.Option<number> = req =>
+  pipe(O.fromNullable(req.cookies.transactionOutcomeRetries), id => {
+    logger.info(
+      `Request outcome info retries cookie: [${req.cookies.transactionOutcomeRetries}]`
+    );
+    return id;
+  });
 
 export const maybeGetSendPaymentResultCookie: (
   req: express.Request
@@ -560,6 +730,20 @@ export const getSendPaymentResultCookie: (
   pipe(
     maybeGetSendPaymentResultCookie(req),
     O.getOrElse(() => (undefined as unknown) as SendPaymentResultOutcomeEnum)
+  );
+
+export const getOutcomeInfoCookie: (req: express.Request) => number = req =>
+  pipe(
+    maybeGetTransactionOutcomeInfoCookie(req),
+    O.getOrElse(() => 0)
+  );
+
+export const getOutcomeInfoRetriesCookie: (
+  req: express.Request
+) => number = req =>
+  pipe(
+    maybeGetOutcomeInfoRetriesCookie(req),
+    O.getOrElse(() => 0)
   );
 
 export const maybeGetPaymentGatewayCookie: (
@@ -676,6 +860,42 @@ export const setPaymentGatewayCookie: (
     O.map(id => {
       logger.info(`Set paymentGateway cookie to: [${GatewayCase[id]}]`);
       res.cookie("paymentGateway", GatewayCase[id]);
+    })
+  );
+};
+
+export const setOutcomeRetriesCookie: (
+  res: express.Response,
+  value: number
+) => void = (res, val) => {
+  logger.info(`Set transactionOutcomeRetries cookie to: [${val}]`);
+  res.cookie("transactionOutcomeRetries", val);
+};
+
+export const setTransactionOutcomeCaseCookie: (
+  res: express.Response,
+  transactionOutcome: TransactionOutcomeInfoCase | undefined,
+  retryNumber: number | undefined
+) => void = (res, transactionOutcome, retryNumber) => {
+  logger.info(`Try to Set transactionOutcome cookie ${transactionOutcome}`);
+  res.clearCookie("transactionOutcome");
+  pipe(
+    transactionOutcome,
+    O.fromNullable,
+    O.map(id => {
+      logger.info(`Try to Set transactionOutcome cookie to: [${id}]`);
+      if (
+        Object.values(TransactionOutcomeInfoCase).filter(v => v === id)
+          .length === 1
+      ) {
+        logger.info(`Set transactionOutcome cookie to: [${id}]`);
+        logger.info(
+          `Set transactionOutcome cookie to: [${Number.parseInt(id, 10)}]`
+        );
+        res.cookie("transactionOutcome", Number.parseInt(id, 10));
+        logger.info(`Retry poll: ${id}`);
+        setOutcomeRetriesCookie(res, retryNumber || 0); // It attempts retryNumber times before getting wanted value
+      }
     })
   );
 };

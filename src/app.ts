@@ -13,29 +13,52 @@ import * as cookieParser from "cookie-parser";
 //   paymentCheckHandler
 // } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
-import { addWalletHandler, updateWalletHandler } from "./handlers/wallet";
+import {
+  addWalletHandler,
+  ecommerceGetWallets,
+  updateWalletHandler
+} from "./handlers/wallet";
 import {
   checkTransactionHandler,
   resume3ds2Handler
 } from "./handlers/transactions";
 import { getPspListHandler } from "./handlers/psps";
 import { ID_PAYMENT, SESSION_USER } from "./constants";
-// import { logger } from "./logger";
-import { authRequestVpos, authRequestXpay } from "./handlers/pgs";
-import { ecommerceActivation } from "./handlers/ecommerce/activation";
+import {
+  ecommerceActivation,
+  secureEcommerceActivation
+} from "./handlers/ecommerce/activation";
 import {
   ecommerceDeleteTransaction,
-  ecommerceGetTransaction
+  ecommerceGetTransaction,
+  ecommerceGetTransactionOutcome
 } from "./handlers/ecommerce/transaction";
-import { ecommerceVerify } from "./handlers/ecommerce/verify";
-import { ecommerceGetPspByPaymentMethods } from "./handlers/ecommerce/psp";
+import {
+  ecommerceVerifyHandler,
+  secureEcommerceVerify
+} from "./handlers/ecommerce/verify";
+import {
+  ecommerceGetPspByPaymentMethodsV1,
+  ecommerceGetPspByPaymentMethodsV2
+} from "./handlers/ecommerce/psp";
 import { ecommerceGetCart } from "./handlers/ecommerce/cart";
 import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import {
   createFormWithNpg,
   ecommerceGetPaymentMethods,
-  retrieveCardDataFromNpg
+  ecommerceGetPaymentMethodsV2,
+  ecommerceGetPaymentMethodsV4,
+  retrieveCardDataFromNpg,
+  secureCreateFormWithNpg,
+  secureEcommerceGetPaymentMethods
 } from "./handlers/ecommerce/payment-method";
+import {
+  checkoutAuthServiceGetUsersHandler,
+  checkoutAuthServiceLogin,
+  checkoutAuthServicePostTokenHandler,
+  checkoutAuthServiceLogoutUsersHandler
+} from "./handlers/checkout-auth-service";
+import { checkoutFeatureFlag } from "./handlers/checkout-feature-flags";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -148,41 +171,6 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   router.put("/pp-restapi/v4/wallet/:id", updateWalletHandler);
 
-  // app.get(
-  //   "/checkout/payments/v1/payment-requests/:rptId",
-  //   async (req, res, _next) => {
-  //     try {
-  //       return await getPaymentInfoHandler(ID_PAYMENT)(req, res);
-  //     } catch (e) {
-  //       logger.error("Got error while executing request handler:");
-  //       logger.error(e);
-  //       return ResponseErrorInternal("").apply(res);
-  //     }
-  //   }
-  // );
-
-  // app.post(
-  //   "/checkout/payments/v1/payment-activations",
-  //   toExpressHandler(activatePaymentHandler())
-  // );
-
-  // app.get(
-  //   "/checkout/payments/v1/payment-activations/:codiceContestoPagamento",
-  //   toExpressHandler(checkPaymentStatusHandler(ID_PAYMENT))
-  // );
-
-  // app.use(
-  //   createProxyMiddleware("/checkout/payment-transactions", {
-  //     onProxyReq: (proxyReq, _req, _res) => {
-  // eslint-disable-next-line extra-rules/no-commented-out-code
-  //       proxyReq.setHeader("X-Forwarded-For", "127.0.0.1");
-  //     },
-  //     pathRewrite: {
-  //       "^/checkout/payment-transactions": "/api"
-  //     },
-  //     target: `http://${process.env.PAGOPA_FUNCTIONS_CHECKOUT_HOST}:${process.env.PAGOPA_FUNCTIONS_CHECKOUT_PORT}`
-  //   })
-  // );
   app.get(
     "/checkout/payment-transactions/v1/browsers/current/info",
     async (_req, res) => {
@@ -197,23 +185,60 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   );
 
   // payment-requests-service get cart requests mock
-  app.get("/ecommerce/checkout/v1/payment-requests/:rptId", ecommerceVerify);
+  app.get(
+    "/ecommerce/checkout/v1/payment-requests/:rptId",
+    ecommerceVerifyHandler
+  );
+
+  app.get(
+    "/ecommerce/checkout/v3/auth/payment-requests/:rptId",
+    secureEcommerceVerify
+  );
 
   // payment-requests-service get cart requests mock
   app.get("/ecommerce/checkout/v1/carts/:id", ecommerceGetCart);
 
-  // TODO refactoring to handle errors scenario
+  // get all payment methods (ecommerce method management)
   app.get("/ecommerce/checkout/v1/payment-methods", ecommerceGetPaymentMethods);
 
-  // payment-methods-service get psp by payment methods requests mock
+  // get all payment methods (GMP method management)
+  app.post(
+    "/ecommerce/checkout/v2/payment-methods",
+    ecommerceGetPaymentMethodsV2
+  );
+
+  // get all payment methods (GMP method management) for authenticated user
+  app.post(
+    "/ecommerce/checkout/v4/auth/payment-methods",
+    ecommerceGetPaymentMethodsV4
+  );
+
+  app.get(
+    "/ecommerce/checkout/v3/auth/payment-methods",
+    secureEcommerceGetPaymentMethods
+  );
+
+  // payment-methods-service get psp by payment methods V1 requests mock
   app.post(
     "/ecommerce/checkout/v1/payment-methods/:id/fees",
-    ecommerceGetPspByPaymentMethods
+    ecommerceGetPspByPaymentMethodsV1
+  );
+
+  // payment-methods-service get psp by payment methods V2 requests mock
+  app.post(
+    "/ecommerce/checkout/v2/payment-methods/:id/fees",
+    ecommerceGetPspByPaymentMethodsV2
   );
 
   // payment-methods-service preauthorizations npg proxy
   app.post(
     "/ecommerce/checkout/v1/payment-methods/:id/sessions",
+    createFormWithNpg
+  );
+
+  // payment-methods-service preauthorizations npg proxy - ecommerce-fe webview
+  app.post(
+    "/ecommerce/webview/v1/payment-methods/:id/sessions",
     createFormWithNpg
   );
 
@@ -223,9 +248,21 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     retrieveCardDataFromNpg
   );
 
+  app.post(
+    "/ecommerce/checkout/v3/auth/payment-methods/:id/sessions",
+    secureCreateFormWithNpg
+  );
+
+  // transaction-service new transaction request mock
+  // v1 is deprecated
+  /* app.get(
+    "/ecommerce/checkout/v1/transactions/:transactionId",
+    ecommerceGetTransaction
+  ); */
+
   // transaction-service new transaction request mock
   app.get(
-    "/ecommerce/checkout/v1/transactions/:transactionId",
+    "/ecommerce/checkout/v2/transactions/:transactionId",
     ecommerceGetTransaction
   );
 
@@ -234,6 +271,11 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // transaction-service v2 new transaction request mock
   app.post("/ecommerce/checkout/v2/transactions", ecommerceActivation);
+
+  app.post(
+    "/ecommerce/checkout/v3/auth/transactions",
+    secureEcommerceActivation
+  );
 
   // transaction-service transaction user cancel
   app.delete(
@@ -247,17 +289,33 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     ecommerceAuthRequest
   );
 
-  // payment-transaction-gateway xpay authorization requests mock
+  // checkout-auth-service login mock
+  app.get("/checkout/auth-service/v1/auth/login", checkoutAuthServiceLogin);
+  app.post(
+    "/checkout/auth-service/v1/auth/token",
+    checkoutAuthServicePostTokenHandler
+  );
   app.get(
-    "/payment-transactions-gateway/web/v1/xpay/authorizations/:paymentAuthorizationId",
-    authRequestXpay
+    "/checkout/auth-service/v1/auth/users",
+    checkoutAuthServiceGetUsersHandler
+  );
+  app.post(
+    "/checkout/auth-service/v1/auth/logout",
+    checkoutAuthServiceLogoutUsersHandler
   );
 
-  // payment-transaction-gateway vpos authorization requests mock
+  // transaction-service v2 new transaction request mock
+
+  // checkout feature flags mock
+  app.get("/checkout/feature-flags/v1/features/values", checkoutFeatureFlag);
+
   app.get(
-    "/payment-transactions-gateway/web/v1/vpos/authorizations/:paymentAuthorizationId",
-    authRequestVpos
+    "/ecommerce/checkout/v1/transactions/:id/outcomes",
+    ecommerceGetTransactionOutcome
   );
+
+  // wallet-service get wallets
+  app.get("/checkout/payment-wallet/v1/users/wallets", ecommerceGetWallets);
 
   return app;
 };

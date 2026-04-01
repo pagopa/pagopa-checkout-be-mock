@@ -7,17 +7,93 @@ import * as TE from "fp-ts/lib/TaskEither";
 import { v4 as uuid } from "uuid";
 import { formatValidationErrors } from "io-ts-reporters";
 import { logger } from "../../logger";
-import { createSuccessGetPaymentMethods } from "../../utils/ecommerce/payment-method";
+import {
+  convertV1GetPaymentMethodsToV2,
+  createSuccessGetPaymentMethods
+} from "../../utils/ecommerce/payment-method";
 import { CreateSessionResponse } from "../../generated/ecommerce/CreateSessionResponse";
 import { ProblemJson } from "../../generated/ecommerce/ProblemJson";
 import { Field } from "../../generated/ecommerce/Field";
 import { SessionPaymentMethodResponse } from "../../generated/ecommerce/SessionPaymentMethodResponse";
 import { config } from "../../config";
-import { getSessionIdCookie, setSessionIdCookie } from "../../flow";
+import {
+  FlowCase,
+  getFlowCookie,
+  getSessionIdCookie,
+  setSessionIdCookie
+} from "../../flow";
+import { PaymentMethodsRequest } from "../../generated/ecommerce-v2/PaymentMethodsRequest";
+import { error400BadRequest } from "../../utils/ecommerce/psp";
+import { authService401 } from "./verify";
 
-export const ecommerceGetPaymentMethods: RequestHandler = async (req, res) => {
+export const ecommerceGetPaymentMethods: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
   logger.info("[Get payment-methods ecommerce] - Return success case");
   res.status(200).send(createSuccessGetPaymentMethods());
+};
+
+export const ecommerceGetPaymentMethodsV2: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  logger.info("[Get all payment-methods V2 ecommerce] - Return success case");
+  return pipe(
+    req.body,
+    PaymentMethodsRequest.decode,
+    E.fold(
+      error => {
+        logger.error(`Error decoding payment methods request`, error);
+        return res.status(400).send(error400BadRequest());
+      },
+      () => res.status(200).send(convertV1GetPaymentMethodsToV2())
+    )
+  );
+};
+
+export const ecommerceGetPaymentMethodsV4: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  logger.info("[Get all payment-methods V4 ecommerce] - Return success case");
+  return pipe(
+    req.body,
+    PaymentMethodsRequest.decode,
+    E.map(_ => getFlowCookie(req)),
+    E.filterOrElseW(
+      flowCookie => flowCookie !== FlowCase.FAIL_UNAUTHORIZED_401,
+      () => FlowCase.FAIL_UNAUTHORIZED_401
+    ),
+    E.fold(
+      error => {
+        if (error === FlowCase.FAIL_UNAUTHORIZED_401) {
+          logger.info("Return unauthorized due to flow cookie");
+          return authService401(res);
+        } else {
+          logger.error("Error decoding payment methods request", error);
+          return res.status(400).send(error400BadRequest());
+        }
+      },
+      _ => res.status(200).send(convertV1GetPaymentMethodsToV2())
+    )
+  );
+};
+
+export const secureEcommerceGetPaymentMethods: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  if (getFlowCookie(req) === FlowCase.FAIL_UNAUTHORIZED_401) {
+    logger.info("[Get payment-methods ecommerce] - Return error case 401");
+    authService401(res);
+  } else {
+    ecommerceGetPaymentMethods(req, res, _next);
+  }
 };
 
 const NPG_API_KEY = config.NPG_API_KEY;
@@ -50,16 +126,10 @@ export const buildCreateSessionResponse = (
   }
 });
 
-export const createFormWithNpg: RequestHandler = async (_req, res) => {
+export const createFormWithNpg: RequestHandler = async (_req, res, _next) => {
   logger.info(
     `[Invoke NPG for create form using payment method id: ${_req.params.id}] - Return success case`
   );
-  if (_req.query.recaptchaResponse == null) {
-    logger.error("Missing recaptchaResponse query param!");
-    res.status(404).send("Missing recaptchaResponse query param!");
-    return;
-  }
-
   const orderId = uuid().substring(0, 15);
   const postData = JSON.stringify({
     merchantUrl: `${_req.protocol}://${_req.get("Host")}`,
@@ -116,6 +186,21 @@ export const createFormWithNpg: RequestHandler = async (_req, res) => {
     }),
     TE.mapLeft(() => res.status(500).send(internalServerError()))
   )();
+};
+
+export const secureCreateFormWithNpg: RequestHandler = async (
+  req,
+  res,
+  _next
+) => {
+  if (getFlowCookie(req) === FlowCase.FAIL_UNAUTHORIZED_401) {
+    logger.info(
+      `[Invoke NPG for create form using payment method id: ${req.params.id}] - Return error case 401`
+    );
+    authService401(res);
+  } else {
+    createFormWithNpg(req, res, _next);
+  }
 };
 
 export const retrieveCardDataFromNpg: RequestHandler = async (_req, res) => {
