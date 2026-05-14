@@ -59,6 +59,7 @@ import {
   checkoutAuthServiceLogoutUsersHandler
 } from "./handlers/checkout-auth-service";
 import { checkoutFeatureFlag } from "./handlers/checkout-feature-flags";
+import { npgSdkIntegrity } from "./handlers/npg-sdk-integrity";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -316,6 +317,9 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // wallet-service get wallets
   app.get("/checkout/payment-wallet/v1/users/wallets", ecommerceGetWallets);
+
+  // NPG SDK integrity hash
+  app.get("/checkout/npg/sdk/v1/resources/sri", npgSdkIntegrity);
 
   return app;
 };
