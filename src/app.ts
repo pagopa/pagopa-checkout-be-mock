@@ -54,6 +54,7 @@ import {
 } from "./handlers/checkout-auth-service";
 import { checkoutFeatureFlag } from "./handlers/checkout-feature-flags";
 import { checkoutIntegrities } from "./handlers/checkout-integrities";
+import { npgSdkIntegrity } from "./handlers/npg-sdk-integrity";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -297,6 +298,9 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     "/ecommerce/checkout/v1/integrities/:resourceId",
     checkoutIntegrities
   );
+
+  // NPG SDK integrity hash
+  app.get("/checkout/npg/sdk/v1/resources/sri", npgSdkIntegrity);
 
   return app;
 };
