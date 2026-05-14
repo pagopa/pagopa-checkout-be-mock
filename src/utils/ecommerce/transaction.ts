@@ -19,7 +19,7 @@ export const createSuccessGetTransactionEntity = (
   gatewayInfo?: TransactionInfoGatewayInfo
 ): TransactionInfo => ({
   clientId: ClientIdEnum.CHECKOUT,
-  feeTotal: 99999999,
+  feeTotal: 99999999 as AmountEuroCents,
   gatewayInfo,
   nodeInfo,
   payments: [

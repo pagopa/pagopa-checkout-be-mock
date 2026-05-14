@@ -5,9 +5,12 @@ import { HttpStatusCode } from "../../generated/ecommerce/HttpStatusCode";
 const encode = (str: string): string =>
   Buffer.from(str, "binary").toString("base64");
 
-export const createSuccessAuthRequestResponseEntity = (): RequestAuthorizationResponse => ({
+export const createSuccessAuthRequestResponseEntity = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  req: any
+): RequestAuthorizationResponse => ({
   authorizationRequestId: "requestId",
-  authorizationUrl: "https://example.com"
+  authorizationUrl: `${req.protocol}://${req.get("Host")}/esito`
 });
 
 export const createSuccessAuthRequestResponseEntityFromNPG = (_value: {

@@ -13,7 +13,11 @@ import * as cookieParser from "cookie-parser";
 //   paymentCheckHandler
 // } from "./handlers/payments";
 import { approveTermsHandler, startSessionHandler } from "./handlers/users";
-import { addWalletHandler, updateWalletHandler } from "./handlers/wallet";
+import {
+  addWalletHandler,
+  ecommerceGetWallets,
+  updateWalletHandler
+} from "./handlers/wallet";
 import {
   checkTransactionHandler,
   resume3ds2Handler
@@ -42,6 +46,8 @@ import { ecommerceAuthRequest } from "./handlers/ecommerce/auth-request";
 import {
   createFormWithNpg,
   ecommerceGetPaymentMethods,
+  ecommerceGetPaymentMethodsV2,
+  ecommerceGetPaymentMethodsV4,
   retrieveCardDataFromNpg,
   secureCreateFormWithNpg,
   secureEcommerceGetPaymentMethods
@@ -194,8 +200,20 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   // payment-requests-service get cart requests mock
   app.get("/ecommerce/checkout/v1/carts/:id", ecommerceGetCart);
 
-  // TODO refactoring to handle errors scenario
+  // get all payment methods (ecommerce method management)
   app.get("/ecommerce/checkout/v1/payment-methods", ecommerceGetPaymentMethods);
+
+  // get all payment methods (GMP method management)
+  app.post(
+    "/ecommerce/checkout/v2/payment-methods",
+    ecommerceGetPaymentMethodsV2
+  );
+
+  // get all payment methods (GMP method management) for authenticated user
+  app.post(
+    "/ecommerce/checkout/v4/auth/payment-methods",
+    ecommerceGetPaymentMethodsV4
+  );
 
   app.get(
     "/ecommerce/checkout/v3/auth/payment-methods",
@@ -217,6 +235,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   // payment-methods-service preauthorizations npg proxy
   app.post(
     "/ecommerce/checkout/v1/payment-methods/:id/sessions",
+    createFormWithNpg
+  );
+
+  // payment-methods-service preauthorizations npg proxy - ecommerce-fe webview
+  app.post(
+    "/ecommerce/webview/v1/payment-methods/:id/sessions",
     createFormWithNpg
   );
 
@@ -292,8 +316,10 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     ecommerceGetTransactionOutcome
   );
 
+  // wallet-service get wallets
+  app.get("/checkout/payment-wallet/v1/users/wallets", ecommerceGetWallets);
+  
   // resource integrities for frontends
-
   app.get(
     "/ecommerce/checkout/v1/integrities/:resourceId",
     checkoutIntegrities
