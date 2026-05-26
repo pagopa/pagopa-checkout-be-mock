@@ -319,7 +319,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.get("/checkout/payment-wallet/v1/users/wallets", ecommerceGetWallets);
 
   // NPG SDK integrity hash
-  app.get("/checkout/npg/sdk/v1/resources/sri", npgSdkIntegrity);
+  app.get("/checkout/npg/sdk/v1/integrity", npgSdkIntegrity);
 
   return app;
 };
