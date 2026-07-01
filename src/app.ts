@@ -191,7 +191,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   );
 
   app.get(
-    "/ecommerce/checkout/v3/auth/payment-requests/:rptId",
+    "/ecommerce/checkout/auth/v1/payment-requests/:rptId",
     secureEcommerceVerify
   );
 
@@ -209,12 +209,12 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
 
   // get all payment methods (GMP method management) for authenticated user
   app.post(
-    "/ecommerce/checkout/v4/auth/payment-methods",
+    "/ecommerce/checkout/auth/v1/payment-methods",
     ecommerceGetPaymentMethodsV4
   );
 
   app.get(
-    "/ecommerce/checkout/v3/auth/payment-methods",
+    "/ecommerce/checkout/auth/v1/payment-methods",
     secureEcommerceGetPaymentMethods
   );
 
@@ -249,7 +249,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   );
 
   app.post(
-    "/ecommerce/checkout/v3/auth/payment-methods/:id/sessions",
+    "/ecommerce/checkout/auth/v1/payment-methods/:id/sessions",
     secureCreateFormWithNpg
   );
 
@@ -273,7 +273,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.post("/ecommerce/checkout/v2/transactions", ecommerceActivation);
 
   app.post(
-    "/ecommerce/checkout/v3/auth/transactions",
+    "/ecommerce/checkout/auth/v1/transactions",
     secureEcommerceActivation
   );
 
