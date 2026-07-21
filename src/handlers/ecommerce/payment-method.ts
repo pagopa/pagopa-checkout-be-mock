@@ -83,19 +83,6 @@ export const ecommerceGetPaymentMethodsV4: RequestHandler = async (
   );
 };
 
-export const secureEcommerceGetPaymentMethods: RequestHandler = async (
-  req,
-  res,
-  _next
-) => {
-  if (getFlowCookie(req) === FlowCase.FAIL_UNAUTHORIZED_401) {
-    logger.info("[Get payment-methods ecommerce] - Return error case 401");
-    authService401(res);
-  } else {
-    ecommerceGetPaymentMethods(req, res, _next);
-  }
-};
-
 const NPG_API_KEY = config.NPG_API_KEY;
 
 export const internalServerError = (): ProblemJson => ({
