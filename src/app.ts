@@ -31,8 +31,7 @@ import {
   ecommerceGetPaymentMethodsV2,
   ecommerceGetPaymentMethodsV4,
   retrieveCardDataFromNpg,
-  secureCreateFormWithNpg,
-  secureEcommerceGetPaymentMethods
+  secureCreateFormWithNpg
 } from "./handlers/ecommerce/payment-method";
 import {
   checkoutAuthServiceGetUsersHandler,
@@ -150,11 +149,6 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   app.post(
     "/ecommerce/checkout/auth/v1/payment-methods",
     ecommerceGetPaymentMethodsV4
-  );
-
-  app.get(
-    "/ecommerce/checkout/auth/v1/payment-methods",
-    secureEcommerceGetPaymentMethods
   );
 
   // payment-methods-service get psp by payment methods V1 requests mock
