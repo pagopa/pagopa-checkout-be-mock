@@ -45,8 +45,10 @@ const fetchNpgSdk = pipe(
 );
 
 export const getNpgSDK: RequestHandler = (_req, res) => {
+  const cachedBody = cache[NPG_SDK_CACHE_KEY];
+  logger.info(`Retrieving NPG SDK, cache hit: ${cachedBody !== undefined}`);
   void pipe(
-    O.fromNullable(cache[NPG_SDK_CACHE_KEY]),
+    O.fromNullable(cachedBody),
     O.fold(() => fetchNpgSdk, TE.right),
     TE.map(body =>
       res
@@ -60,7 +62,9 @@ export const getNpgSDK: RequestHandler = (_req, res) => {
     })
   )();
 };
+
 const correlationId = uuid();
+
 const fetchNpgSdkSriHash = pipe(
   TE.tryCatch(() => {
     logger.info("Fetching NPG SDK SRI hash from Nexi server");
@@ -87,10 +91,19 @@ const fetchNpgSdkSriHash = pipe(
     return body;
   })
 );
-export const npgGetSdkIntegrity: RequestHandler = async (_req, res) => {
+
+export const npgGetSdkIntegrity: RequestHandler = (_req, res) => {
+  const cachedBody = cache[NPG_SDK_SRI_HASH_CACHE_KEY];
+  logger.info(
+    `Retrieving NPG SDK SRI hash, cache hit: ${cachedBody !== undefined}`
+  );
   void pipe(
-    O.fromNullable(cache[NPG_SDK_SRI_HASH_CACHE_KEY]),
+    O.fromNullable(cachedBody),
     O.fold(() => fetchNpgSdkSriHash, TE.right),
+    TE.filterOrElse(
+      body => JSON.parse(body).integrity,
+      () => new Error("Empty response body for NPG SDK SRI hash")
+    ),
     TE.map(body =>
       res
         .status(200)
