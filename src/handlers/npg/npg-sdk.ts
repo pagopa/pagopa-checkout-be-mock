@@ -79,7 +79,7 @@ const fetchNpgSdkSriHash = pipe(
         `Error retrieving NPG SDK sri hash, status code: ${response.status}`
       )
   ),
-  TE.chain(response => TE.tryCatch(() => response.json(), toError)),
+  TE.chain(response => TE.tryCatch(() => response.text(), toError)),
   TE.map(body => {
     logger.info(`NPG returned SRI hash response: ${body}`);
     // eslint-disable-next-line functional/immutable-data
@@ -96,7 +96,7 @@ export const npgGetSdkIntegrity: RequestHandler = async (_req, res) => {
         .status(200)
         .set(contentTypeHeaderKey, "application/json")
         .send({
-          integrityHash: body.integrity
+          integrityHash: JSON.parse(body).integrity
         })
     ),
     TE.mapLeft(error => {
