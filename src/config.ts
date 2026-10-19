@@ -5,6 +5,7 @@ import { formatValidationErrors } from "io-ts-reporters";
 
 const ConfigR = t.type({
   NPG_API_KEY: t.string,
+  NPG_SDK_TAMPER_HASH: t.boolean,
   PSP_API_KEY: t.string
 });
 
@@ -31,6 +32,7 @@ const decodeEnv = (
   ),
   ENDPOINT_DELAY: getNumber(env, "ENDPOINT_DELAY"),
   NPG_API_KEY: env.NPG_API_KEY,
+  NPG_SDK_TAMPER_HASH: env.NPG_SDK_TAMPER_HASH === "true",
   PSP_API_KEY: env.PSP_API_KEY
 });
 
