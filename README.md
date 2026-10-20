@@ -24,7 +24,6 @@ This mock uses the following environment variables:
 | CHECK_STATUS_ADDITIONAL_ATTEMPTS | (‡) Additional attempts required when calling `pagopa-proxy` payment status check | No       | 0             |
 | NPG_API_KEY                      | API Key for NPG                                                                   | Yes      | N/A           |
 | PSP_API_KEY                      | API Key for psp used during NPG confirm payment method                            | Yes      | N/A           |
-| NPG_SDK_TAMPER_HASH              | Boolean parameter used to tamper NPG SDK hash value                               | Yes      | false         |
 
 
 
