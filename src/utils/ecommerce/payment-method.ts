@@ -39,7 +39,7 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
       status: PaymentMethodStatusEnum.ENABLED
     },
     {
-      asset: "https://assets.cdn.io.italia.it/logos/apps/paga-con-postepay.png",
+      asset: "https://assets.cdn.platform.pagopa.it/logos/apps/paga-con-postepay.png",
       description: "Paga con Postepay",
       id: "1c12349f-8133-42f3-ad96-7e6527d27a41",
       methodManagement: PaymentMethodManagementTypeEnum.REDIRECT,
@@ -96,7 +96,7 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
       status: PaymentMethodStatusEnum.ENABLED
     },
     {
-      asset: "https://assets.cdn.io.italia.it/logos/apps/satispay.png",
+      asset: "https://assets.cdn.platform.pagopa.it/logos/apps/satispay.png",
       description: "Satispay",
       id: "0021234f-12345-42f3-ad96-7e6527d27a44",
       methodManagement: PaymentMethodManagementTypeEnum.REDIRECT,
