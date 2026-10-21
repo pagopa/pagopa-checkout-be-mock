@@ -25,6 +25,8 @@ This mock uses the following environment variables:
 | NPG_API_KEY                      | API Key for NPG                                                                   | Yes      | N/A           |
 | PSP_API_KEY                      | API Key for psp used during NPG confirm payment method                            | Yes      | N/A           |
 
+
+
 (‡) Note that the total time to successfully complete a payment status check is `(ACTIVATION_STATUS_ADDITIONAL_ATTEMPTS + 1) * ENDPOINT_DELAY`
 
 You must set up environment variables by creating a `.env` file. You can use the provided example file as such to get default values for these variables:
