@@ -72,16 +72,14 @@ export const getNpgSDK: RequestHandler = (_req, res) => {
   )();
 };
 
-// default: the checkout-fe/ecommerce-fe dev server origin, local and in CI
-const NPG_SDK_CDN_CORS_ORIGINS = config.NPG_SDK_CDN_CORS_ORIGINS ?? [
-  "http://localhost:1234"
-];
-
 // same CORS and cache headers as the platform CDN
 export const npgSdkCdnHeaders: RequestHandler = (req, res, next) => {
   res.removeHeader("Access-Control-Allow-Origin");
   const origin = req.headers.origin;
-  if (origin !== undefined && NPG_SDK_CDN_CORS_ORIGINS.includes(origin)) {
+  if (
+    origin !== undefined &&
+    config.NPG_SDK_CDN_CORS_ORIGINS.includes(origin)
+  ) {
     res.header("Access-Control-Allow-Origin", origin);
   }
   res.header("Vary", "Origin");
