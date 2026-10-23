@@ -10,7 +10,8 @@ const ConfigR = t.type({
 
 const ConfigO = t.partial({
   CHECK_STATUS_ADDITIONAL_ATTEMPTS: t.number,
-  ENDPOINT_DELAY: t.number
+  ENDPOINT_DELAY: t.number,
+  NPG_SDK_CDN_CORS_ORIGINS: t.readonlyArray(t.string)
 });
 
 const Config = t.intersection([ConfigR, ConfigO]);
@@ -31,6 +32,9 @@ const decodeEnv = (
   ),
   ENDPOINT_DELAY: getNumber(env, "ENDPOINT_DELAY"),
   NPG_API_KEY: env.NPG_API_KEY,
+  NPG_SDK_CDN_CORS_ORIGINS: env.NPG_SDK_CDN_CORS_ORIGINS
+    ? env.NPG_SDK_CDN_CORS_ORIGINS.split(",").filter(o => o !== "")
+    : undefined,
   PSP_API_KEY: env.PSP_API_KEY
 });
 

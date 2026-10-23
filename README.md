@@ -18,12 +18,13 @@ Mock of backend services used by pagopa Checkout.
 
 This mock uses the following environment variables:
 
-| Name                             | Description                                                                       | Required | Default value |
-|----------------------------------|-----------------------------------------------------------------------------------|----------|---------------|
-| ENDPOINT_DELAY                   | Delay time in milliseconds applied to every endpoint                              | No       | 0             |
-| CHECK_STATUS_ADDITIONAL_ATTEMPTS | (‡) Additional attempts required when calling `pagopa-proxy` payment status check | No       | 0             |
-| NPG_API_KEY                      | API Key for NPG                                                                   | Yes      | N/A           |
-| PSP_API_KEY                      | API Key for psp used during NPG confirm payment method                            | Yes      | N/A           |
+| Name                             | Description                                                                                                                             | Required | Default value         |
+|----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|----------|-----------------------|
+| ENDPOINT_DELAY                   | Delay time in milliseconds applied to every endpoint                                                                                    | No       | 0                     |
+| CHECK_STATUS_ADDITIONAL_ATTEMPTS | (‡) Additional attempts required when calling `pagopa-proxy` payment status check                                                       | No       | 0                     |
+| NPG_API_KEY                      | API Key for NPG                                                                                                                         | Yes      | N/A                   |
+| PSP_API_KEY                      | API Key for psp used during NPG confirm payment method                                                                                  | Yes      | N/A                   |
+| NPG_SDK_CDN_CORS_ORIGINS         | Comma-separated origins allowed by the CORS headers on `/npg/sdk/*` (see [NPG SDK platform CDN headers](#npg-sdk-platform-cdn-headers)) | No       | http://localhost:1234 |
 
 
 
@@ -410,3 +411,14 @@ Refreshing the front end would cause the new cookie value to be set.
 | isPaymentWalletEnabled               | Boolean FF to enable user onboarded wallets list on checkout                                    | true          | paymentWalletEnabledFF               | boolean (true/false)  |
 | isPspPickerPageEnabled               | Boolean FF to enable PSP picker page                                                            | true          | pspPickerPageEnabledFF               | boolean (true/false)  |
 | isScheduledMaintenanceBannerEnabled  | Boolean FF to enable maintenance banner                                                         | false         | scheduledMaintenanceBannerEnabledFF  | boolean (true/false)  |
+
+## NPG SDK platform CDN headers
+`GET /npg/sdk/hfsdk.js` and `GET /npg/sdk/hfsdk.integrity.json` send the same CORS and cache headers as the platform CDN (`assets.cdn.platform.pagopa.it`), so the FEs load the SDK under the same rules as in production:
+
+| Header                        | Value                                                                                                   |
+|-------------------------------|---------------------------------------------------------------------------------------------------------|
+| `Access-Control-Allow-Origin` | the request `Origin`, only if listed in `NPG_SDK_CDN_CORS_ORIGINS` (default `http://localhost:1234`)    |
+| `Vary`                        | `Origin`                                                                                                |
+| `Cache-Control`               | `public, max-age=300`; `no-store` on errors and on tampered hashes (`tamperSriHash=true` cookie)        |
+
+A request from an origin not in the list gets no `Access-Control-Allow-Origin`, so the browser blocks the SDK and the FE fails closed. To load the SDK from another origin (e.g. `http://127.0.0.1:1234` or another port), add it to `NPG_SDK_CDN_CORS_ORIGINS`.
