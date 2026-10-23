@@ -5,6 +5,7 @@ import { formatValidationErrors } from "io-ts-reporters";
 
 const ConfigR = t.type({
   NPG_API_KEY: t.string,
+  NPG_SDK_CDN_CORS_ORIGINS: t.readonlyArray(t.string),
   PSP_API_KEY: t.string
 });
 
@@ -31,6 +32,10 @@ const decodeEnv = (
   ),
   ENDPOINT_DELAY: getNumber(env, "ENDPOINT_DELAY"),
   NPG_API_KEY: env.NPG_API_KEY,
+  // default: the checkout-fe/ecommerce-fe dev server origin, local and in CI
+  NPG_SDK_CDN_CORS_ORIGINS: env.NPG_SDK_CDN_CORS_ORIGINS
+    ? env.NPG_SDK_CDN_CORS_ORIGINS.split(",").filter(o => o !== "")
+    : ["http://localhost:1234"],
   PSP_API_KEY: env.PSP_API_KEY
 });
 

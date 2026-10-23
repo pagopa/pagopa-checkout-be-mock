@@ -23,6 +23,11 @@ const NPG_SDK_SRI_HASH_CACHE_KEY = "sri-hash";
 
 const contentTypeHeaderKey = "Content-Type";
 
+const cacheControlHeaderKey = "Cache-Control";
+
+// never cache tampered hashes or errors, so they cannot outlive the request that caused them
+const noStore = "no-store";
+
 const cache: Record<string, string> = {};
 
 const fetchNpgSdk = pipe(
@@ -59,9 +64,27 @@ export const getNpgSDK: RequestHandler = (_req, res) => {
     ),
     TE.mapLeft(error => {
       logger.error("Error retrieving NPG SDK static resource", error);
-      return res.status(502).send(error.message);
+      return res
+        .status(502)
+        .set(cacheControlHeaderKey, noStore)
+        .send(error.message);
     })
   )();
+};
+
+// same CORS and cache headers as the platform CDN
+export const npgSdkCdnHeaders: RequestHandler = (req, res, next) => {
+  res.removeHeader("Access-Control-Allow-Origin");
+  const origin = req.headers.origin;
+  if (
+    origin !== undefined &&
+    config.NPG_SDK_CDN_CORS_ORIGINS.includes(origin)
+  ) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+  res.header("Vary", "Origin");
+  res.header(cacheControlHeaderKey, "public, max-age=300");
+  next();
 };
 
 const correlationId = uuid();
@@ -122,6 +145,9 @@ export const npgGetSdkIntegrity: RequestHandler = (req, res) => {
       const integrity = `${JSON.parse(body).integrity}${
         tamperSriHash ? "-tampered" : ""
       }`;
+      if (tamperSriHash) {
+        res.set(cacheControlHeaderKey, noStore);
+      }
       res
         .status(200)
         .set(contentTypeHeaderKey, "application/json")
@@ -131,7 +157,10 @@ export const npgGetSdkIntegrity: RequestHandler = (req, res) => {
     }),
     TE.mapLeft(error => {
       logger.error("Error retrieving NPG SDK SRI hash ", error);
-      return res.status(502).send(error.message);
+      return res
+        .status(502)
+        .set(cacheControlHeaderKey, noStore)
+        .send(error.message);
     })
   )();
 };
