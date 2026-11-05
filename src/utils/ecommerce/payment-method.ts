@@ -4,7 +4,6 @@ import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethod
 import { PaymentMethodManagementTypeEnum } from "../../generated/ecommerce/PaymentMethodManagementType";
 import { PaymentMethodsResponse as PaymentMethodsResponseV2 } from "../../generated/ecommerce-v2/PaymentMethodsResponse";
 import {
-  PaymentTypeCodeEnum,
   MethodManagementEnum,
   StatusEnum,
   PaymentMethodResponseMetadata
@@ -162,7 +161,7 @@ export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
               min: p.ranges[0].min as number
             }
           : undefined,
-      group: getEnumFromString(PaymentTypeCodeEnum, p.paymentTypeCode),
+      group: p.paymentTypeCode,
       id: p.id,
       metadata:
         p.paymentTypeCode === "MYBK"
@@ -188,10 +187,7 @@ export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
           : "CONTO"
       ],
       paymentMethodsBrandAssets: p.brandAssets,
-      paymentTypeCode: getEnumFromString(
-        PaymentTypeCodeEnum,
-        p.paymentTypeCode
-      ),
+      paymentTypeCode: p.paymentTypeCode,
       status:
         p.status.toString() === "ENABLED"
           ? StatusEnum.ENABLED

@@ -47,6 +47,7 @@ export const fillRequestPaymentInfoWithMockData = (
     O.map(paymentNotices =>
       paymentNotices.map((paymentNotice, index) => ({
         amount: paymentNotice.amount,
+        companyName: `companyName${index}`,
         isAllCCP: false,
         paymentToken: `paymentToken${index}`,
         reason: `reason${index}`,
