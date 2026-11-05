@@ -41,7 +41,11 @@ import {
   checkoutAuthServiceLogoutUsersHandler
 } from "./handlers/checkout-auth-service";
 import { checkoutFeatureFlag } from "./handlers/checkout-feature-flags";
-import { getNpgSDK, npgGetSdkIntegrity } from "./handlers/npg/npg-sdk";
+import {
+  getNpgSDK,
+  npgGetSdkIntegrity,
+  npgSdkCdnHeaders
+} from "./handlers/npg/npg-sdk";
 
 // eslint-disable-next-line max-lines-per-function
 export const newExpressApp: () => Promise<Express.Application> = async () => {
@@ -104,6 +108,8 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
     ]);
     next();
   });
+
+  app.use("/npg/sdk", npgSdkCdnHeaders);
 
   app.get("/getPaymentId", async (_req, res) => {
     res.status(200).send({
