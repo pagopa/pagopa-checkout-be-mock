@@ -104,14 +104,14 @@ const returnSuccessResponse = (
   transactionIdPrefix?: number
 ): void => {
   logger.info("[Activation ecommerce] - Return success case");
-  res
-    .status(200)
-    .send(
-      createSuccessActivationResponseEntity(
-        req,
-        generateTransactionId(transactionIdPrefix)
-      )
-    );
+  res.status(200).send({
+    ...createSuccessActivationResponseEntity(
+      req,
+      generateTransactionId(transactionIdPrefix)
+    ),
+    testField:
+      "field added to test that additional fields will be ignored by decoder"
+  });
 };
 
 const return400InvalidInputError = (res: any): void => {
