@@ -4,7 +4,6 @@ import { PaymentMethodStatusEnum } from "../../generated/ecommerce/PaymentMethod
 import { PaymentMethodManagementTypeEnum } from "../../generated/ecommerce/PaymentMethodManagementType";
 import { PaymentMethodsResponse as PaymentMethodsResponseV2 } from "../../generated/ecommerce-v2/PaymentMethodsResponse";
 import {
-  PaymentTypeCodeEnum,
   MethodManagementEnum,
   StatusEnum,
   PaymentMethodResponseMetadata
@@ -39,7 +38,8 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
       status: PaymentMethodStatusEnum.ENABLED
     },
     {
-      asset: "https://assets.cdn.io.italia.it/logos/apps/paga-con-postepay.png",
+      asset:
+        "https://assets.cdn.platform.pagopa.it/logos/apps/paga-con-postepay.png",
       description: "Paga con Postepay",
       id: "1c12349f-8133-42f3-ad96-7e6527d27a41",
       methodManagement: PaymentMethodManagementTypeEnum.REDIRECT,
@@ -96,7 +96,7 @@ export const createSuccessGetPaymentMethods = (): PaymentMethodsResponse => ({
       status: PaymentMethodStatusEnum.ENABLED
     },
     {
-      asset: "https://assets.cdn.io.italia.it/logos/apps/satispay.png",
+      asset: "https://assets.cdn.platform.pagopa.it/logos/apps/satispay.png",
       description: "Satispay",
       id: "0021234f-12345-42f3-ad96-7e6527d27a44",
       methodManagement: PaymentMethodManagementTypeEnum.REDIRECT,
@@ -162,7 +162,7 @@ export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
               min: p.ranges[0].min as number
             }
           : undefined,
-      group: getEnumFromString(PaymentTypeCodeEnum, p.paymentTypeCode),
+      group: p.paymentTypeCode,
       id: p.id,
       metadata:
         p.paymentTypeCode === "MYBK"
@@ -188,10 +188,7 @@ export const convertV1GetPaymentMethodsToV2 = (): PaymentMethodsResponseV2 => {
           : "CONTO"
       ],
       paymentMethodsBrandAssets: p.brandAssets,
-      paymentTypeCode: getEnumFromString(
-        PaymentTypeCodeEnum,
-        p.paymentTypeCode
-      ),
+      paymentTypeCode: p.paymentTypeCode,
       status:
         p.status.toString() === "ENABLED"
           ? StatusEnum.ENABLED
