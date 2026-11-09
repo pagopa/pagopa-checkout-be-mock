@@ -34,7 +34,9 @@ const decodeEnv = (
   NPG_API_KEY: env.NPG_API_KEY,
   // default: the checkout-fe/ecommerce-fe dev server origin, local and in CI
   NPG_SDK_CDN_CORS_ORIGINS: env.NPG_SDK_CDN_CORS_ORIGINS
-    ? env.NPG_SDK_CDN_CORS_ORIGINS.split(",").filter(o => o !== "")
+    ? env.NPG_SDK_CDN_CORS_ORIGINS.split(",")
+        .map(o => o.trim())
+        .filter(o => o !== "")
     : ["http://localhost:1234"],
   PSP_API_KEY: env.PSP_API_KEY
 });
