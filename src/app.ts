@@ -16,7 +16,7 @@ import {
   ecommerceGetTransactionOutcome
 } from "./handlers/ecommerce/transaction";
 import {
-  ecommerceVerifyHandler,
+  ecommerceVerify,
   secureEcommerceVerify
 } from "./handlers/ecommerce/verify";
 import {
@@ -131,10 +131,7 @@ export const newExpressApp: () => Promise<Express.Application> = async () => {
   );
 
   // payment-requests-service get cart requests mock
-  app.get(
-    "/ecommerce/checkout/v1/payment-requests/:rptId",
-    ecommerceVerifyHandler
-  );
+  app.get("/ecommerce/checkout/v1/payment-requests/:rptId", ecommerceVerify);
 
   app.get(
     "/ecommerce/checkout/auth/v1/payment-requests/:rptId",

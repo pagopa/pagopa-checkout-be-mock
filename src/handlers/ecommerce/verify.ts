@@ -99,7 +99,7 @@ const getFlowId = (rptId: string): FlowCase => {
   return FlowCase.OK;
 };
 
-const ecommerceVerify: RequestHandler = async (req, res, _next) => {
+export const ecommerceVerify: RequestHandler = async (req, res, _next) => {
   const flowId = getFlowId(req.params.rptId);
   // eslint-disable-next-line no-console
   console.log(flowId);
@@ -136,19 +136,6 @@ export const authService401 = (res: any): void => {
     title: "Unauthorized Access"
   };
   res.status(401).send(response);
-};
-
-export const ecommerceVerifyHandler: RequestHandler = async (
-  req,
-  res,
-  _next
-) => {
-  if (req.query.recaptchaResponse == null) {
-    logger.error("Missing recaptchaResponse query param!");
-    res.status(404).send("Missing recaptchaResponse query param!");
-    return;
-  }
-  ecommerceVerify(req, res, _next);
 };
 
 export const secureEcommerceVerify: RequestHandler = async (
